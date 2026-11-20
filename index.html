@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-RtVB6vN5j1xDDi8m6+RmfWPt1MyumOf2YJwIYmmLEU4='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://icons.duckduckgo.com; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-WIVs5tXhDYbHhajxXaAV6UlMA7QLpbS/IdWHWxkaLlw='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://icons.duckduckgo.com; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Confronto offerte luce e gas oggi, dalla più conveniente | comparaoffertelucegas</title>
@@ -218,7 +218,6 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 <label class="val"><span class="sr" id="qlab">Consumo mensile</span><input id="cons" inputmode="numeric" aria-labelledby="qlab" value="225"><span class="u" id="unit">kWh al mese</span></label>
 <button type="button" id="plus" aria-label="Aumenta il consumo">+</button>
 </div>
-<p class="hint" id="hint">Lo trovi in bolletta alla voce "consumo del periodo". Una cifra a occhio va bene.</p>
 </div>
 <div class="best" aria-live="polite">
 <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center"><span class="k" id="bk">N°1 oggi</span><span class="pill" id="bt"></span></div>
@@ -274,8 +273,8 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 <script>
 (function(){
 var S={c:'luce',q:{luce:225,gas:90},f:'tutte',np:false,s:'',lim:50,data:{},k:'m',dir:1};
-var CFG={luce:{u:'kWh',step:10,max:3000,q:'Quanti kWh consumi al mese?',h:'Lo trovi in bolletta: consumo del periodo.'},
-gas:{u:'Smc',step:5,max:1000,q:'Quanti Smc di gas consumi al mese?',h:'Media dell\'anno, dalla bolletta.'}};
+var CFG={luce:{u:'kWh',step:10,max:3000,q:'Quanti kWh consumi al mese?'},
+gas:{u:'Smc',step:5,max:1000,q:'Quanti Smc di gas consumi al mese?'}};
 var $=function(id){return document.getElementById(id)};
 var eur=function(n,d){return n.toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d})+' €'};
 var num=function(n,d){return n.toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d})};
@@ -307,7 +306,7 @@ function compute(){
 
 function render(){
   var cfg=CFG[S.c];
-  $('q').textContent=cfg.q;$('unit').textContent=cfg.u+' al mese';$('hint').textContent=cfg.h;
+  $('q').textContent=cfg.q;$('unit').textContent=cfg.u+' al mese';
   if(document.activeElement!==$('cons'))$('cons').value=S.q[S.c];
   document.querySelectorAll('.seg button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.c===S.c)});
   document.querySelectorAll('[data-f]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.f===S.f)});
