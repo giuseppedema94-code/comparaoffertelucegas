@@ -15,6 +15,7 @@ from urllib.parse import urlparse
 
 import datetime as dt
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -99,6 +100,45 @@ def senza_doppioni(o: dict) -> dict:
     return {**o, "componenti": comp}
 
 
+def link(u: str | None) -> str | None:
+    u = (u or "").strip()
+    if not u or " " in u or "." not in u:
+        return None
+    return u if u.lower().startswith(("http://", "https://")) else "https://" + u.lstrip("/")
+
+
+def link_vivi(dati: list[dict]) -> None:
+    """Toglie i link che non rispondono (dominio inesistente, 404, timeout)."""
+    import concurrent.futures as cf
+    import urllib.request
+    urls = {r["u"] for d in dati for r in d["offerte"] if r.get("u")}
+
+    def ok(u: str) -> bool:
+        for metodo in ("HEAD", "GET"):
+            try:
+                req = urllib.request.Request(u, method=metodo, headers={"User-Agent": "Mozilla/5.0 (comparaoffertelucegas.it)"})
+                with urllib.request.urlopen(req, timeout=12) as r:
+                    return r.status < 400
+            except urllib.error.HTTPError as e:
+                if e.code in (403, 405, 429, 503):  # siti che bloccano i bot: li considero vivi
+                    return True
+                if metodo == "GET":
+                    return False
+            except Exception:
+                if metodo == "GET":
+                    return False
+        return False
+
+    with cf.ThreadPoolExecutor(32) as ex:
+        stato = dict(zip(urls, ex.map(ok, urls)))
+    morti = [u for u, v in stato.items() if not v]
+    print(f"link: {len(urls)} controllati, {len(morti)} non raggiungibili")
+    for d in dati:
+        for r in d["offerte"]:
+            if r.get("u") and not stato.get(r["u"], True):
+                del r["u"]
+
+
 def genera(archivio: Archivio, commodity: str, cambio: dict) -> dict:
     offerte, _ = archivio.cerca(commodity=commodity, tipo_cliente="domestico", residente=True)
     parametri = archivio.parametri.get(commodity, {})
@@ -164,7 +204,7 @@ def genera(archivio: Archivio, commodity: str, cambio: dict) -> dict:
             "pen": pen,
             "penT": pen_testo,
             "z": zona(archivio, o),
-            "u": contatti.get("pagina_offerta") or contatti.get("sito"),
+            "u": link(contatti.get("pagina_offerta") or contatti.get("sito")),
             "min": o.get("consumo_min"),
             "max": o.get("consumo_max"),
             "ok": bool(sa.get("stima_completa")),
@@ -213,11 +253,16 @@ def main() -> int:
     cambio = json.loads(percorso_cambio.read_text(encoding="utf-8")) if percorso_cambio.exists() else {}
     archivio = Archivio()
     archivio.assicura(forza=True)
+    tutti = {}
     for commodity in ("luce", "gas"):
         dati = genera(archivio, commodity, cambio)
         if len(dati["offerte"]) < 20:
             print(f"{commodity}: solo {len(dati['offerte'])} offerte, file non aggiornato", file=sys.stderr)
             return 1
+        tutti[commodity] = dati
+    if os.environ.get("CONTROLLA_LINK"):
+        link_vivi(list(tutti.values()))
+    for commodity, dati in tutti.items():
         (DATI / f"{commodity}.json").write_text(json.dumps(dati, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
         print(f"{commodity}: {len(dati['offerte'])} offerte, {dati['fornitori']} fornitori, dati del {dati['data_open_data']}")
     return 0

@@ -36,6 +36,8 @@ jobs:
         run: python scripts/scarica_po.py grezzi
       - name: Genera JSON
         run: python scripts/aggiorna.py grezzi
+        env:
+          CONTROLLA_LINK: "1"
       - name: Pubblica
         run: |
           git config user.name "aggiornamento-automatico"
