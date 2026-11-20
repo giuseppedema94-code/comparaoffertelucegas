@@ -377,7 +377,7 @@ function renderIdx(){
   var X=function(i){return P+i*(W-P-10)/(n-1)},Y=function(v){return H-24-(v-mn)/(mx-mn)*(H-40)};
   var pts=se.map(function(x,i){return X(i).toFixed(1)+','+Y(x[k]).toFixed(1)}).join(' ');
   var g='';for(var t=0;t<=4;t++){var v=mn+(mx-mn)*t/4,y=Y(v).toFixed(1);g+='<line x1="'+P+'" x2="'+(W-10)+'" y1="'+y+'" y2="'+y+'" stroke="var(--line)"/><text x="'+(P-6)+'" y="'+(+y+4)+'" text-anchor="end" font-size="11" fill="var(--mut)">'+num(v,2)+'</text>'}
-  var lab='';se.forEach(function(x,i){if(x.m.slice(5)==='01'||i===n-1)lab+='<text x="'+X(i).toFixed(1)+'" y="'+(H-6)+'" text-anchor="middle" font-size="11" fill="var(--mut)">'+ml(x.m)+'</text>'});
+  var lab='';se.forEach(function(x,i){if(x.m.slice(5)==='01'||i===n-1)lab+='<text x="'+X(i).toFixed(1)+'" y="'+(H-6)+'" text-anchor="'+(i===n-1?'end':'middle')+'" font-size="11" fill="var(--mut)">'+ml(x.m)+'</text>'});
   $('chart').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Andamento '+k.toUpperCase()+' in '+u+'">'+g+lab+'<polyline points="'+pts+'" fill="none" stroke="var(--accbg)" stroke-width="3" stroke-linejoin="round"/><circle cx="'+X(n-1).toFixed(1)+'" cy="'+Y(l[k]).toFixed(1)+'" r="5" fill="var(--accbg)"/></svg>';
   var rows=se.slice(-12).reverse().map(function(x){return '<tr><td>'+ml(x.m)+'</td><td>'+num(x.pun,4)+'</td><td>'+num(x.psv,4)+'</td></tr>'}).join('');
   $('itab').innerHTML='<thead><tr><th>Mese</th><th>PUN €/kWh</th><th>PSV €/Smc</th></tr></thead><tbody>'+rows+'</tbody>';
