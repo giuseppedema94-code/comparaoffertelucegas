@@ -102,6 +102,9 @@ main{padding:28px 0 64px;display:flex;flex-direction:column;gap:18px}
 .tf{background:#E7E9E4;color:#14161A}.tv{background:#DBEAFE;color:#1E3A8A}.tz{background:#FFEDD5;color:#7C2D12}
 .nt{font-size:12px;color:#6B7079;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sc{font-size:14px}
+.sort{border:0;background:none;padding:6px 0;font:600 11px Inter,sans-serif;text-transform:uppercase;letter-spacing:.05em;color:#5B6068;cursor:pointer;text-align:right;width:100%}
+.sort.on{color:#14161A}
+.sort:hover{color:#14161A}
 .dsc{font-weight:600;color:#15803D;font-size:14px}
 .dd{font-size:11px;color:#6B7079}
 .num{text-align:right;font-variant-numeric:tabular-nums;font-size:15px}
@@ -194,7 +197,7 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 
 <script>
 (function(){
-var S={c:'luce',q:{luce:225,gas:90},f:'tutte',np:false,s:'',lim:50,data:{}};
+var S={c:'luce',q:{luce:225,gas:90},f:'tutte',np:false,s:'',lim:50,data:{},k:'m',dir:1};
 var CFG={luce:{u:'kWh',step:10,max:3000,q:'Quanti kWh consumi al mese?',h:'Lo trovi in bolletta alla voce "consumo del periodo". Una cifra a occhio va bene.'},
 gas:{u:'Smc',step:5,max:1000,q:'Quanti Smc di gas consumi al mese?',h:'Lo trovi in bolletta alla voce "consumo del periodo". In inverno è più alto: usa una media dell\'anno.'}};
 var $=function(id){return document.getElementById(id)};
@@ -248,10 +251,13 @@ function render(){
     if(s&&(x.o.v+' '+x.o.n).toLowerCase().indexOf(s)<0)return false;
     return true;
   });
-  var top=list.length?list[0].m:0,max=list.length?list[Math.min(list.length,S.lim)-1].m:1;
-  var h=['<div class="row head" role="row"><span>#</span><span>Fornitore e offerta</span><span class="num">€/'+cfg.u+'</span><span class="num">Quota fissa €/mese</span><span class="num">Sconto</span><span class="num">Scadenza offerta</span><span class="num">Spesa al mese</span></div>'];
+  var top=Infinity,max=0;list.forEach(function(x){if(x.m<top)top=x.m;if(x.m>max)max=x.m});
+  var key={m:function(x){return x.m},p:function(x){return x.o.p},fx:function(x){return x.o.fx}}[S.k];
+  if(S.k!=='m'||S.dir!==1)list=list.slice().sort(function(a,b){return (key(a)-key(b))*S.dir||a.m-b.m});
+  var th=function(k,label){var on=S.k===k,ar=on?(S.dir===1?'▲':'▼'):'↕';return '<button type="button" class="sort'+(on?' on':'')+'" data-k="'+k+'" aria-sort="'+(on?(S.dir===1?'ascending':'descending'):'none')+'" title="Ordina">'+label+' <span aria-hidden="true">'+ar+'</span></button>'};
+  var h=['<div class="row head" role="row"><span>#</span><span>Fornitore e offerta</span><span class="num">'+th('p','€/'+cfg.u)+'</span><span class="num">'+th('fx','Quota fissa €/mese')+'</span><span class="num">Sconto</span><span class="num">Scadenza offerta</span><span class="num">'+th('m','Spesa al mese')+'</span></div>'];
   list.slice(0,S.lim).forEach(function(x,i){
-    var o=x.o,u=safeUrl(o.u),first=i===0;
+    var o=x.o,u=safeUrl(o.u),first=x.m===top;
     var tags='<span class="tag '+(o.t==='f'?'tf':'tv')+'">'+(o.t==='f'?'fisso':'variabile')+'</span>'+(o.pl?'<span class="tag tf">PLACET</span>':'')+(o.z?'<span class="tag tz" title="'+esc(o.z)+'">solo alcune zone</span>':'');
     var pen=o.pen===true?'<span class="yes" title="'+esc(o.penT||'Oneri di recesso anticipato')+'">Sì</span>':(o.pen===false?'<span class="no">No</span>':'<span class="unk" title="In verifica">—</span>');
     var cl=o.cl==='si'?'<span class="no" title="'+esc(o.clT||'')+'">Sì</span>':(o.cl==='no'?'<span class="yes" title="'+esc(o.clT||'')+'">No</span>':'<span class="unk" title="Non ancora verificato">—</span>');
@@ -272,6 +278,7 @@ document.querySelectorAll('[data-f]').forEach(function(b){b.addEventListener('cl
 
 $('search').addEventListener('input',function(e){S.s=e.target.value;S.lim=50;render()});
 $('more').addEventListener('click',function(){S.lim+=50;render()});
+$('tbl').addEventListener('click',function(e){var b=e.target.closest('.sort');if(!b)return;var k=b.dataset.k;if(S.k===k)S.dir=-S.dir;else{S.k=k;S.dir=1}render()});
 function step(dir){var c=CFG[S.c];S.q[S.c]=Math.max(c.step,Math.min(c.max,S.q[S.c]+dir*c.step));render()}
 $('minus').addEventListener('click',function(){step(-1)});$('plus').addEventListener('click',function(){step(1)});
 $('cons').addEventListener('input',function(e){var v=parseInt(e.target.value.replace(/\D/g,''),10);if(v>0){S.q[S.c]=Math.min(CFG[S.c].max,v);render()}});
