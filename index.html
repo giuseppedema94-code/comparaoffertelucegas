@@ -140,6 +140,24 @@ footer{border-top:1px solid var(--line);background:var(--card);font-size:13px;co
 footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 @media (max-width:640px){.ask h1{font-size:26px}.best .big{font-size:42px}.stepper input{font-size:34px;width:110px}}
+
+.msort{display:none;align-items:center;gap:6px;font-size:13px;color:var(--ink3)}
+.msort select{font:600 14px Inter,sans-serif;padding:9px 10px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--ink)}
+@media (max-width:700px){
+.stepper .val{flex-direction:column;align-items:center;gap:0;padding:8px 10px}
+.stepper input{width:100%;text-align:center;font-size:40px;line-height:1.1}
+.stepper .u{font-size:14px;white-space:nowrap}
+.msort{display:flex}
+.scroll{overflow:visible}.tbl{min-width:0}
+.row.head{display:none}
+.row{grid-template-columns:26px repeat(4,minmax(0,1fr));gap:10px 8px;padding:14px 10px;border-bottom:1px solid var(--line);border-radius:12px}
+.row .who{grid-column:2/4}.row .cost{grid-column:4/6;align-self:start}
+.row .c-p{grid-column:2}.row .c-fx{grid-column:3}.row .c-ds{grid-column:4}.row .c-sc{grid-column:5}
+.row .c-p,.row .c-fx,.row .c-ds,.row .c-sc{text-align:left;font-size:14px}
+.row [data-l]::before{content:attr(data-l);display:block;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);margin-bottom:2px}
+.who .nt,.who .o{white-space:normal}
+.cost .m{font-size:20px}
+}
 </style>
 </head>
 <body>
@@ -193,6 +211,7 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 <button type="button" class="chip" data-f="f" aria-pressed="false">Prezzo fisso</button>
 <button type="button" class="chip" data-f="v" aria-pressed="false">Variabile</button>
 </div>
+<label class="msort">Ordina per <select id="msort"><option value="m">Spesa al mese</option><option value="p">Prezzo €/kWh</option><option value="fx">Quota fissa</option></select></label>
 <label><span class="sr">Cerca fornitore o offerta</span><input type="search" class="search" id="search" placeholder="Cerca fornitore o offerta"></label>
 </div>
 </div>
@@ -252,6 +271,7 @@ function render(){
   document.querySelectorAll('.seg button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.c===S.c)});
   document.querySelectorAll('[data-f]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.f===S.f)});
   
+  $('msort').value=S.k;$('msort').options[1].text='Prezzo €/'+cfg.u;
   var d=S.data[S.c],all=compute();
   if(!all){$('tbl').innerHTML='';return}
   var valid=all.filter(function(x){return x.o.ok!==false});
@@ -281,7 +301,7 @@ function render(){
     var pen=o.pen===true?'<span class="yes" title="'+esc(o.penT||'Oneri di recesso anticipato')+'">Sì</span>':(o.pen===false?'<span class="no">No</span>':'<span class="unk" title="In verifica">—</span>');
     var cl=o.cl==='si'?'<span class="no" title="'+esc(o.clT||'')+'">Sì</span>':(o.cl==='no'?'<span class="yes" title="'+esc(o.clT||'')+'">No</span>':'<span class="unk" title="Non ancora verificato">—</span>');
     var w=Math.max(4,Math.min(100,x.m/max*100));
-    h.push('<div class="row'+(first?' first':'')+'" role="row"><span class="pos">'+(i+1)+'</span><div class="who"><div class="v">'+esc(o.v)+'</div><div class="o">'+tags+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+(o.ok===false?' · stima parziale':'')+'</div>'+(o.nt?'<div class="nt">'+esc(o.nt)+'</div>':'')+'</div><span class="num">'+num(o.pd!=null?o.pd:o.p,4)+'</span><span class="num">'+num(o.fx/12,2)+'</span><span class="num">'+(o.ds?'<span class="dsc">−'+eur(o.ds,0)+'/anno</span><div class="dd">'+esc(o.dsT||'durata da verificare')+'</div>':'<span class="unk">—</span>')+'</span><span class="num sc">'+(o.sc?fd(o.sc):'—')+'</span><div class="cost"><div class="m">'+eur(x.m,2)+'</div><div class="d">'+(first?'la più conveniente':'+'+eur(x.m-top,2))+'</div>'+(o.ds?'<div class="dd">senza sconto '+eur(x.m+x.dm,2)+'</div>':'')+'<div class="bar"><i style="width:'+w.toFixed(1)+'%;background:'+(first?'var(--accbar)':(o.t==='f'?'var(--barf)':'#60A5FA'))+'"></i></div></div></div>');
+    h.push('<div class="row'+(first?' first':'')+'" role="row"><span class="pos">'+(i+1)+'</span><div class="who"><div class="v">'+esc(o.v)+'</div><div class="o">'+tags+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+(o.ok===false?' · stima parziale':'')+'</div>'+(o.nt?'<div class="nt">'+esc(o.nt)+'</div>':'')+'</div><span class="num c-p" data-l="€/'+cfg.u+'">'+num(o.pd!=null?o.pd:o.p,4)+'</span><span class="num c-fx" data-l="Quota fissa/mese">'+num(o.fx/12,2)+' €</span><span class="num c-ds" data-l="Sconto">'+(o.ds?'<span class="dsc">−'+eur(o.ds,0)+'/anno</span><div class="dd">'+esc(o.dsT||'durata da verificare')+'</div>':'<span class="unk">—</span>')+'</span><span class="num sc c-sc" data-l="Scadenza">'+(o.sc?fd(o.sc):'—')+'</span><div class="cost"><div class="m">'+eur(x.m,2)+'</div><div class="d">'+(first?'la più conveniente':'+'+eur(x.m-top,2))+'</div>'+(o.ds?'<div class="dd">senza sconto '+eur(x.m+x.dm,2)+'</div>':'')+'<div class="bar"><i style="width:'+w.toFixed(1)+'%;background:'+(first?'var(--accbar)':(o.t==='f'?'var(--barf)':'#60A5FA'))+'"></i></div></div></div>');
   });
   if(!list.length)h.push('<p class="note">Nessuna offerta con questi filtri.</p>');
   $('tbl').innerHTML=h.join('');
@@ -301,6 +321,7 @@ var m=Math.max(0,modes.indexOf(r.getAttribute('data-theme')||'auto'));
 var show=function(){b.textContent='Tema: '+nomi[modes[m]];b.title=modes[m]==='auto'?'Segue il tema del dispositivo':''};
 b.addEventListener('click',function(){m=(m+1)%3;if(modes[m]==='auto')r.removeAttribute('data-theme');else r.setAttribute('data-theme',modes[m]);try{modes[m]==='auto'?localStorage.removeItem('tema'):localStorage.setItem('tema',modes[m])}catch(e){}show()});show()})();
 $('more').addEventListener('click',function(){S.lim+=50;render()});
+$('msort').addEventListener('change',function(e){S.k=e.target.value;S.dir=1;render()});
 $('tbl').addEventListener('click',function(e){var b=e.target.closest('.sort');if(!b)return;var k=b.dataset.k;if(S.k===k)S.dir=-S.dir;else{S.k=k;S.dir=1}render()});
 function step(dir){var c=CFG[S.c];S.q[S.c]=Math.max(c.step,Math.min(c.max,S.q[S.c]+dir*c.step));render()}
 $('minus').addEventListener('click',function(){step(-1)});$('plus').addEventListener('click',function(){step(1)});
