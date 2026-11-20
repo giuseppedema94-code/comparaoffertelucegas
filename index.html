@@ -48,8 +48,12 @@
 }
 </script>
 <style>
-:root{--bg:#F4F5F1;--card:#fff;--ink:#14161A;--ink2:#3A3F47;--ink3:#4A4F57;--mut:#5B6068;--mut2:#6B7079;--line:#E2E4DE;--bd:#D3D6CF;--soft:#F4F5F1;--alt:#FAFAF8;--first:#FEF3C7;--track:#ECEDE8;--tf:#E7E9E4;--tvb:#DBEAFE;--tvi:#1E3A8A;--tzb:#FFEDD5;--tzi:#7C2D12;--ok:#15803D;--warn:#9A3412;--diff:#8A3B12;--inv:#14161A;--invi:#fff;--best:#14161A;--barf:#14161A;color-scheme:light}
+:root{--bg:#F4F5F1;--card:#fff;--ink:#14161A;--ink2:#3A3F47;--ink3:#4A4F57;--mut:#5B6068;--mut2:#6B7079;--line:#E2E4DE;--bd:#D3D6CF;--soft:#F4F5F1;--alt:#FAFAF8;--first:#FEF3C7;--track:#ECEDE8;--tf:#E7E9E4;--tvb:#DBEAFE;--tvi:#1E3A8A;--tzb:#FFEDD5;--tzi:#7C2D12;--ok:#15803D;--warn:#9A3412;--diff:#8A3B12;--inv:#14161A;--invi:#fff;--best:#14161A;--barf:#14161A;--acc:#FACC15;--accbar:#CA8A04;color-scheme:light}
+:root[data-c=gas]{--acc:#60A5FA;--accbar:#2563EB;--first:#DBEAFE}
+.ic-flame{display:none}:root[data-c=gas] .ic-flame{display:inline}:root[data-c=gas] .ic-bolt{display:none}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0f1114;--card:#171a1e;--ink:#e8eaed;--ink2:#c3c8cf;--ink3:#aab1ba;--mut:#98a1ad;--mut2:#8a929d;--line:#272c33;--bd:#3a414b;--soft:#1f2329;--alt:#1a1d22;--first:#3a3110;--track:#2a2f36;--tf:#2a2f36;--tvb:#1e2a44;--tvi:#bcd0ff;--tzb:#3a2617;--tzi:#fdba74;--ok:#4ade80;--warn:#fb923c;--diff:#fdba74;--inv:#e8eaed;--invi:#0f1114;--best:#262b33;--barf:#c3c8cf;color-scheme:dark}}
+:root[data-c=gas][data-theme=dark]{--first:#172a4a}
+@media (prefers-color-scheme:dark){:root[data-c=gas]:not([data-theme=light]){--first:#172a4a}}
 :root[data-theme=dark]{--bg:#0f1114;--card:#171a1e;--ink:#e8eaed;--ink2:#c3c8cf;--ink3:#aab1ba;--mut:#98a1ad;--mut2:#8a929d;--line:#272c33;--bd:#3a414b;--soft:#1f2329;--alt:#1a1d22;--first:#3a3110;--track:#2a2f36;--tf:#2a2f36;--tvb:#1e2a44;--tvi:#bcd0ff;--tzb:#3a2617;--tzi:#fdba74;--ok:#4ade80;--warn:#fb923c;--diff:#fdba74;--inv:#e8eaed;--invi:#0f1114;--best:#262b33;--barf:#c3c8cf;color-scheme:dark}
 .theme-btn{border:1px solid var(--bd);background:transparent;color:var(--ink2);border-radius:10px;padding:9px 12px;font:600 13px Inter,sans-serif;cursor:pointer}
 .theme-btn:hover{color:var(--ink)}
@@ -59,13 +63,13 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,
 a{color:var(--ink)}a:hover{color:var(--ink2)}
 .h{font-family:'Space Grotesk',sans-serif}
 .wrap{max-width:1200px;margin:0 auto;padding:0 20px}
-header.top{background:var(--card);border-bottom:1px solid var(--line)}
+header.top{border-top:4px solid var(--acc);background:var(--card);border-bottom:1px solid var(--line)}
 header.top .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding-top:14px;padding-bottom:14px}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:700;font-size:18px}
 .logo span.dom{color:var(--mut2)}
 .seg{display:flex;background:var(--soft);border-radius:12px;padding:4px}
 .seg button{border:0;cursor:pointer;font:600 15px Inter,sans-serif;padding:10px 22px;border-radius:9px;background:transparent;color:var(--ink)}
-.seg button[aria-pressed=true]{background:var(--inv);color:var(--invi)}
+.seg button[aria-pressed=true]{background:var(--acc);color:#14161A}
 main{padding:28px 0 64px;display:flex;flex-direction:column;gap:18px}
 .hero{display:flex;flex-wrap:wrap;gap:18px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:24px}
@@ -73,12 +77,12 @@ main{padding:28px 0 64px;display:flex;flex-direction:column;gap:18px}
 .ask h1{margin:0;font-size:32px;line-height:1.1;letter-spacing:-.02em}
 .stepper{display:flex;align-items:center;gap:10px}
 .stepper button{width:56px;height:56px;border-radius:14px;border:1px solid var(--bd);background:var(--card);font-size:28px;cursor:pointer;color:var(--ink);flex:0 0 auto}
-.stepper .val{flex:1 1 auto;display:flex;align-items:baseline;justify-content:center;gap:8px;background:var(--soft);border-radius:14px;padding:6px 12px}
+.stepper .val{box-shadow:inset 0 0 0 2px var(--acc);flex:1 1 auto;display:flex;align-items:baseline;justify-content:center;gap:8px;background:var(--soft);border-radius:14px;padding:6px 12px}
 .stepper input{width:150px;border:0;background:transparent;font:700 44px 'Space Grotesk',sans-serif;text-align:right;color:var(--ink);padding:0}
 .stepper .u{font-size:17px;font-weight:600;color:var(--ink3)}
 .hint{margin:0;font-size:14px;color:var(--ink3)}
-.best{flex:1 1 400px;min-width:0;background:var(--best);color:var(--card);border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:8px}
-.best .k{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#FACC15}
+.best{border-top:4px solid var(--acc);flex:1 1 400px;min-width:0;background:var(--best);color:var(--card);border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:8px}
+.best .k{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--acc)}
 .pill{font-size:12px;font-weight:600;background:#2A2E35;padding:5px 10px;border-radius:99px}
 .best .sup{font-size:15px;color:#C9CCD1}
 .best .nm{font-size:24px;font-weight:600}
@@ -136,7 +140,7 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 <body>
 <header class="top">
 <div class="wrap">
-<a class="logo h" href="/"><svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="#14161A"/><path d="M15.5 5 9 15.5h5L12.5 23 19 12.5h-5z" fill="#FACC15"/></svg><span>comparaoffertelucegas<span class="dom">.it</span></span></a>
+<a class="logo h" href="/"><svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="#14161A"/><path class="ic-bolt" d="M15.5 5 9 15.5h5L12.5 23 19 12.5h-5z" fill="var(--acc)"/><path class="ic-flame" d="M14 4.5c.9 3.6 6 6.3 6 11.3a6 6 0 0 1-12 0c0-2.8 1.5-4.8 3-6 .2 1.9 1 3.1 2.2 3.6-.3-3.2.1-6.2.8-8.9z" fill="var(--acc)"/></svg><span>comparaoffertelucegas<span class="dom">.it</span></span></a>
 <div class="hdr-r">
 <div class="seg" role="group" aria-label="Fornitura">
 <button type="button" data-c="luce" aria-pressed="true">Luce</button>
@@ -272,7 +276,7 @@ function render(){
     var pen=o.pen===true?'<span class="yes" title="'+esc(o.penT||'Oneri di recesso anticipato')+'">Sì</span>':(o.pen===false?'<span class="no">No</span>':'<span class="unk" title="In verifica">—</span>');
     var cl=o.cl==='si'?'<span class="no" title="'+esc(o.clT||'')+'">Sì</span>':(o.cl==='no'?'<span class="yes" title="'+esc(o.clT||'')+'">No</span>':'<span class="unk" title="Non ancora verificato">—</span>');
     var w=Math.max(4,Math.min(100,x.m/max*100));
-    h.push('<div class="row'+(first?' first':'')+'" role="row"><span class="pos">'+(i+1)+'</span><div class="who"><div class="v">'+esc(o.v)+'</div><div class="o">'+tags+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+(o.ok===false?' · stima parziale':'')+'</div>'+(o.nt?'<div class="nt">'+esc(o.nt)+'</div>':'')+'</div><span class="num">'+num(o.pd!=null?o.pd:o.p,4)+'</span><span class="num">'+num(o.fx/12,2)+'</span><span class="num">'+(o.ds?'<span class="dsc">−'+eur(o.ds,0)+'/anno</span><div class="dd">'+esc(o.dsT||'durata da verificare')+'</div>':'<span class="unk">—</span>')+'</span><span class="num sc">'+(o.sc?fd(o.sc):'—')+'</span><div class="cost"><div class="m">'+eur(x.m,2)+'</div><div class="d">'+(first?'la più conveniente':'+'+eur(x.m-top,2))+'</div>'+(o.ds?'<div class="dd">senza sconto '+eur(x.m+x.dm,2)+'</div>':'')+'<div class="bar"><i style="width:'+w.toFixed(1)+'%;background:'+(first?'#CA8A04':(o.t==='f'?'var(--barf)':'#60A5FA'))+'"></i></div></div></div>');
+    h.push('<div class="row'+(first?' first':'')+'" role="row"><span class="pos">'+(i+1)+'</span><div class="who"><div class="v">'+esc(o.v)+'</div><div class="o">'+tags+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+(o.ok===false?' · stima parziale':'')+'</div>'+(o.nt?'<div class="nt">'+esc(o.nt)+'</div>':'')+'</div><span class="num">'+num(o.pd!=null?o.pd:o.p,4)+'</span><span class="num">'+num(o.fx/12,2)+'</span><span class="num">'+(o.ds?'<span class="dsc">−'+eur(o.ds,0)+'/anno</span><div class="dd">'+esc(o.dsT||'durata da verificare')+'</div>':'<span class="unk">—</span>')+'</span><span class="num sc">'+(o.sc?fd(o.sc):'—')+'</span><div class="cost"><div class="m">'+eur(x.m,2)+'</div><div class="d">'+(first?'la più conveniente':'+'+eur(x.m-top,2))+'</div>'+(o.ds?'<div class="dd">senza sconto '+eur(x.m+x.dm,2)+'</div>':'')+'<div class="bar"><i style="width:'+w.toFixed(1)+'%;background:'+(first?'var(--accbar)':(o.t==='f'?'var(--barf)':'#60A5FA'))+'"></i></div></div></div>');
   });
   if(!list.length)h.push('<p class="note">Nessuna offerta con questi filtri.</p>');
   $('tbl').innerHTML=h.join('');
@@ -282,7 +286,7 @@ function render(){
   $('fdate').textContent='Prezzi rilevati il '+dd+' dalle schede delle offerte dei venditori.';
 }
 
-function setC(c){S.c=c;S.lim=50;load(c).then(render).catch(function(){$('bs').textContent='Dati non disponibili, riprova tra poco.'});render()}
+function setC(c){S.c=c;document.documentElement.setAttribute('data-c',c);var fi=document.querySelector('link[rel=icon]');if(fi)fi.href=c==='gas'?'favicon-gas.svg':'favicon.svg';S.lim=50;load(c).then(render).catch(function(){$('bs').textContent='Dati non disponibili, riprova tra poco.'});render()}
 document.querySelectorAll('.seg button').forEach(function(b){b.addEventListener('click',function(){setC(b.dataset.c)})});
 document.querySelectorAll('[data-f]').forEach(function(b){b.addEventListener('click',function(){S.f=b.dataset.f;S.lim=50;render()})});
 
