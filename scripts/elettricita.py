@@ -25,7 +25,9 @@ for t, p in zip(d["unix_seconds"], d["price"]):
     ore[x.date().isoformat()][x.hour].append(p)
 serie = [{"d": k, "v": round(sum(v) / len(v) / 1000, 5), "min": round(min(v) / 1000, 5), "max": round(max(v) / 1000, 5)}
          for k, v in sorted(giorni.items()) if len(v) >= 20]
-prof = {k: [round(sum(ore[k][h]) / len(ore[k][h]) / 1000, 5) for h in sorted(ore[k])] for k in (oggi.isoformat(), (oggi + dt.timedelta(days=1)).isoformat()) if k in ore}
+ultimo = max([k for k in ore if k <= oggi.isoformat()], default=None)
+chiavi = {ultimo, oggi.isoformat(), (oggi + dt.timedelta(days=1)).isoformat()} - {None}
+prof = {k: [round(sum(ore[k][h]) / len(ore[k][h]) / 1000, 5) for h in sorted(ore[k])] for k in chiavi if k in ore}
 out = {"zona": "IT-North", "unita": "€/kWh", "licenza": lic, "generato": dt.datetime.now(TZ).isoformat(timespec="minutes"), "serie": serie, "orario": prof}
 json.dump(out, open("data/elettricita.json", "w"), separators=(",", ":"))
 print(len(serie), "giorni; ultimo", serie[-1])

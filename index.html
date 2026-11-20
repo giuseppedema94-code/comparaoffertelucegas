@@ -383,7 +383,7 @@ function renderIdx(){
   $('itab').innerHTML='<thead><tr><th>Mese</th><th>PUN €/kWh</th><th>PSV €/Smc</th></tr></thead><tbody>'+rows+'</tbody>';
   $('inote').textContent='Media mensile. Fonte: ARERA, Portale Offerte.';
 }
-var EL=null;fetch('data/elettricita.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){var se=d.serie,pp,o=new Date().toLocaleDateString('sv-SE',{timeZone:'Europe/Rome'}),pp=se.filter(function(x){return x.d<o});EL={};$('pm').textContent='oggi';var t=se.filter(function(x){return x.d===o})[0];if(!t){$('pv').textContent='n.d.';$('pd').innerHTML='';return}EL=t;var p=pp[pp.length-1],v=(EL.v-p.v)/p.v*100;$('pv').textContent=num(EL.v,4);$('pd').innerHTML='<span class="'+(v>0?'up':'down')+'">'+(v>0?'▲':'▼')+' '+Math.abs(v).toFixed(0)+'%</span>'}).catch(function(){});
+var EL=null;
 fetch('data/indici.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){IDX=d;renderIdx()}).catch(function(){});
 setC('luce');load('gas');
 })();
