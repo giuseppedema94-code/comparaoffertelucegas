@@ -87,6 +87,18 @@ def marchio(o: dict, marchi: dict) -> str:
     return "Fornitore"
 
 
+def senza_doppioni(o: dict) -> dict:
+    """Se una componente ha una riga generica e anche righe a scaglioni, la libreria le somma: tengo solo gli scaglioni."""
+    comp = []
+    for c in o.get("componenti") or []:
+        prezzi = c.get("prezzi") or []
+        scaglioni = [x for x in prezzi if x.get("consumo_da") is not None or x.get("consumo_a") is not None]
+        if scaglioni and len(scaglioni) < len(prezzi):
+            c = {**c, "prezzi": scaglioni}
+        comp.append(c)
+    return {**o, "componenti": comp}
+
+
 def genera(archivio: Archivio, commodity: str, cambio: dict) -> dict:
     offerte, _ = archivio.cerca(commodity=commodity, tipo_cliente="domestico", residente=True)
     parametri = archivio.parametri.get(commodity, {})
@@ -99,11 +111,18 @@ def genera(archivio: Archivio, commodity: str, cambio: dict) -> dict:
     for o in offerte:
         if o.get("sottoscrivibile_singolarmente") is False:
             continue
+        o = senza_doppioni(o)
         sa = costi.stima(o, a, parametri, valori, riferimento)
         sb = costi.stima(o, b, parametri, valori, riferimento)
         ca, cb = sa["costo_vendita_anno"], sb["costo_vendita_anno"]
-        prezzo = (cb - ca) / (b - a)
-        fisso = ca - prezzo * a
+        # sconti separati: quota fissa e prezzo mostrati lordi, sconto a parte
+        za = (sa.get("voci") or {}).get("sconti") or 0
+        zb = (sb.get("voci") or {}).get("sconti") or 0
+        z_var = (zb - za) / (b - a)
+        z_fix = za - z_var * a
+        prezzo_lordo = ((cb - zb) - (ca - za)) / (b - a)
+        fisso = (ca - za) - prezzo_lordo * a
+        prezzo = prezzo_lordo + z_var
         if prezzo <= 0 or prezzo > pmax or not (0 <= fisso <= 600):
             continue
         if zona(archivio, o):
@@ -119,7 +138,7 @@ def genera(archivio: Archivio, commodity: str, cambio: dict) -> dict:
         contatti = o.get("contatti") or {}
         cv = cambio.get(o["piva"]) or cambio.get((o.get("venditore") or "").upper()) or {}
         voci = sb.get("voci") or {}
-        sconto = round(-(voci.get("sconti") or 0) * (2700 if commodity == "luce" else 1100) / b, 2)
+        sconto = round(-z_fix, 2)
         durata_sconto = None
         for sc_ in o.get("sconti") or []:
             dm = (sc_.get("periodo") or {}).get("durata_mesi")
@@ -135,8 +154,8 @@ def genera(archivio: Archivio, commodity: str, cambio: dict) -> dict:
             "pl": o.get("fonte") == "PLACET",
             "fx": round(fisso, 2),
             "p": round(prezzo, 5),
-            "pd": round(prezzo, 5),
-            "s": 0,
+            "pd": round(prezzo_lordo, 5),
+            "s": sconto if sconto > 0.5 else 0,
             "ds": sconto if sconto > 0.5 else 0,
             "dsT": durata_sconto,
             "sc": str(fine)[:10] if fine else None,
