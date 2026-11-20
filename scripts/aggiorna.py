@@ -10,6 +10,9 @@ Lettura dei file e calcolo: libreria portale-offerte-mcp di Marco Patti (licenza
 
 from __future__ import annotations
 
+import re
+from urllib.parse import urlparse
+
 import datetime as dt
 import json
 import sys
@@ -23,6 +26,14 @@ DATI = RADICE / "data"
 
 # Due consumi annui per ricavare quota fissa e prezzo marginale.
 PUNTI = {"luce": (1200.0, 3600.0), "gas": (400.0, 1600.0)}
+
+# Componenti regolate (uguali per tutte le offerte), cliente domestico residente.
+# Luce: quote fisse di rete e potenza 3 kW (€/anno), parte variabile rete+oneri+dispacciamento (€/kWh), accise, IVA 10%.
+# Gas: rete+oneri+accise medie (€/Smc) e IVA media, dal confronto con le bollette tipo a 1.400 Smc.
+REG = {
+    "luce": {"rf": 94.2, "rv": 0.06461, "iva": 0.10, "accSoglia": 1800, "accRif": 44.49 / 3200},
+    "gas": {"rf": 0, "rv": 0.474, "iva": 0.183, "accSoglia": 1e9, "accRif": 0},
+}
 
 
 def penale(offerta: dict) -> tuple[bool, str | None]:
@@ -43,12 +54,48 @@ def zona(archivio: Archivio, offerta: dict) -> str | None:
         return "solo alcune zone"
 
 
+MARCHI_FILE = Path(__file__).resolve().parent.parent / "data" / "marchi.json"
+SUFFISSI = re.compile(r"[\s,]*\b(S\.?\s?P\.?\s?A|S\.?\s?R\.?\s?L|S\.?\s?A\.?\s?S|S\.?\s?N\.?\s?C|SOCIETA'?\s+.*|SOC\.?\s+COOP.*|UNIPERSONALE|A SOCIO UNICO|IN FORMA ABBREVIATA.*)\.?\b.*$", re.I)
+
+
+def dominio(url: str | None) -> str | None:
+    if not url:
+        return None
+    h = urlparse(url if "://" in url else "https://" + url).netloc.lower()
+    return h[4:] if h.startswith("www.") else (h or None)
+
+
+def bello(testo: str) -> str:
+    testo = re.sub(r"\s+", " ", testo).strip(" .,-")
+    if testo and sum(c.isupper() for c in testo) > 0.7 * sum(c.isalpha() for c in testo):
+        testo = " ".join(w if (len(w) <= 3 and w.isalpha() and w not in ("DI", "DEL", "E")) or any(ch.isdigit() for ch in w) else w.capitalize() for w in testo.split())
+    return testo
+
+
+def marchio(o: dict, marchi: dict) -> str:
+    contatti = o.get("contatti") or {}
+    for u in (contatti.get("sito"), contatti.get("pagina_offerta")):
+        d = dominio(u)
+        if d and d in marchi:
+            return marchi[d]
+    v = (o.get("venditore") or "").strip()
+    if v:
+        return bello(SUFFISSI.sub("", v)) or bello(v)
+    d = dominio(contatti.get("sito") or contatti.get("pagina_offerta"))
+    if d:
+        return d.split(".")[-2].replace("-", " ").title() if d.count(".") else d
+    return "Fornitore"
+
+
 def genera(archivio: Archivio, commodity: str, cambio: dict) -> dict:
     offerte, _ = archivio.cerca(commodity=commodity, tipo_cliente="domestico", residente=True)
     parametri = archivio.parametri.get(commodity, {})
     valori, riferimento = archivio.valori_indici("ultimo_mese")
     a, b = PUNTI[commodity]
     righe, visti = [], set()
+    marchi = json.loads(MARCHI_FILE.read_text()) if MARCHI_FILE.exists() else {}
+    oggi = dt.date.today().isoformat()
+    pmax = 1.0 if commodity == "luce" else 3.0
     for o in offerte:
         if o.get("sottoscrivibile_singolarmente") is False:
             continue
@@ -57,7 +104,12 @@ def genera(archivio: Archivio, commodity: str, cambio: dict) -> dict:
         ca, cb = sa["costo_vendita_anno"], sb["costo_vendita_anno"]
         prezzo = (cb - ca) / (b - a)
         fisso = ca - prezzo * a
-        if prezzo <= 0:
+        if prezzo <= 0 or prezzo > pmax or not (0 <= fisso <= 600):
+            continue
+        if zona(archivio, o):
+            continue  # offerte solo per alcune regioni: il sito non chiede il CAP
+        fine_ = o.get("data_fine")
+        if fine_ and str(fine_)[:10] < oggi:
             continue
         chiave = (o["piva"], o["codice"])
         if chiave in visti:
@@ -66,15 +118,30 @@ def genera(archivio: Archivio, commodity: str, cambio: dict) -> dict:
         pen, pen_testo = penale(o)
         contatti = o.get("contatti") or {}
         cv = cambio.get(o["piva"]) or cambio.get((o.get("venditore") or "").upper()) or {}
+        voci = sb.get("voci") or {}
+        sconto = round(-(voci.get("sconti") or 0) * (2700 if commodity == "luce" else 1100) / b, 2)
+        durata_sconto = None
+        for sc_ in o.get("sconti") or []:
+            dm = (sc_.get("periodo") or {}).get("durata_mesi")
+            if dm and not [c for c in sc_.get("condizioni", []) if c.get("codice") not in (None, "00")]:
+                durata_sconto = f"per {dm} mesi"
+                break
+        fine = o.get("data_fine")
         righe.append({
-            "v": (o.get("venditore") or "").strip(),
-            "n": (o.get("nome") or "").strip(),
+            "v": marchio(o, marchi),
+            "n": bello(o.get("nome") or ""),
             "c": o["codice"],
-            "t": "f" if o.get("tipo_prezzo") == "fisso" else ("v" if o.get("tipo_prezzo") == "variabile" else "a"),
+            "t": "f" if o.get("tipo_prezzo") == "fisso" else "v",
             "pl": o.get("fonte") == "PLACET",
             "fx": round(fisso, 2),
             "p": round(prezzo, 5),
+            "pd": round(prezzo, 5),
+            "s": 0,
+            "ds": sconto if sconto > 0.5 else 0,
+            "dsT": durata_sconto,
+            "sc": str(fine)[:10] if fine else None,
             "d": o.get("durata_mesi"),
+            "nt": None,
             "pen": pen,
             "penT": pen_testo,
             "z": zona(archivio, o),
@@ -85,14 +152,17 @@ def genera(archivio: Archivio, commodity: str, cambio: dict) -> dict:
             "cl": cv.get("stato"),
             "clT": cv.get("nota"),
         })
-    righe.sort(key=lambda r: r["fx"] + r["p"] * (2700 if commodity == "luce" else 1100))
+    righe.sort(key=lambda r: (not r["ok"], r["fx"] + r["p"] * (2700 if commodity == "luce" else 1100)))
     return {
+        "reg": REG[commodity],
+        "fonte": "arera",
+        "rilevazione": archivio.giornata.data.isoformat(),
         "commodity": commodity,
         "data_open_data": archivio.giornata.data.isoformat(),
         "generato": dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes"),
         "indici": riferimento,
         "fornitori": len({r["v"] for r in righe}),
-        "offerte": righe,
+        "offerte": [{k: v for k, v in r.items() if v is not None and k not in ("c", "min", "max")} for r in righe],
     }
 
 
