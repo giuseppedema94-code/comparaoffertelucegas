@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /anteprima/
 
 Sitemap: https://comparaoffertelucegas.it/sitemap.xml
