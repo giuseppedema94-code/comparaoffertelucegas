@@ -88,8 +88,8 @@ main{padding:28px 0 64px;display:flex;flex-direction:column;gap:18px}
 .chip[aria-pressed=true]{background:#14161A;color:#fff;border-color:#14161A}
 .search{font:500 14px Inter,sans-serif;padding:10px 12px;border:1px solid #D3D6CF;border-radius:10px;width:200px}
 .scroll{overflow-x:auto}
-.tbl{min-width:980px}
-.row{display:grid;grid-template-columns:40px minmax(0,1.7fr) 90px 100px 70px 76px 92px 130px;gap:12px;align-items:center;padding:10px 8px;border-radius:10px}
+.tbl{min-width:820px}
+.row{display:grid;grid-template-columns:40px minmax(0,1.8fr) 96px 110px 104px 140px;gap:12px;align-items:center;padding:10px 8px;border-radius:10px}
 .row.head{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#5B6068;padding-bottom:6px}
 .row:nth-child(even):not(.head){background:#FAFAF8}
 .row.first{background:#FEF3C7 !important}
@@ -169,7 +169,6 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 <button type="button" class="chip" data-f="f" aria-pressed="false">Prezzo fisso</button>
 <button type="button" class="chip" data-f="v" aria-pressed="false">Variabile</button>
 </div>
-<button type="button" class="chip" id="nopen" aria-pressed="false">Senza penale</button>
 <label><span class="sr">Cerca fornitore o offerta</span><input type="search" class="search" id="search" placeholder="Cerca fornitore o offerta"></label>
 </div>
 </div>
@@ -181,7 +180,6 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 <section class="faq" aria-label="Domande frequenti">
 <div class="card"><h3 class="h">Da dove vengono le offerte?</h3><p>Dalle schede ufficiali delle offerte dei venditori, con le regole di stima del Portale Offerte ARERA. Stiamo collegando il sito agli open data del Portale, che contengono tutte le offerte per le famiglie e si aggiornano ogni giorno.</p></div>
 <div class="card"><h3 class="h">Cosa comprende il costo mostrato?</h3><p>È una stima della bolletta intera: energia o gas, quote fisse del venditore, trasporto, oneri di sistema, accise e IVA, per un cliente residente. Le offerte variabili usano la previsione dell'indice (PUN o PSV) per i prossimi 12 mesi.</p></div>
-<div class="card"><h3 class="h">Penale e cambio offerta</h3><p>"Penale" indica che l'offerta prevede oneri o vincoli in caso di recesso anticipato, come dichiarato dal venditore al Portale. "Cambio libero" indica se il venditore ti passa a una sua offerta più conveniente su richiesta, senza costi: lo verifichiamo a mano, fornitore per fornitore.</p></div>
 </section>
 </main>
 
@@ -225,7 +223,7 @@ function render(){
   if(document.activeElement!==$('cons'))$('cons').value=S.q[S.c];
   document.querySelectorAll('.seg button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.c===S.c)});
   document.querySelectorAll('[data-f]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.f===S.f)});
-  $('nopen').setAttribute('aria-pressed',S.np);
+  
   var d=S.data[S.c],all=compute();
   if(!all){$('tbl').innerHTML='';return}
   var valid=all.filter(function(x){return x.o.ok!==false});
@@ -245,14 +243,14 @@ function render(){
     return true;
   });
   var top=list.length?list[0].m:0,max=list.length?list[Math.min(list.length,S.lim)-1].m:1;
-  var h=['<div class="row head" role="row"><span>#</span><span>Fornitore e offerta</span><span class="num">€/'+cfg.u+'</span><span class="num">Quota fissa €/mese</span><span class="yn">Penale</span><span class="yn">Cambio libero</span><span class="num">Scadenza offerta</span><span class="num">Spesa al mese</span></div>'];
+  var h=['<div class="row head" role="row"><span>#</span><span>Fornitore e offerta</span><span class="num">€/'+cfg.u+'</span><span class="num">Quota fissa €/mese</span><span class="num">Scadenza offerta</span><span class="num">Spesa al mese</span></div>'];
   list.slice(0,S.lim).forEach(function(x,i){
     var o=x.o,u=safeUrl(o.u),first=i===0;
     var tags='<span class="tag '+(o.t==='f'?'tf':'tv')+'">'+(o.t==='f'?'fisso':'variabile')+'</span>'+(o.pl?'<span class="tag tf">PLACET</span>':'')+(o.z?'<span class="tag tz" title="'+esc(o.z)+'">solo alcune zone</span>':'');
     var pen=o.pen===true?'<span class="yes" title="'+esc(o.penT||'Oneri di recesso anticipato')+'">Sì</span>':(o.pen===false?'<span class="no">No</span>':'<span class="unk" title="In verifica">—</span>');
     var cl=o.cl==='si'?'<span class="no" title="'+esc(o.clT||'')+'">Sì</span>':(o.cl==='no'?'<span class="yes" title="'+esc(o.clT||'')+'">No</span>':'<span class="unk" title="Non ancora verificato">—</span>');
     var w=Math.max(4,Math.min(100,x.m/max*100));
-    h.push('<div class="row'+(first?' first':'')+'" role="row"><span class="pos">'+(i+1)+'</span><div class="who"><div class="v">'+esc(o.v)+'</div><div class="o">'+tags+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+(o.ok===false?' · stima parziale':'')+'</div>'+(o.nt?'<div class="nt">'+esc(o.nt)+'</div>':'')+'</div><span class="num">'+num(o.p,4)+'</span><span class="num">'+num(o.fx/12,2)+'</span><span class="yn">'+pen+'</span><span class="yn">'+cl+'</span><span class="num sc">'+(o.sc?fd(o.sc):'—')+'</span><div class="cost"><div class="m">'+eur(x.m,2)+'</div><div class="d">'+(first?'la più conveniente':'+'+eur(x.m-top,2))+'</div><div class="bar"><i style="width:'+w.toFixed(1)+'%;background:'+(first?'#CA8A04':(o.t==='f'?'#14161A':'#60A5FA'))+'"></i></div></div></div>');
+    h.push('<div class="row'+(first?' first':'')+'" role="row"><span class="pos">'+(i+1)+'</span><div class="who"><div class="v">'+esc(o.v)+'</div><div class="o">'+tags+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+(o.ok===false?' · stima parziale':'')+'</div>'+(o.nt?'<div class="nt">'+esc(o.nt)+'</div>':'')+'</div><span class="num">'+num(o.p,4)+'</span><span class="num">'+num(o.fx/12,2)+'</span><span class="num sc">'+(o.sc?fd(o.sc):'—')+'</span><div class="cost"><div class="m">'+eur(x.m,2)+'</div><div class="d">'+(first?'la più conveniente':'+'+eur(x.m-top,2))+'</div><div class="bar"><i style="width:'+w.toFixed(1)+'%;background:'+(first?'#CA8A04':(o.t==='f'?'#14161A':'#60A5FA'))+'"></i></div></div></div>');
   });
   if(!list.length)h.push('<p class="note">Nessuna offerta con questi filtri.</p>');
   $('tbl').innerHTML=h.join('');
@@ -265,7 +263,7 @@ function render(){
 function setC(c){S.c=c;S.lim=50;load(c).then(render).catch(function(){$('bs').textContent='Dati non disponibili, riprova tra poco.'});render()}
 document.querySelectorAll('.seg button').forEach(function(b){b.addEventListener('click',function(){setC(b.dataset.c)})});
 document.querySelectorAll('[data-f]').forEach(function(b){b.addEventListener('click',function(){S.f=b.dataset.f;S.lim=50;render()})});
-$('nopen').addEventListener('click',function(){S.np=!S.np;S.lim=50;render()});
+
 $('search').addEventListener('input',function(e){S.s=e.target.value;S.lim=50;render()});
 $('more').addEventListener('click',function(){S.lim+=50;render()});
 function step(dir){var c=CFG[S.c];S.q[S.c]=Math.max(c.step,Math.min(c.max,S.q[S.c]+dir*c.step));render()}
