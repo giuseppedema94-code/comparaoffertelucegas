@@ -124,7 +124,7 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 <body>
 <header class="top">
 <div class="wrap">
-<a class="logo h" href="/"><svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="#14161A"/><path d="M15.5 5 9 15.5h5L12.5 23 19 12.5h-5z" fill="#FACC15"/></svg>comparaoffertelucegas<span class="dom">.it</span></a>
+<a class="logo h" href="/"><svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="#14161A"/><path d="M15.5 5 9 15.5h5L12.5 23 19 12.5h-5z" fill="#FACC15"/></svg><span>comparaoffertelucegas<span class="dom">.it</span></span></a>
 <div class="seg" role="group" aria-label="Fornitura">
 <button type="button" data-c="luce" aria-pressed="true">Luce</button>
 <button type="button" data-c="gas" aria-pressed="false">Gas</button>
@@ -236,7 +236,7 @@ function render(){
   $('bsub').innerHTML='<span>Prezzo <strong>'+num(best.o.p,4)+' €/'+cfg.u+'</strong></span><span>Quota fissa <strong>'+eur(best.o.fx/12,2)+'/mese</strong></span>'+(best.o.sc?'<span>Sottoscrivibile fino al <strong>'+fd(best.o.sc)+'</strong></span>':'');
   $('bsave').hidden=false;$('bsave').textContent=eur(med.m-best.m,2)+" al mese in meno rispetto all'offerta mediana";
   var bu=safeUrl(best.o.u);$('blink').hidden=!bu;if(bu)$('blink').href=bu;
-  $('tcount').textContent=all.length.toLocaleString('it-IT')+' offerte di '+d.fornitori.toLocaleString('it-IT')+' fornitori:';
+  $('tcount').textContent=all.length.toLocaleString('it-IT')+' offerte di '+d.fornitori.toLocaleString('it-IT')+' fornitori';
   var s=S.s.trim().toLowerCase();
   var list=all.filter(function(x){
     if(S.f!=='tutte'&&x.o.t!==S.f)return false;
