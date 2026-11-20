@@ -103,7 +103,7 @@ page('psv','gas','Prezzo gas PSV: valore e andamento mensile | comparaofferteluc
 </section>
 <section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Andamento mensile</h2><div id="ch1"></div>
 <div class="scroll"><table class="itab" id="tab"></table></div>
-<p class="src">Media mensile del PSV usata da ARERA per le offerte. Un valore giornaliero ufficiale e gratuito non esiste.</p></section>''',
+<p class="src">Media mensile del PSV usata da ARERA per le offerte.</p></section>''',
 '''fetch('/data/indici.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){
 var se=d.serie,n=se.length,l=se[n-1],p=se[n-2];
 $('l1').textContent='PSV '+fd(l.m);$('v1').textContent=num(l.psv,4);var dv=(l.psv-p.psv)/p.psv*100;$('s1').innerHTML='€/Smc <span class="dl '+(dv>0?'up':'down')+'">'+(dv>0?'▲':'▼')+' '+Math.abs(dv).toFixed(0)+'%</span>';
