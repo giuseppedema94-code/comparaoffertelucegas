@@ -240,7 +240,7 @@ function render(){
   $('bk').textContent='N°1 oggi su '+all.length.toLocaleString('it-IT')+' offerte';
   $('bt').textContent=best.o.t==='f'?'Prezzo fisso':'Prezzo variabile';
   $('bs').textContent=best.o.v;$('bn').textContent=best.o.n;$('bm').textContent=eur(best.m,2);
-  $('bsub').innerHTML='<span>Prezzo <strong>'+num(best.o.p,4)+' €/'+cfg.u+'</strong></span><span>Quota fissa <strong>'+eur(best.o.fx/12,2)+'/mese</strong></span>'+(best.o.ds?'<span>Sconto <strong>'+eur(best.o.ds,0)+'/anno</strong>'+(best.o.dsT?' ('+esc(best.o.dsT)+')':'')+'</span>':'')+(best.o.sc?'<span>Offerta valida fino al <strong>'+fd(best.o.sc)+'</strong></span>':'');
+  $('bsub').innerHTML='<span>Prezzo <strong>'+num(best.o.pd!=null?best.o.pd:best.o.p,4)+' €/'+cfg.u+'</strong></span><span>Quota fissa <strong>'+eur(best.o.fx/12,2)+'/mese</strong></span>'+(best.o.ds?'<span>Sconto <strong>'+eur(best.o.ds,0)+'/anno</strong>'+(best.o.dsT?' ('+esc(best.o.dsT)+')':'')+'</span>':'')+(best.o.sc?'<span>Offerta valida fino al <strong>'+fd(best.o.sc)+'</strong></span>':'');
   $('bsave').hidden=false;$('bsave').textContent=eur(med.m-best.m,2)+" al mese in meno rispetto all'offerta mediana";
   var bu=safeUrl(best.o.u);$('blink').hidden=!bu;if(bu)$('blink').href=bu;
   $('tcount').textContent=all.length.toLocaleString('it-IT')+' offerte di '+d.fornitori.toLocaleString('it-IT')+' fornitori';
@@ -252,7 +252,7 @@ function render(){
     return true;
   });
   var top=Infinity,max=0;list.forEach(function(x){if(x.m<top)top=x.m;if(x.m>max)max=x.m});
-  var key={m:function(x){return x.m},p:function(x){return x.o.p},fx:function(x){return x.o.fx}}[S.k];
+  var key={m:function(x){return x.m},p:function(x){return x.o.pd!=null?x.o.pd:x.o.p},fx:function(x){return x.o.fx}}[S.k];
   if(S.k!=='m'||S.dir!==1)list=list.slice().sort(function(a,b){return (key(a)-key(b))*S.dir||a.m-b.m});
   var th=function(k,label){var on=S.k===k,ar=on?(S.dir===1?'▲':'▼'):'↕';return '<button type="button" class="sort'+(on?' on':'')+'" data-k="'+k+'" aria-sort="'+(on?(S.dir===1?'ascending':'descending'):'none')+'" title="Ordina">'+label+' <span aria-hidden="true">'+ar+'</span></button>'};
   var h=['<div class="row head" role="row"><span>#</span><span>Fornitore e offerta</span><span class="num">'+th('p','€/'+cfg.u)+'</span><span class="num">'+th('fx','Quota fissa €/mese')+'</span><span class="num">Sconto</span><span class="num">Scadenza offerta</span><span class="num">'+th('m','Spesa al mese')+'</span></div>'];
@@ -262,13 +262,13 @@ function render(){
     var pen=o.pen===true?'<span class="yes" title="'+esc(o.penT||'Oneri di recesso anticipato')+'">Sì</span>':(o.pen===false?'<span class="no">No</span>':'<span class="unk" title="In verifica">—</span>');
     var cl=o.cl==='si'?'<span class="no" title="'+esc(o.clT||'')+'">Sì</span>':(o.cl==='no'?'<span class="yes" title="'+esc(o.clT||'')+'">No</span>':'<span class="unk" title="Non ancora verificato">—</span>');
     var w=Math.max(4,Math.min(100,x.m/max*100));
-    h.push('<div class="row'+(first?' first':'')+'" role="row"><span class="pos">'+(i+1)+'</span><div class="who"><div class="v">'+esc(o.v)+'</div><div class="o">'+tags+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+(o.ok===false?' · stima parziale':'')+'</div>'+(o.nt?'<div class="nt">'+esc(o.nt)+'</div>':'')+'</div><span class="num">'+num(o.p,4)+'</span><span class="num">'+num(o.fx/12,2)+'</span><span class="num">'+(o.ds?'<span class="dsc">−'+eur(o.ds,0)+'/anno</span><div class="dd">'+esc(o.dsT||'durata da verificare')+'</div>':'<span class="unk">—</span>')+'</span><span class="num sc">'+(o.sc?fd(o.sc):'—')+'</span><div class="cost"><div class="m">'+eur(x.m,2)+'</div><div class="d">'+(first?'la più conveniente':'+'+eur(x.m-top,2))+'</div>'+(o.ds?'<div class="dd">senza sconto '+eur(x.m+x.dm,2)+'</div>':'')+'<div class="bar"><i style="width:'+w.toFixed(1)+'%;background:'+(first?'#CA8A04':(o.t==='f'?'#14161A':'#60A5FA'))+'"></i></div></div></div>');
+    h.push('<div class="row'+(first?' first':'')+'" role="row"><span class="pos">'+(i+1)+'</span><div class="who"><div class="v">'+esc(o.v)+'</div><div class="o">'+tags+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+(o.ok===false?' · stima parziale':'')+'</div>'+(o.nt?'<div class="nt">'+esc(o.nt)+'</div>':'')+'</div><span class="num">'+num(o.pd!=null?o.pd:o.p,4)+'</span><span class="num">'+num(o.fx/12,2)+'</span><span class="num">'+(o.ds?'<span class="dsc">−'+eur(o.ds,0)+'/anno</span><div class="dd">'+esc(o.dsT||'durata da verificare')+'</div>':'<span class="unk">—</span>')+'</span><span class="num sc">'+(o.sc?fd(o.sc):'—')+'</span><div class="cost"><div class="m">'+eur(x.m,2)+'</div><div class="d">'+(first?'la più conveniente':'+'+eur(x.m-top,2))+'</div>'+(o.ds?'<div class="dd">senza sconto '+eur(x.m+x.dm,2)+'</div>':'')+'<div class="bar"><i style="width:'+w.toFixed(1)+'%;background:'+(first?'#CA8A04':(o.t==='f'?'#14161A':'#60A5FA'))+'"></i></div></div></div>');
   });
   if(!list.length)h.push('<p class="note">Nessuna offerta con questi filtri.</p>');
   $('tbl').innerHTML=h.join('');
   $('more').hidden=list.length<=S.lim;$('more').textContent='Mostra altre offerte ('+(list.length-S.lim)+')';
   var dd=fd(d.data_open_data||d.rilevazione);
-  $('note').textContent='Spesa al mese stimata per '+S.q[S.c]+' '+cfg.u+' al mese, con trasporto, oneri di sistema, accise e IVA (cliente residente'+(S.c==='luce'?', 3 kW':'')+'). Le variabili usano la previsione ARERA dell\'indice ('+(S.c==='luce'?'PUN':'PSV')+') per i prossimi 12 mesi. Prezzo e quota fissa sono le componenti del venditore; la spesa include gli sconti senza condizioni, indicati a parte con la spesa senza sconto. "Scadenza offerta" è l\'ultimo giorno per sottoscriverla a queste condizioni. Verifica sempre le condizioni sul sito del fornitore prima di firmare.';
+  $('note').textContent='Spesa al mese stimata per '+S.q[S.c]+' '+cfg.u+' al mese, con trasporto, oneri di sistema, accise e IVA (cliente residente'+(S.c==='luce'?', 3 kW':'')+'). Le variabili usano la previsione ARERA dell\'indice ('+(S.c==='luce'?'PUN':'PSV')+') per i prossimi 12 mesi. Prezzo e quota fissa sono le componenti del venditore (per la luce il prezzo è senza dispacciamento, 0,0168 €/kWh uguale per tutti, che resta comunque nella spesa); la spesa include gli sconti senza condizioni, indicati a parte con la spesa senza sconto. "Scadenza offerta" è l\'ultimo giorno per sottoscriverla a queste condizioni. Verifica sempre le condizioni sul sito del fornitore prima di firmare.';
   $('fdate').textContent='Prezzi rilevati il '+dd+' dalle schede delle offerte dei venditori.';
 }
 
