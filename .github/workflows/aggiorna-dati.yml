@@ -1,0 +1,38 @@
+name: Aggiorna offerte
+
+on:
+  schedule:
+    # 00:00 e 12:00 ora italiana (UTC+1 d'inverno, UTC+2 d'estate)
+    - cron: "0 23 * * *"
+    - cron: "0 11 * * *"
+    - cron: "0 22 * * *"
+    - cron: "0 10 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aggiorna-dati
+  cancel-in-progress: false
+
+jobs:
+  aggiorna:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Dipendenze
+        run: pip install "git+https://github.com/marcopa84/PortaleOfferteEnergiaMCP"
+      - name: Scarica open data e genera JSON
+        run: python scripts/aggiorna.py
+      - name: Pubblica
+        run: |
+          git config user.name "aggiornamento-automatico"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/luce.json data/gas.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Offerte aggiornate $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push
