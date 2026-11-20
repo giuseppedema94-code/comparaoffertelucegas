@@ -222,7 +222,7 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 <button type="button" class="chip" data-f="f" aria-pressed="false">Prezzo fisso</button>
 <button type="button" class="chip" data-f="v" aria-pressed="false">Variabile</button>
 </div>
-<label class="msort">Ordina per <select id="msort"><option value="m">Spesa al mese</option><option value="p">Prezzo €/kWh</option><option value="fx">Quota fissa</option></select></label>
+<label class="msort">Ordina per <select id="msort"><option value="m">Spesa al mese</option><option value="p">Energia €/kWh</option><option value="fx">Quota fissa</option></select></label>
 <label><span class="sr">Cerca fornitore o offerta</span><input type="search" class="search" id="search" placeholder="Cerca fornitore o offerta"></label>
 </div>
 </div>
@@ -280,7 +280,7 @@ function render(){
   document.querySelectorAll('.seg button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.c===S.c)});
   document.querySelectorAll('[data-f]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.f===S.f)});
   
-  $('msort').value=S.k;$('msort').options[1].text='Prezzo €/'+cfg.u;
+  $('msort').value=S.k;$('msort').options[1].text=(S.c==='luce'?'Energia':'Gas')+' €/'+cfg.u;
   var d=S.data[S.c],all=compute();
   if(!all){$('tbl').innerHTML='';return}
   var valid=all.filter(function(x){return x.o.ok!==false});
@@ -288,7 +288,7 @@ function render(){
   $('bk').textContent='N°1 oggi su '+all.length.toLocaleString('it-IT')+' offerte';
   $('bt').textContent=best.o.t==='f'?'Prezzo fisso':'Prezzo variabile';
   $('bs').innerHTML=logo(best.o)+'<span>'+esc(best.o.v)+'</span>';$('bn').textContent=best.o.n;$('bm').textContent=eur(best.m,2);
-  $('bsub').innerHTML='<span>Prezzo <strong>'+num(best.o.pd!=null?best.o.pd:best.o.p,4)+' €/'+cfg.u+'</strong></span><span>Quota fissa <strong>'+eur(best.o.fx/12,2)+'/mese</strong></span>'+(best.o.ds?'<span>Sconto <strong>'+eur(best.o.ds,0)+'/anno</strong>'+(best.o.dsT?' ('+esc(best.o.dsT)+')':'')+'</span>':'')+(best.o.sc?'<span>Offerta valida fino al <strong>'+fd(best.o.sc)+'</strong></span>':'');
+  $('bsub').innerHTML='<span>'+(S.c==='luce'?'Energia':'Gas')+' <strong>'+num(best.o.pd!=null?best.o.pd:best.o.p,4)+' €/'+cfg.u+'</strong></span><span>Quota fissa <strong>'+eur(best.o.fx/12,2)+'/mese</strong></span>'+(best.o.ds?'<span>Sconto <strong>'+eur(best.o.ds,0)+'/anno</strong>'+(best.o.dsT?' ('+esc(best.o.dsT)+')':'')+'</span>':'')+(best.o.sc?'<span>Offerta valida fino al <strong>'+fd(best.o.sc)+'</strong></span>':'');
   $('bsave').hidden=false;$('bsave').textContent=eur(med.m-best.m,2)+"/mese in meno della mediana";
   var bu=safeUrl(best.o.u);$('blink').hidden=!bu;if(bu)$('blink').href=bu;
   $('tcount').textContent=all.length.toLocaleString('it-IT')+' offerte, '+d.fornitori.toLocaleString('it-IT')+' fornitori';
@@ -303,7 +303,7 @@ function render(){
   var key={m:function(x){return x.m},p:function(x){return x.o.pd!=null?x.o.pd:x.o.p},fx:function(x){return x.o.fx}}[S.k];
   if(S.k!=='m'||S.dir!==1)list=list.slice().sort(function(a,b){return (key(a)-key(b))*S.dir||a.m-b.m});
   var th=function(k,label){var on=S.k===k,ar=on?(S.dir===1?'▲':'▼'):'↕';return '<button type="button" class="sort'+(on?' on':'')+'" data-k="'+k+'" aria-sort="'+(on?(S.dir===1?'ascending':'descending'):'none')+'" title="Ordina">'+label+' <span aria-hidden="true">'+ar+'</span></button>'};
-  var h=['<div class="row head" role="row"><span>#</span><span>Fornitore e offerta</span><span class="num">'+th('p','€/'+cfg.u)+'</span><span class="num">'+th('fx','Quota fissa €/mese')+'</span><span class="num">Sconto</span><span class="num">Scadenza offerta</span><span class="num">'+th('m','Spesa al mese')+'</span></div>'];
+  var h=['<div class="row head" role="row"><span>#</span><span>Fornitore e offerta</span><span class="num">'+th('p',(S.c==='luce'?'Energia':'Gas')+' €/'+cfg.u)+'</span><span class="num">'+th('fx','Quota fissa €/mese')+'</span><span class="num">Sconto</span><span class="num">Scadenza offerta</span><span class="num">'+th('m','Spesa al mese')+'</span></div>'];
   list.slice(0,S.lim).forEach(function(x,i){
     var o=x.o,u=safeUrl(o.u),first=x.m===top;
     var tags='<span class="tag '+(o.t==='f'?'tf':'tv')+'">'+(o.t==='f'?'fisso':'variabile')+'</span>'+(o.pl?'<span class="tag tf">PLACET</span>':'')+(o.z?'<span class="tag tz" title="'+esc(o.z)+'">solo alcune zone</span>':'');
