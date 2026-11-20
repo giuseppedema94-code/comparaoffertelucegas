@@ -1,0 +1,22 @@
+name: Controllo settimanale
+# Nessuna AI: script Python. Se trova problemi il job fallisce e GitHub manda una mail al proprietario.
+on:
+  schedule:
+    - cron: "17 6 * * 1"   # lunedì 07:17 ora italiana
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  controllo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Controlla sito, dati e relay
+        run: python scripts/controllo.py
+        env:
+          RELAY_URL: ${{ secrets.RELAY_URL }}
+          RELAY_KEY: ${{ secrets.RELAY_KEY }}

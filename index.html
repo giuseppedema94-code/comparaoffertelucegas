@@ -2,6 +2,8 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-RtVB6vN5j1xDDi8m6+RmfWPt1MyumOf2YJwIYmmLEU4='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://icons.duckduckgo.com; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Confronto offerte luce e gas oggi, dalla più conveniente | comparaoffertelucegas</title>
 <meta name="description" content="Le offerte luce e gas del mercato libero, dalla più conveniente, con spesa al mese, prezzo, quota fissa e scadenza. Nessuna registrazione, nessuna telefonata.">
@@ -279,7 +281,8 @@ var eur=function(n,d){return n.toLocaleString('it-IT',{minimumFractionDigits:d,m
 var num=function(n,d){return n.toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d})};
 var fd=function(s){if(!s)return '';var p=String(s).slice(0,10).split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:s};
 var dom=function(u){u=safeUrl(u);if(!u)return null;var h=u.replace(/^https?:\/\//,'').split('/')[0].toLowerCase().split('.');return h.slice(-2).join('.')};
-var logo=function(o){var d=dom(o.u),ini=esc((o.v||'?').trim().charAt(0).toUpperCase());return '<span class="lg" aria-hidden="true">'+ini+(d?'<img src="https://icons.duckduckgo.com/ip3/'+d+'.ico" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">':'')+'</span>'};
+document.addEventListener('error',function(e){var t=e.target;if(t&&t.tagName==='IMG'&&t.closest('.lg'))t.remove()},true);
+var logo=function(o){var d=dom(o.u),ini=esc((o.v||'?').trim().charAt(0).toUpperCase());return '<span class="lg" aria-hidden="true">'+ini+(d?'<img src="https://icons.duckduckgo.com/ip3/'+d+'.ico" alt="" loading="lazy" referrerpolicy="no-referrer">':'')+'</span>'};
 var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
 var safeUrl=function(u){if(!u)return null;u=String(u).trim();if(!/^https?:\/\//i.test(u))u='https://'+u;return /^https?:\/\/[^\s"'<>]+$/i.test(u)?u:null};
 
