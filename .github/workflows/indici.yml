@@ -1,0 +1,38 @@
+name: Aggiorna prezzo elettricità
+
+on:
+  schedule:
+    # 00:00, 12:00 e 14:00 ora italiana (inverno UTC+1, estate UTC+2)
+    - cron: "0 23 * * *"
+    - cron: "0 11 * * *"
+    - cron: "0 13 * * *"
+    - cron: "0 22 * * *"
+    - cron: "0 10 * * *"
+    - cron: "0 12 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aggiorna-dati
+  cancel-in-progress: false
+
+jobs:
+  elettricita:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/elettricita.py
+      - name: Pubblica
+        run: |
+          git config user.name "aggiornamento-automatico"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/elettricita.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Prezzo elettricità $(date -u +%Y-%m-%dT%H:%MZ)"
+          git pull --rebase origin main
+          git push origin HEAD:main

@@ -205,8 +205,8 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 
 <main class="wrap">
 <section class="idx" aria-label="Indici">
-<a class="ix" href="#andamento"><span class="ixl">PUN <span id="pm"></span></span><span class="ixv"><strong id="pv">—</strong> €/kWh <span class="dl" id="pd"></span></span></a>
-<a class="ix" href="#andamento"><span class="ixl">PSV <span id="gm"></span></span><span class="ixv"><strong id="gv">—</strong> €/Smc <span class="dl" id="gd"></span></span></a>
+<a class="ix" href="/prezzo-energia-oggi/"><span class="ixl">Energia <span id="pm"></span></span><span class="ixv"><strong id="pv">—</strong> €/kWh <span class="dl" id="pd"></span></span></a>
+<a class="ix" href="/psv/"><span class="ixl">PSV <span id="gm"></span></span><span class="ixv"><strong id="gv">—</strong> €/Smc <span class="dl" id="gd"></span></span></a>
 </section>
 <section class="hero">
 <div class="card ask">
@@ -369,9 +369,8 @@ var ml=function(m){var p=m.split('-');return MESI[+p[1]-1]+' '+p[0]};
 function renderIdx(){
   if(!IDX)return;var se=IDX.serie,n=se.length,l=se[n-1],p=se[n-2];
   var dd=function(a,b){var v=(a-b)/b*100;return '<span class="'+(v>0?'up':'down')+'">'+(v>0?'▲':'▼')+' '+Math.abs(v).toFixed(0)+'%</span>'};
-  $('pm').textContent=ml(l.m);$('gm').textContent=ml(l.m);
-  $('pv').textContent=num(l.pun,4);$('gv').textContent=num(l.psv,4);
-  $('pd').innerHTML=dd(l.pun,p.pun);$('gd').innerHTML=dd(l.psv,p.psv);
+  $('gm').textContent=ml(l.m);$('gv').textContent=num(l.psv,4);$('gd').innerHTML=dd(l.psv,p.psv);
+  if(!EL){$('pm').textContent=ml(l.m);$('pv').textContent=num(l.pun,4);$('pd').innerHTML=dd(l.pun,p.pun)}
   var k=S.c==='luce'?'pun':'psv',u=S.c==='luce'?'€/kWh':'€/Smc',W=800,H=220,P=36;
   var vals=se.map(function(x){return x[k]}),mx=Math.max.apply(null,vals)*1.08,mn=0;
   var X=function(i){return P+i*(W-P-10)/(n-1)},Y=function(v){return H-24-(v-mn)/(mx-mn)*(H-40)};
@@ -383,6 +382,7 @@ function renderIdx(){
   $('itab').innerHTML='<thead><tr><th>Mese</th><th>PUN €/kWh</th><th>PSV €/Smc</th></tr></thead><tbody>'+rows+'</tbody>';
   $('inote').textContent='Media mensile. Fonte: ARERA, Portale Offerte.';
 }
+var EL=null;fetch('data/elettricita.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){var se=d.serie,o=new Date().toLocaleDateString('sv-SE',{timeZone:'Europe/Rome'}),i=se.findIndex(function(x){return x.d===o});if(i<1)return;EL=se[i];var p=se[i-1],v=(EL.v-p.v)/p.v*100;$('pm').textContent='oggi';$('pv').textContent=num(EL.v,4);$('pd').innerHTML='<span class="'+(v>0?'up':'down')+'">'+(v>0?'▲':'▼')+' '+Math.abs(v).toFixed(0)+'%</span>'}).catch(function(){});
 fetch('data/indici.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){IDX=d;renderIdx()}).catch(function(){});
 setC('luce');load('gas');
 })();
