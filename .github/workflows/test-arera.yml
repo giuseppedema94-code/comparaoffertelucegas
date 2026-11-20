@@ -1,0 +1,15 @@
+name: Test accesso ARERA
+on: workflow_dispatch
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          U=https://www.ilportaleofferte.it/portaleOfferte/it/open-data.page
+          F=https://www.ilportaleofferte.it/portaleOfferte/resources/opendata/csv/parametri/2026_11/PO_Parametri_E_20261120.csv
+          echo "curl default: $(curl -s -o /dev/null -w '%{http_code}' $U)"
+          echo "UA dichiarato: $(curl -s -o /dev/null -w '%{http_code}' -A 'comparaoffertelucegas-bot/1.0 (+https://comparaoffertelucegas.it)' $U)"
+          echo "file default: $(curl -s -o /dev/null -w '%{http_code}' $F)"
+          echo "file UA: $(curl -s -o /dev/null -w '%{http_code}' -A 'comparaoffertelucegas-bot/1.0 (+https://comparaoffertelucegas.it)' $F)"
+          echo "arera.it: $(curl -s -o /dev/null -w '%{http_code}' https://www.arera.it/area-operatori/prezzi-e-tariffe/valore-cmemm-vulnerabili)"
+          curl -s -A 'comparaoffertelucegas-bot/1.0' $U | head -c 400
