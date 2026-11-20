@@ -2,7 +2,7 @@
 <html lang="it" data-c="luce">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-fXVjF19iPVDTobZYgjDBO0x2PmLhUiTggFTedsEcIgo='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://icons.duckduckgo.com; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-0tI12XiI+PIshoLFdrsRLRBEtHRxNZq9t6AoSvIuLt0='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://icons.duckduckgo.com; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PUN oggi: prezzo energia elettrica (zona Nord) | comparaoffertelucegas</title>
@@ -153,6 +153,7 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 .itab th:first-child,.itab td:first-child{text-align:left}
 .itab td{text-align:right;padding:7px 8px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
 :root:not([data-c=gas]) .ix-gas,:root[data-c=gas] .ix-luce{display:none}
+.hrow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 8px;flex-wrap:wrap}.seg.sm button{padding:7px 14px;font-size:14px}
 </style>
 <style>
 .pg{padding:28px 0 64px;display:flex;flex-direction:column;gap:18px}
@@ -178,7 +179,7 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 <div class="card"><div class="l" id="l3">Media del mese</div><div class="v" id="v3">—</div><div class="s">€/kWh</div></div>
 </section>
 <section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Oggi ora per ora</h2><div id="ch0"></div></section>
-<section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Ultimi 120 giorni</h2><div id="ch1"></div>
+<section class="card"><div class="hrow"><h2 class="h" id="t1" style="margin:0;font-size:22px">Ultimi 120 giorni</h2><div class="seg sm" role="group" aria-label="Periodo"><button type="button" data-v="g" aria-pressed="true">Giorni</button><button type="button" data-v="m" aria-pressed="false">Mesi</button></div></div><div id="ch1"></div>
 <div class="scroll"><table class="itab" id="tab"></table></div>
 <p class="src">Prezzo del mercato del giorno prima, zona Nord, riferimento per il PUN. Prezzo all'ingrosso, non la tariffa in bolletta.</p></section>
 </main>
@@ -206,8 +207,19 @@ $('l1').textContent=(t0?'Oggi, ':'Ultimo dato, ')+fd(o.d);$('v1').textContent=nu
 if(dom){$('l2').textContent='Domani, '+fd(dom.d);$('v2').textContent=num(dom.v,4);var dv=(dom.v-o.v)/o.v*100;$('s2').innerHTML='€/kWh <span class="dl '+(dv>0?'up':'down')+'">'+(dv>0?'▲':'▼')+' '+Math.abs(dv).toFixed(0)+'%</span>'}else{$('v2').textContent='dalle 13';}
 var cm=oggi.slice(0,7),l30=se.filter(function(x){return x.d.slice(0,7)===cm&&x.d<=oggi});if(!l30.length)l30=se.filter(function(x){return x.d<=o.d}).slice(-30);$('l3').textContent='Media '+fd(cm);$('v3').textContent=num(l30.reduce(function(a,x){return a+x.v},0)/l30.length,4);
 var h=d.orario[o.d]||d.orario[oggi]||[];if(!h.length)$('ch0').parentNode.style.display='none';chart($('ch0'),h,h.map(function(_,i){return i+':00'}));
-var past=se.filter(function(x){return x.d<=o.d});chart($('ch1'),past.map(function(x){return x.v}),past.map(function(x){return fd(x.d)}));
-$('tab').innerHTML='<thead><tr><th>Giorno</th><th>Media €/kWh</th><th>Min</th><th>Max</th></tr></thead><tbody>'+se.slice().reverse().slice(0,30).map(function(x){return '<tr><td>'+fd(x.d)+(x.d>oggi?' (domani)':'')+'</td><td>'+num(x.v,4)+'</td><td>'+num(x.min,4)+'</td><td>'+num(x.max,4)+'</td></tr>'}).join('')+'</tbody>';
+var past=se.filter(function(x){return x.d<=o.d});
+var giorni=function(){$('t1').textContent='Ultimi 120 giorni';chart($('ch1'),past.map(function(x){return x.v}),past.map(function(x){return fd(x.d)}));
+$('tab').innerHTML='<thead><tr><th>Giorno</th><th>Media €/kWh</th><th>Min</th><th>Max</th></tr></thead><tbody>'+se.slice().reverse().slice(0,30).map(function(x){return '<tr><td>'+fd(x.d)+(x.d>oggi?' (domani)':'')+'</td><td>'+num(x.v,4)+'</td><td>'+num(x.min,4)+'</td><td>'+num(x.max,4)+'</td></tr>'}).join('')+'</tbody>'};
+var MS=null;
+var mesi=function(){$('t1').textContent='Media mensile';if(!MS)return;
+var m=MS.filter(function(x){return x.pun!=null});if(m.length&&m[m.length-1].m<cm&&l30.length&&l30[0].d.slice(0,7)===cm)m=m.concat([{m:cm,pun:l30.reduce(function(a,x){return a+x.v},0)/l30.length,parz:1}]);
+chart($('ch1'),m.map(function(x){return x.pun}),m.map(function(x){return fd(x.m)}));
+var r=m.slice().reverse();$('tab').innerHTML='<thead><tr><th>Mese</th><th>Media €/kWh</th><th>Rispetto al mese prima</th></tr></thead><tbody>'+r.map(function(x,i){var pr=r[i+1],dv=pr?(x.pun-pr.pun)/pr.pun*100:null;return '<tr><td>'+fd(x.m)+(x.parz?' (finora)':'')+'</td><td>'+num(x.pun,4)+'</td><td>'+(dv==null?'—':'<span class="dl '+(dv>0?'up':'down')+'">'+(dv>0?'▲':'▼')+' '+Math.abs(dv).toFixed(0)+'%</span>')+'</td></tr>'}).join('')+'</tbody>'};
+var vista='g',btns=document.querySelectorAll('.seg.sm button');
+var mostra=function(v){vista=v;btns.forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-v')===v)});v==='m'?mesi():giorni()};
+btns.forEach(function(b){b.addEventListener('click',function(){mostra(b.getAttribute('data-v'))})});
+fetch('/data/indici.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(j){MS=j.serie;if(vista==='m')mesi()});
+giorni();
 $('fsrc').textContent='Dati: Energy-Charts (Fraunhofer ISE), Bundesnetzagentur | SMARD.de, CC BY 4.0.';
 });
 })();
