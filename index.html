@@ -203,14 +203,14 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 <div style="display:flex;align-items:baseline;gap:8px"><span class="big h" id="bm"></span><span style="color:#C9CCD1">al mese</span></div>
 <div class="sub" id="bsub"></div>
 <div class="save" id="bsave" hidden></div>
-<a id="blink" href="#" target="_blank" rel="nofollow noopener" hidden>Vai all'offerta sul sito del fornitore</a>
+<a id="blink" href="#" target="_blank" rel="nofollow noopener" hidden>Vai all'offerta</a>
 </div>
 </section>
 
 <section class="trust" aria-label="Come funziona">
 <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--ok)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><strong id="tcount">Tutte le offerte</strong>&nbsp;sul mercato libero per le famiglie</span>
-<span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--ok)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Ordine solo per costo: nessuno paga per stare in cima</span>
-<span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--ok)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Nessuna registrazione, nessuna telefonata</span>
+<span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--ok)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Ordinate solo per prezzo</span>
+<span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--ok)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Niente registrazione</span>
 </section>
 
 <section class="card list" aria-labelledby="clh">
@@ -231,24 +231,20 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 <p class="note" id="note"></p>
 </section>
 
-<section class="faq" aria-label="Domande frequenti">
-<div class="card"><h3 class="h">Da dove vengono le offerte?</h3><p>Dalle schede ufficiali delle offerte dei venditori, con le regole di stima del Portale Offerte ARERA. Stiamo collegando il sito agli open data del Portale, che contengono tutte le offerte per le famiglie e si aggiornano ogni giorno.</p></div>
-<div class="card"><h3 class="h">Cosa comprende il costo mostrato?</h3><p>È una stima della bolletta intera: energia o gas, quote fisse del venditore, trasporto, oneri di sistema, accise e IVA, per un cliente residente. Le offerte variabili usano la previsione dell'indice (PUN o PSV) per i prossimi 12 mesi.</p></div>
-</section>
 </main>
 
 <footer>
 <div class="wrap">
 <span id="fdate"></span>
-<span>Stime indicative: non sostituiscono le condizioni contrattuali dell'offerta. I loghi appartengono ai rispettivi titolari e servono solo a identificare il fornitore.</span>
+<span>Stime indicative. Loghi dei rispettivi titolari.</span>
 </div>
 </footer>
 
 <script>
 (function(){
 var S={c:'luce',q:{luce:225,gas:90},f:'tutte',np:false,s:'',lim:50,data:{},k:'m',dir:1};
-var CFG={luce:{u:'kWh',step:10,max:3000,q:'Quanti kWh consumi al mese?',h:'Lo trovi in bolletta alla voce "consumo del periodo". Una cifra a occhio va bene.'},
-gas:{u:'Smc',step:5,max:1000,q:'Quanti Smc di gas consumi al mese?',h:'Lo trovi in bolletta alla voce "consumo del periodo". In inverno è più alto: usa una media dell\'anno.'}};
+var CFG={luce:{u:'kWh',step:10,max:3000,q:'Quanti kWh consumi al mese?',h:'Lo trovi in bolletta: consumo del periodo.'},
+gas:{u:'Smc',step:5,max:1000,q:'Quanti Smc di gas consumi al mese?',h:'Media dell\'anno, dalla bolletta.'}};
 var $=function(id){return document.getElementById(id)};
 var eur=function(n,d){return n.toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d})+' €'};
 var num=function(n,d){return n.toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d})};
@@ -293,7 +289,7 @@ function render(){
   $('bt').textContent=best.o.t==='f'?'Prezzo fisso':'Prezzo variabile';
   $('bs').innerHTML=logo(best.o)+'<span>'+esc(best.o.v)+'</span>';$('bn').textContent=best.o.n;$('bm').textContent=eur(best.m,2);
   $('bsub').innerHTML='<span>Prezzo <strong>'+num(best.o.pd!=null?best.o.pd:best.o.p,4)+' €/'+cfg.u+'</strong></span><span>Quota fissa <strong>'+eur(best.o.fx/12,2)+'/mese</strong></span>'+(best.o.ds?'<span>Sconto <strong>'+eur(best.o.ds,0)+'/anno</strong>'+(best.o.dsT?' ('+esc(best.o.dsT)+')':'')+'</span>':'')+(best.o.sc?'<span>Offerta valida fino al <strong>'+fd(best.o.sc)+'</strong></span>':'');
-  $('bsave').hidden=false;$('bsave').textContent=eur(med.m-best.m,2)+" al mese in meno rispetto all'offerta mediana";
+  $('bsave').hidden=false;$('bsave').textContent=eur(med.m-best.m,2)+"/mese in meno della mediana";
   var bu=safeUrl(best.o.u);$('blink').hidden=!bu;if(bu)$('blink').href=bu;
   $('tcount').textContent=all.length.toLocaleString('it-IT')+' offerte di '+d.fornitori.toLocaleString('it-IT')+' fornitori';
   var s=S.s.trim().toLowerCase();
@@ -314,14 +310,14 @@ function render(){
     var pen=o.pen===true?'<span class="yes" title="'+esc(o.penT||'Oneri di recesso anticipato')+'">Sì</span>':(o.pen===false?'<span class="no">No</span>':'<span class="unk" title="In verifica">—</span>');
     var cl=o.cl==='si'?'<span class="no" title="'+esc(o.clT||'')+'">Sì</span>':(o.cl==='no'?'<span class="yes" title="'+esc(o.clT||'')+'">No</span>':'<span class="unk" title="Non ancora verificato">—</span>');
     var w=Math.max(4,Math.min(100,x.m/max*100));
-    h.push('<div class="row'+(first?' first':'')+'" role="row"><span class="pos">'+(i+1)+'</span><div class="who"><div class="v">'+logo(o)+'<span>'+esc(o.v)+'</span></div><div class="o">'+tags+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+(o.ok===false?' · stima parziale':'')+'</div>'+(o.nt?'<div class="nt">'+esc(o.nt)+'</div>':'')+'</div><span class="num c-p" data-l="€/'+cfg.u+'">'+num(o.pd!=null?o.pd:o.p,4)+'</span><span class="num c-fx" data-l="Q. fissa">'+num(o.fx/12,2)+' €</span><span class="num c-ds" data-l="Sconto">'+(o.ds?'<span class="dsc">−'+eur(o.ds,0)+'<span class="dlg">/anno</span></span><div class="dd"><span class="dsh">all\'anno, </span>'+esc(o.dsT||'durata da verificare')+'</div>':'<span class="unk">—</span>')+'</span><span class="num sc c-sc" data-l="Scadenza">'+(o.sc?'<span class="dlg">'+fd(o.sc)+'</span><span class="dsh">'+fd(o.sc).slice(0,6)+fd(o.sc).slice(8)+'</span>':'—')+'</span><div class="cost"><div class="m">'+eur(x.m,2)+'</div><div class="d">'+(first?'la più conveniente':'+'+eur(x.m-top,2))+'</div>'+(o.ds?'<div class="dd">senza sconto '+eur(x.m+x.dm,2)+'</div>':'')+'<div class="bar"><i style="width:'+w.toFixed(1)+'%;background:'+(first?'var(--accbar)':(o.t==='f'?'var(--barf)':'#60A5FA'))+'"></i></div></div></div>');
+    h.push('<div class="row'+(first?' first':'')+'" role="row"><span class="pos">'+(i+1)+'</span><div class="who"><div class="v">'+logo(o)+'<span>'+esc(o.v)+'</span></div><div class="o">'+tags+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+(o.ok===false?' · stima parziale':'')+'</div>'+(o.nt?'<div class="nt">'+esc(o.nt)+'</div>':'')+'</div><span class="num c-p" data-l="€/'+cfg.u+'">'+num(o.pd!=null?o.pd:o.p,4)+'</span><span class="num c-fx" data-l="Q. fissa">'+num(o.fx/12,2)+' €</span><span class="num c-ds" data-l="Sconto">'+(o.ds?'<span class="dsc">−'+eur(o.ds,0)+'<span class="dlg">/anno</span></span>'+(o.dsT?'<div class="dd">'+esc(o.dsT)+'</div>':''):'<span class="unk">—</span>')+'</span><span class="num sc c-sc" data-l="Scadenza">'+(o.sc?'<span class="dlg">'+fd(o.sc)+'</span><span class="dsh">'+fd(o.sc).slice(0,6)+fd(o.sc).slice(8)+'</span>':'—')+'</span><div class="cost"><div class="m">'+eur(x.m,2)+'</div><div class="d">'+(first?'la più conveniente':'+'+eur(x.m-top,2))+'</div>'+(o.ds?'<div class="dd">senza sconto '+eur(x.m+x.dm,2)+'</div>':'')+'<div class="bar"><i style="width:'+w.toFixed(1)+'%;background:'+(first?'var(--accbar)':(o.t==='f'?'var(--barf)':'#60A5FA'))+'"></i></div></div></div>');
   });
   if(!list.length)h.push('<p class="note">Nessuna offerta con questi filtri.</p>');
   $('tbl').innerHTML=h.join('');
   $('more').hidden=list.length<=S.lim;$('more').textContent='Mostra altre offerte ('+(list.length-S.lim)+')';
   var dd=fd(d.data_open_data||d.rilevazione);
-  $('note').textContent='Spesa al mese stimata per '+S.q[S.c]+' '+cfg.u+' al mese, con trasporto, oneri di sistema, accise e IVA (cliente residente'+(S.c==='luce'?', 3 kW':'')+'). Le variabili usano la previsione ARERA dell\'indice ('+(S.c==='luce'?'PUN':'PSV')+') per i prossimi 12 mesi. Prezzo e quota fissa sono le componenti del venditore (per la luce il prezzo è senza dispacciamento, 0,0168 €/kWh uguale per tutti, che resta comunque nella spesa); la spesa include gli sconti senza condizioni, indicati a parte con la spesa senza sconto. "Scadenza offerta" è l\'ultimo giorno per sottoscriverla a queste condizioni. Verifica sempre le condizioni sul sito del fornitore prima di firmare.';
-  $('fdate').textContent='Prezzi rilevati il '+dd+' dalle schede delle offerte dei venditori.';
+  $('note').textContent='Spesa stimata con imposte, cliente residente'+(S.c==='luce'?' 3 kW':'')+'. Variabili con previsione '+(S.c==='luce'?'PUN':'PSV')+' a 12 mesi. €/'+cfg.u+' senza dispacciamento.';
+  $('fdate').textContent='Prezzi del '+dd+'.';
 }
 
 function setC(c){S.c=c;document.documentElement.setAttribute('data-c',c);var fi=document.querySelector('link[rel=icon]');if(fi)fi.href=c==='gas'?'favicon-gas.svg':'favicon.svg';S.lim=50;load(c).then(render).catch(function(){$('bs').textContent='Dati non disponibili, riprova tra poco.'});render()}
