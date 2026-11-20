@@ -174,6 +174,19 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 .best .sup{display:flex;align-items:center;gap:10px}
 .best .lg{border-color:transparent}
 .dsh{display:none}
+
+.idx{display:flex;gap:10px;flex-wrap:wrap}
+.ix{flex:1 1 200px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px;text-decoration:none;color:var(--ink)}
+.ixl{font-size:13px;font-weight:700;letter-spacing:.04em;color:var(--mut)}
+.ixl span{font-weight:500;letter-spacing:0;text-transform:none}
+.ixv{font-size:14px;color:var(--ink2)}.ixv strong{font:700 20px 'Space Grotesk',sans-serif;color:var(--ink)}
+.dl{font-size:12px;font-weight:700;margin-left:4px}.up{color:var(--warn)}.down{color:var(--ok)}
+#andamento h2{margin:0;font-size:24px}
+#chart svg{width:100%;height:auto;display:block}
+.itab{width:100%;border-collapse:collapse;font-size:14px;margin-top:10px}
+.itab th{text-align:right;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);padding:6px 8px;border-bottom:1px solid var(--line)}
+.itab th:first-child,.itab td:first-child{text-align:left}
+.itab td{text-align:right;padding:7px 8px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body>
@@ -191,6 +204,10 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 </header>
 
 <main class="wrap">
+<section class="idx" aria-label="Indici">
+<a class="ix" href="#andamento"><span class="ixl">PUN <span id="pm"></span></span><span class="ixv"><strong id="pv">—</strong> €/kWh <span class="dl" id="pd"></span></span></a>
+<a class="ix" href="#andamento"><span class="ixl">PSV <span id="gm"></span></span><span class="ixv"><strong id="gv">—</strong> €/Smc <span class="dl" id="gd"></span></span></a>
+</section>
 <section class="hero">
 <div class="card ask">
 <h1 class="h" id="q">Quanti kWh consumi al mese?</h1>
@@ -234,6 +251,12 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 <div class="scroll"><div class="tbl" id="tbl"></div></div>
 <button type="button" class="chip more" id="more" hidden>Mostra altre offerte</button>
 <p class="note" id="note"></p>
+</section>
+<section class="card" id="andamento" aria-labelledby="anh">
+<div class="tools"><h2 class="h" id="anh">Andamento PUN e PSV</h2></div>
+<div id="chart"></div>
+<div class="scroll"><table class="itab" id="itab"></table></div>
+<p class="note" id="inote"></p>
 </section>
 
 </main>
@@ -325,7 +348,7 @@ function render(){
   $('fdate').textContent='Prezzi del '+dd+'.';
 }
 
-function setC(c){S.c=c;document.documentElement.setAttribute('data-c',c);var fi=document.querySelector('link[rel=icon]');if(fi)fi.href=c==='gas'?'favicon-gas.svg':'favicon.svg';S.lim=50;load(c).then(render).catch(function(){$('bs').textContent='Dati non disponibili, riprova tra poco.'});render()}
+function setC(c){S.c=c;setTimeout(renderIdx,0);document.documentElement.setAttribute('data-c',c);var fi=document.querySelector('link[rel=icon]');if(fi)fi.href=c==='gas'?'favicon-gas.svg':'favicon.svg';S.lim=50;load(c).then(render).catch(function(){$('bs').textContent='Dati non disponibili, riprova tra poco.'});render()}
 document.querySelectorAll('.seg button').forEach(function(b){b.addEventListener('click',function(){setC(b.dataset.c)})});
 document.querySelectorAll('[data-f]').forEach(function(b){b.addEventListener('click',function(){S.f=b.dataset.f;S.lim=50;render()})});
 
@@ -340,6 +363,27 @@ $('tbl').addEventListener('click',function(e){var b=e.target.closest('.sort');if
 function step(dir){var c=CFG[S.c];S.q[S.c]=Math.max(c.step,Math.min(c.max,S.q[S.c]+dir*c.step));render()}
 $('minus').addEventListener('click',function(){step(-1)});$('plus').addEventListener('click',function(){step(1)});
 $('cons').addEventListener('input',function(e){var v=parseInt(e.target.value.replace(/\D/g,''),10);if(v>0){S.q[S.c]=Math.min(CFG[S.c].max,v);render()}});
+
+var IDX=null,MESI=['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
+var ml=function(m){var p=m.split('-');return MESI[+p[1]-1]+' '+p[0]};
+function renderIdx(){
+  if(!IDX)return;var se=IDX.serie,n=se.length,l=se[n-1],p=se[n-2];
+  var dd=function(a,b){var v=(a-b)/b*100;return '<span class="'+(v>0?'up':'down')+'">'+(v>0?'▲':'▼')+' '+Math.abs(v).toFixed(0)+'%</span>'};
+  $('pm').textContent=ml(l.m);$('gm').textContent=ml(l.m);
+  $('pv').textContent=num(l.pun,4);$('gv').textContent=num(l.psv,4);
+  $('pd').innerHTML=dd(l.pun,p.pun);$('gd').innerHTML=dd(l.psv,p.psv);
+  var k=S.c==='luce'?'pun':'psv',u=S.c==='luce'?'€/kWh':'€/Smc',W=800,H=220,P=36;
+  var vals=se.map(function(x){return x[k]}),mx=Math.max.apply(null,vals)*1.08,mn=0;
+  var X=function(i){return P+i*(W-P-10)/(n-1)},Y=function(v){return H-24-(v-mn)/(mx-mn)*(H-40)};
+  var pts=se.map(function(x,i){return X(i).toFixed(1)+','+Y(x[k]).toFixed(1)}).join(' ');
+  var g='';for(var t=0;t<=4;t++){var v=mn+(mx-mn)*t/4,y=Y(v).toFixed(1);g+='<line x1="'+P+'" x2="'+(W-10)+'" y1="'+y+'" y2="'+y+'" stroke="var(--line)"/><text x="'+(P-6)+'" y="'+(+y+4)+'" text-anchor="end" font-size="11" fill="var(--mut)">'+num(v,2)+'</text>'}
+  var lab='';se.forEach(function(x,i){if(x.m.slice(5)==='01'||i===n-1)lab+='<text x="'+X(i).toFixed(1)+'" y="'+(H-6)+'" text-anchor="middle" font-size="11" fill="var(--mut)">'+ml(x.m)+'</text>'});
+  $('chart').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Andamento '+k.toUpperCase()+' in '+u+'">'+g+lab+'<polyline points="'+pts+'" fill="none" stroke="var(--accbg)" stroke-width="3" stroke-linejoin="round"/><circle cx="'+X(n-1).toFixed(1)+'" cy="'+Y(l[k]).toFixed(1)+'" r="5" fill="var(--accbg)"/></svg>';
+  var rows=se.slice(-12).reverse().map(function(x){return '<tr><td>'+ml(x.m)+'</td><td>'+num(x.pun,4)+'</td><td>'+num(x.psv,4)+'</td></tr>'}).join('');
+  $('itab').innerHTML='<thead><tr><th>Mese</th><th>PUN €/kWh</th><th>PSV €/Smc</th></tr></thead><tbody>'+rows+'</tbody>';
+  $('inote').textContent='Media mensile. Fonte: ARERA, Portale Offerte.';
+}
+fetch('data/indici.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){IDX=d;renderIdx()}).catch(function(){});
 setC('luce');load('gas');
 })();
 </script>
