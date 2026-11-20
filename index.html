@@ -211,7 +211,10 @@ function compute(){
   var d=S.data[S.c];if(!d)return null;
   var annuo=S.q[S.c]*12;
   var all=d.offerte.filter(function(o){return (o.min==null||annuo>=o.min)&&(o.max==null||annuo<=o.max)}).map(function(o){
-    var a=o.A!=null?o.A+o.B*annuo:o.fx+o.p*annuo;return {o:o,m:a/12};
+    var r=d.reg,a;
+    if(r&&o.s!=null){var acc=annuo<=r.accSoglia?0:r.accRif*annuo;a=(1+r.iva)*(o.fx+o.p*annuo-o.s+r.rf+r.rv*annuo+acc)}
+    else a=o.A!=null?o.A+o.B*annuo:o.fx+o.p*annuo;
+    return {o:o,m:a/12};
   });
   all.sort(function(a,b){if((a.o.ok===false)!==(b.o.ok===false))return a.o.ok===false?1:-1;return a.m-b.m});
   return all;
