@@ -174,7 +174,7 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 <section class="kpi">
 <div class="card"><div class="l" id="l1">Oggi</div><div class="v" id="v1">—</div><div class="s">€/kWh, media del giorno</div></div>
 <div class="card"><div class="l" id="l2">Domani</div><div class="v" id="v2">—</div><div class="s" id="s2">€/kWh</div></div>
-<div class="card"><div class="l">Media 30 giorni</div><div class="v" id="v3">—</div><div class="s">€/kWh</div></div>
+<div class="card"><div class="l" id="l3">Media del mese</div><div class="v" id="v3">—</div><div class="s">€/kWh</div></div>
 </section>
 <section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Oggi ora per ora</h2><div id="ch0"></div></section>
 <section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Ultimi 120 giorni</h2><div id="ch1"></div>
@@ -203,7 +203,7 @@ var se=d.serie,n=se.length,oggi=new Date().toLocaleDateString('sv-SE',{timeZone:
 var past0=se.filter(function(x){return x.d<oggi}),t0=se.filter(function(x){return x.d===oggi})[0],o=t0||past0[past0.length-1],dom=se.filter(function(x){return x.d>oggi})[0]||null;
 $('l1').textContent=(t0?'Oggi, ':'Ultimo dato, ')+fd(o.d);$('v1').textContent=num(o.v,4);
 if(dom){$('l2').textContent='Domani, '+fd(dom.d);$('v2').textContent=num(dom.v,4);var dv=(dom.v-o.v)/o.v*100;$('s2').innerHTML='€/kWh <span class="dl '+(dv>0?'up':'down')+'">'+(dv>0?'▲':'▼')+' '+Math.abs(dv).toFixed(0)+'%</span>'}else{$('v2').textContent='dalle 13';}
-var l30=se.filter(function(x){return x.d<=o.d}).slice(-30);$('v3').textContent=num(l30.reduce(function(a,x){return a+x.v},0)/l30.length,4);
+var cm=oggi.slice(0,7),l30=se.filter(function(x){return x.d.slice(0,7)===cm&&x.d<=oggi});if(!l30.length)l30=se.filter(function(x){return x.d<=o.d}).slice(-30);$('l3').textContent='Media '+fd(cm);$('v3').textContent=num(l30.reduce(function(a,x){return a+x.v},0)/l30.length,4);
 var h=d.orario[o.d]||d.orario[oggi]||[];if(!h.length)$('ch0').parentNode.style.display='none';chart($('ch0'),h,h.map(function(_,i){return i+':00'}));
 var past=se.filter(function(x){return x.d<=o.d});chart($('ch1'),past.map(function(x){return x.v}),past.map(function(x){return fd(x.d)}));
 $('tab').innerHTML='<thead><tr><th>Giorno</th><th>Media €/kWh</th><th>Min</th><th>Max</th></tr></thead><tbody>'+se.slice().reverse().slice(0,30).map(function(x){return '<tr><td>'+fd(x.d)+(x.d>oggi?' (domani)':'')+'</td><td>'+num(x.v,4)+'</td><td>'+num(x.min,4)+'</td><td>'+num(x.max,4)+'</td></tr>'}).join('')+'</tbody>';
