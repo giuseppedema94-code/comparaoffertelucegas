@@ -1,12 +1,12 @@
 name: Aggiorna offerte
 
+# Il Portale Offerte non risponde ai server di GitHub (403). I file open data li scarica
+# il PC di casa (scripts/scarica-open-data.ps1) e li carica nel ramo "dati-grezzi":
+# ogni caricamento avvia questo workflow, che calcola data/luce.json e data/gas.json.
+
 on:
-  schedule:
-    # 00:00 e 12:00 ora italiana (UTC+1 d'inverno, UTC+2 d'estate)
-    - cron: "0 23 * * *"
-    - cron: "0 11 * * *"
-    - cron: "0 22 * * *"
-    - cron: "0 10 * * *"
+  push:
+    branches: [dati-grezzi]
   workflow_dispatch:
 
 permissions:
@@ -21,13 +21,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/checkout@v4
+        with:
+          ref: dati-grezzi
+          path: grezzi
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: Dipendenze
         run: pip install "git+https://github.com/marcopa84/PortaleOfferteEnergiaMCP"
-      - name: Scarica open data e genera JSON
-        run: python scripts/aggiorna.py
+      - name: Genera JSON
+        run: python scripts/aggiorna.py grezzi
       - name: Pubblica
         run: |
           git config user.name "aggiornamento-automatico"
@@ -35,4 +41,4 @@ jobs:
           git add data/luce.json data/gas.json
           git diff --cached --quiet && exit 0
           git commit -m "Offerte aggiornate $(date -u +%Y-%m-%dT%H:%MZ)"
-          git push
+          git push origin HEAD:main

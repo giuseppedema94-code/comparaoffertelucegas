@@ -96,8 +96,30 @@ def genera(archivio: Archivio, commodity: str, cambio: dict) -> dict:
     }
 
 
+def prepara_cache(grezzi: Path) -> None:
+    """Il Portale Offerte blocca i server di GitHub: i file arrivano gia scaricati
+    (cartella grezzi/AAAAMMGG con i .gz) e vengono messi nella cache della libreria."""
+    import shutil
+    from portale_offerte_mcp import sorgenti
+
+    giorni = sorted(p for p in grezzi.iterdir() if p.is_dir() and p.name.isdigit()) if grezzi.is_dir() else []
+    if not giorni:
+        return
+    ultimo = giorni[-1]
+    cache = sorgenti.cartella_cache()
+    dest = cache / "giornaliero" / ultimo.name
+    dest.mkdir(parents=True, exist_ok=True)
+    for f in ultimo.glob("*.gz"):
+        if f.name == "prezzi_storici.csv.gz":
+            shutil.copy(f, cache / f.name)
+        else:
+            shutil.copy(f, dest / f.name)
+
+
 def main() -> int:
     DATI.mkdir(exist_ok=True)
+    if len(sys.argv) > 1:
+        prepara_cache(Path(sys.argv[1]))
     percorso_cambio = DATI / "cambio-offerta.json"
     cambio = json.loads(percorso_cambio.read_text(encoding="utf-8")) if percorso_cambio.exists() else {}
     archivio = Archivio()
