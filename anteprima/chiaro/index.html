@@ -193,7 +193,8 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 <style>/* === Anteprima direzione "Listino" === */
 body,.seg button,.chip,.search,.sort,.msort select,.theme-btn{font-family:'Plex',system-ui,sans-serif}
 .h,.pos,.stepper input,.cost .m,.ixv strong,.lg{font-family:'Plex',system-ui,sans-serif}
-.num,.cost .m,.ixv strong,.stepper input,.best .big,.itab td{font-family:'Plex Mono',ui-monospace,monospace;font-feature-settings:"zero" 0}
+.itab td:first-child{font-family:Plex,sans-serif}.best .big{font-family:Plex,sans-serif;font-variant-numeric:tabular-nums}
+.num,.cost .m,.ixv strong,.stepper input,.itab td{font-family:'Plex Mono',ui-monospace,monospace;font-feature-settings:"zero" 0}
 header.top{background:var(--bg)}
 header.top::before{height:3px}
 .logo svg{display:none}
@@ -259,6 +260,7 @@ footer{background:var(--bg);border-top:1px solid var(--ink)}
 </header>
 
 <main class="wrap">
+<span id="tcount" hidden></span>
 <section class="idx" aria-label="Indici">
 <a class="ix ix-luce" href="/prezzo-energia-oggi/"><span class="ixl">PUN <span id="pm"></span></span><span class="ixv"><strong id="pv">—</strong> €/kWh <span class="dl" id="pd"></span></span></a>
 <a class="ix ix-gas" href="/psv/"><span class="ixl">PSV <span id="gm"></span></span><span class="ixv"><strong id="gv">—</strong> €/Smc <span class="dl" id="gd"></span></span></a>
