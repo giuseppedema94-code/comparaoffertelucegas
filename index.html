@@ -151,8 +151,10 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 .scroll{overflow:visible}.tbl{min-width:0}
 .row.head{display:none}
 .row{grid-template-columns:26px repeat(4,minmax(0,1fr));gap:10px 8px;padding:14px 10px;border-bottom:1px solid var(--line);border-radius:12px}
-.row .who{grid-column:2/4}.row .cost{grid-column:4/6;align-self:start}
-.row .c-p{grid-column:2}.row .c-fx{grid-column:3}.row .c-ds{grid-column:4}.row .c-sc{grid-column:5}
+.row .pos{grid-row:1;grid-column:1}.row .who{grid-row:1;grid-column:2/6}
+.row .c-p{grid-row:2;grid-column:2}.row .c-fx{grid-row:2;grid-column:3}.row .c-ds{grid-row:2;grid-column:4}.row .c-sc{grid-row:2;grid-column:5}
+.row .cost{grid-row:3;grid-column:2/6;display:grid;grid-template-columns:auto 1fr;column-gap:10px;align-items:baseline;text-align:left}
+.row .cost .m{grid-row:1;grid-column:1}.row .cost .d,.row .cost .dd{grid-column:2;text-align:right}.row .cost .bar{grid-column:1/3}
 .row .c-p,.row .c-fx,.row .c-ds,.row .c-sc{text-align:left;font-size:14px}
 .row [data-l]::before{content:attr(data-l);display:block;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);margin-bottom:2px}
 .who .nt,.who .o{white-space:normal}
@@ -301,7 +303,7 @@ function render(){
     var pen=o.pen===true?'<span class="yes" title="'+esc(o.penT||'Oneri di recesso anticipato')+'">Sì</span>':(o.pen===false?'<span class="no">No</span>':'<span class="unk" title="In verifica">—</span>');
     var cl=o.cl==='si'?'<span class="no" title="'+esc(o.clT||'')+'">Sì</span>':(o.cl==='no'?'<span class="yes" title="'+esc(o.clT||'')+'">No</span>':'<span class="unk" title="Non ancora verificato">—</span>');
     var w=Math.max(4,Math.min(100,x.m/max*100));
-    h.push('<div class="row'+(first?' first':'')+'" role="row"><span class="pos">'+(i+1)+'</span><div class="who"><div class="v">'+esc(o.v)+'</div><div class="o">'+tags+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+(o.ok===false?' · stima parziale':'')+'</div>'+(o.nt?'<div class="nt">'+esc(o.nt)+'</div>':'')+'</div><span class="num c-p" data-l="€/'+cfg.u+'">'+num(o.pd!=null?o.pd:o.p,4)+'</span><span class="num c-fx" data-l="Quota fissa/mese">'+num(o.fx/12,2)+' €</span><span class="num c-ds" data-l="Sconto">'+(o.ds?'<span class="dsc">−'+eur(o.ds,0)+'/anno</span><div class="dd">'+esc(o.dsT||'durata da verificare')+'</div>':'<span class="unk">—</span>')+'</span><span class="num sc c-sc" data-l="Scadenza">'+(o.sc?fd(o.sc):'—')+'</span><div class="cost"><div class="m">'+eur(x.m,2)+'</div><div class="d">'+(first?'la più conveniente':'+'+eur(x.m-top,2))+'</div>'+(o.ds?'<div class="dd">senza sconto '+eur(x.m+x.dm,2)+'</div>':'')+'<div class="bar"><i style="width:'+w.toFixed(1)+'%;background:'+(first?'var(--accbar)':(o.t==='f'?'var(--barf)':'#60A5FA'))+'"></i></div></div></div>');
+    h.push('<div class="row'+(first?' first':'')+'" role="row"><span class="pos">'+(i+1)+'</span><div class="who"><div class="v">'+esc(o.v)+'</div><div class="o">'+tags+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+(o.ok===false?' · stima parziale':'')+'</div>'+(o.nt?'<div class="nt">'+esc(o.nt)+'</div>':'')+'</div><span class="num c-p" data-l="€/'+cfg.u+'">'+num(o.pd!=null?o.pd:o.p,4)+'</span><span class="num c-fx" data-l="Quota fissa">'+num(o.fx/12,2)+' €</span><span class="num c-ds" data-l="Sconto">'+(o.ds?'<span class="dsc">−'+eur(o.ds,0)+'/anno</span><div class="dd">'+esc(o.dsT||'durata da verificare')+'</div>':'<span class="unk">—</span>')+'</span><span class="num sc c-sc" data-l="Scadenza">'+(o.sc?fd(o.sc):'—')+'</span><div class="cost"><div class="m">'+eur(x.m,2)+'</div><div class="d">'+(first?'la più conveniente':'+'+eur(x.m-top,2))+'</div>'+(o.ds?'<div class="dd">senza sconto '+eur(x.m+x.dm,2)+'</div>':'')+'<div class="bar"><i style="width:'+w.toFixed(1)+'%;background:'+(first?'var(--accbar)':(o.t==='f'?'var(--barf)':'#60A5FA'))+'"></i></div></div></div>');
   });
   if(!list.length)h.push('<p class="note">Nessuna offerta con questi filtri.</p>');
   $('tbl').innerHTML=h.join('');
