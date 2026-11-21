@@ -2,7 +2,7 @@
 <html lang="it" data-c="luce">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-3L0mYag8K+jxeMZxJeaXSA1Ly2+JOYJiwdExvieLEa4='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://icons.duckduckgo.com; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-pGnnNxjSzBfF0e8j8Ny3otww14uDbgVFrnwyInOO2k8='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://icons.duckduckgo.com; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PUN oggi: prezzo energia elettrica (zona Nord) | comparaoffertelucegas</title>
@@ -204,7 +204,7 @@ fetch('/data/elettricita.json',{cache:'no-cache'}).then(function(r){return r.jso
 var se=d.serie,n=se.length,oggi=new Date().toLocaleDateString('sv-SE',{timeZone:'Europe/Rome'});
 var past0=se.filter(function(x){return x.d<oggi}),t0=se.filter(function(x){return x.d===oggi})[0],o=t0||past0[past0.length-1],dom=se.filter(function(x){return x.d>oggi})[0]||null;
 $('l1').textContent=(t0?'Oggi, ':'Ultimo dato, ')+fd(o.d);$('v1').textContent=num(o.v,4);
-if(dom){$('l2').textContent='Domani, '+fd(dom.d);$('v2').textContent=num(dom.v,4);var dv=(dom.v-o.v)/o.v*100;$('s2').innerHTML='€/kWh <span class="dl '+(dv>0?'up':'down')+'">'+(dv>0?'▲':'▼')+' '+Math.abs(dv).toFixed(0)+'%</span>'}else{$('v2').textContent='dalle 15';}
+if(dom){$('l2').textContent='Domani, '+fd(dom.d);$('v2').textContent=num(dom.v,4);var dv=(dom.v-o.v)/o.v*100;$('s2').innerHTML='€/kWh <span class="dl '+(dv>0?'up':'down')+'">'+(dv>0?'▲':'▼')+' '+Math.abs(dv).toFixed(0)+'%</span>'}else{$('v2').textContent='in arrivo';}
 var cm=oggi.slice(0,7),l30=se.filter(function(x){return x.d.slice(0,7)===cm&&x.d<=oggi});if(!l30.length)l30=se.filter(function(x){return x.d<=o.d}).slice(-30);$('l3').textContent='Media '+fd(cm);$('v3').textContent=num(l30.reduce(function(a,x){return a+x.v},0)/l30.length,4);
 var h=d.orario[o.d]||d.orario[oggi]||[];if(!h.length)$('ch0').parentNode.style.display='none';chart($('ch0'),h,h.map(function(_,i){return i+':00'}));
 var past=se.filter(function(x){return x.d<=o.d});
