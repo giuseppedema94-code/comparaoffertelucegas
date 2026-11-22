@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-bvtTrCObbLauSozLaUs358iYUoWqN/ahzB+i1i6yotY='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://icons.duckduckgo.com; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-/rRdOGJoEbADQxSFxMD/C+xu/mzAeciZ2S0FfphikMA='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://icons.duckduckgo.com; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Confronto offerte luce e gas oggi, dalla più conveniente | comparaoffertelucegas</title>
@@ -325,7 +325,7 @@ function render(){
   $('bt').textContent=best.o.t==='f'?'Prezzo fisso':'Prezzo variabile';
   $('bs').innerHTML=logo(best.o)+'<span>'+esc(best.o.v)+'</span>';$('bn').textContent=best.o.n;$('bm').textContent=eur(best.m,2);
   $('bsub').innerHTML='<span>'+(S.c==='luce'?'Energia':'Gas')+' <strong>'+num(best.o.pd!=null?best.o.pd:best.o.p,4)+' €/'+cfg.u+'</strong></span><span>Quota fissa <strong>'+eur(best.o.fx/12,2)+'/mese</strong></span>'+(best.o.ds?'<span>Sconto <strong>'+eur(best.o.ds,0)+'/anno</strong>'+(best.o.dsT?' ('+esc(best.o.dsT)+')':'')+'</span>':'')+(best.o.sc?'<span>Offerta valida fino al <strong>'+fd(best.o.sc)+'</strong></span>':'');
-  $('bsave').hidden=false;$('bsave').textContent=eur(med.m-best.m,2)+"/mese in meno della mediana";
+  $('bsave').hidden=false;$('bsave').textContent="Risparmio medio di "+eur(med.m-best.m,2)+"/mese";$('bsave').title="Rispetto a un'offerta tipica tra quelle in elenco";
   var bu=safeUrl(best.o.u);$('blink').hidden=!bu;if(bu)$('blink').href=bu;
   $('tcount').textContent=all.length.toLocaleString('it-IT')+' offerte di '+d.fornitori.toLocaleString('it-IT')+' fornitori';
   var s=S.s.trim().toLowerCase();
