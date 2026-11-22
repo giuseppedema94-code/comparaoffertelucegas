@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-P6zLZfhFIFR5AyeBGVXARX14sM6AvUMWYk3uyTMazTY='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://icons.duckduckgo.com; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-H1AXhXDfdkOjxms7LbxpCHfmilK3iiiSwAJTUX4vc0c='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://icons.duckduckgo.com; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Confronto offerte luce e gas oggi, dalla più conveniente | comparaoffertelucegas</title>
@@ -191,6 +191,7 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 :root:not([data-c=gas]) .ix-gas,:root[data-c=gas] .ix-luce{display:none}
 .logo .geco{width:40px;height:40px;display:block}.logo .geco.ic-flame{display:none}:root[data-c=gas] .logo .geco.ic-flame{display:block}:root[data-c=gas] .logo .geco.ic-bolt{display:none}.logo .wm{color:var(--ink)}.logo span.dom{color:var(--ink)}.logo .w-luce{color:#F5C518}.logo .w-gas{color:var(--ink)}:root[data-c=gas] .logo .w-luce{color:var(--ink)}:root[data-c=gas] .logo .w-gas{color:#C65B7C}
 :where(a,button,input,select,[tabindex]):focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:4px}.sort{min-height:24px}@media (pointer:coarse){.chip,.theme-btn,.seg button,.more,.stepper button{min-height:44px}}.who .o a,.best a{text-decoration:underline;text-underline-offset:2px}.chip,.tag,.pill{border-radius:8px!important}.search,.msort select{font-size:16px!important}:root[data-theme=dark] .logo .geco{filter:drop-shadow(0 0 .6px #E9E7E1) drop-shadow(0 0 .6px #E9E7E1)}@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .logo .geco{filter:drop-shadow(0 0 .6px #E9E7E1) drop-shadow(0 0 .6px #E9E7E1)}}
+.ask h1{text-align:center}.trust2{margin:2px 4px;font-size:15px;color:var(--ink2)}.trust2 strong{color:var(--ink)}.save{background:none!important;color:#4ADE80!important;padding:0!important;border-radius:0!important;font-weight:700}
 </style>
 </head>
 <body>
@@ -214,7 +215,7 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 </section>
 <section class="hero">
 <div class="card ask">
-<h1 class="h" id="q">Quanti kWh consumi al mese?</h1>
+<h1 class="h" id="q">Consumo mensile</h1>
 <div class="stepper">
 <button type="button" id="minus" aria-label="Diminuisci il consumo">−</button>
 <label class="val"><span class="sr" id="qlab">Consumo mensile</span><input id="cons" inputmode="numeric" aria-labelledby="qlab" value="225"><span class="u" id="unit">kWh al mese</span></label>
@@ -232,11 +233,7 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 </div>
 </section>
 
-<section class="trust" aria-label="Come funziona">
-<span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--ok)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><strong id="tcount">Tutte le offerte</strong></span>
-<span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--ok)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Ordinate solo per prezzo</span>
-<span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color:var(--ok)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Niente registrazione</span>
-</section>
+<p class="trust2"><strong id="tcount">Tutte le offerte</strong> dagli open data ARERA, ordinate solo per prezzo. Niente registrazione.</p>
 
 <section class="card list" aria-labelledby="clh">
 <div class="tools">
@@ -275,8 +272,8 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 <script>
 (function(){
 var S={c:'luce',q:{luce:225,gas:90},f:'tutte',np:false,s:'',lim:50,data:{},k:'m',dir:1};
-var CFG={luce:{u:'kWh',step:10,max:3000,q:'Quanti kWh consumi al mese?'},
-gas:{u:'Smc',step:5,max:1000,q:'Quanti Smc di gas consumi al mese?'}};
+var CFG={luce:{u:'kWh',step:10,max:3000,q:'Consumo mensile'},
+gas:{u:'Smc',step:5,max:1000,q:'Consumo mensile'}};
 var $=function(id){return document.getElementById(id)};
 var eur=function(n,d){return n.toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d})+' €'};
 var num=function(n,d){return n.toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d})};
@@ -324,7 +321,7 @@ function render(){
   $('bsub').innerHTML='<span>'+(S.c==='luce'?'Energia':'Gas')+' <strong>'+num(best.o.pd!=null?best.o.pd:best.o.p,4)+' €/'+cfg.u+'</strong></span><span>Quota fissa <strong>'+eur(best.o.fx/12,2)+'/mese</strong></span>'+(best.o.ds?'<span>Sconto <strong>'+eur(best.o.ds,0)+'/anno</strong>'+(best.o.dsT?' ('+esc(best.o.dsT)+')':'')+'</span>':'')+(best.o.sc?'<span>Offerta valida fino al <strong>'+fd(best.o.sc)+'</strong></span>':'');
   $('bsave').hidden=false;$('bsave').textContent=eur(med.m-best.m,2)+"/mese in meno della mediana";
   var bu=safeUrl(best.o.u);$('blink').hidden=!bu;if(bu)$('blink').href=bu;
-  $('tcount').textContent=all.length.toLocaleString('it-IT')+' offerte, '+d.fornitori.toLocaleString('it-IT')+' fornitori';
+  $('tcount').textContent=all.length.toLocaleString('it-IT')+' offerte di '+d.fornitori.toLocaleString('it-IT')+' fornitori';
   var s=S.s.trim().toLowerCase();
   var list=all.filter(function(x){
     if(S.f!=='tutte'&&x.o.t!==S.f)return false;
