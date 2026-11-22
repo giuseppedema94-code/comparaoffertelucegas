@@ -29,10 +29,10 @@ DATI = RADICE / "data"
 PUNTI = {"luce": (1200.0, 3600.0), "gas": (400.0, 1600.0)}
 
 # Componenti regolate (uguali per tutte le offerte), cliente domestico residente.
-# Luce: quote fisse di rete e potenza 3 kW (€/anno), parte variabile rete+oneri+dispacciamento (€/kWh), accise, IVA 10%.
+# Luce: quote fisse di rete e potenza 3 kW (€/anno), qp quota potenza €/kW/anno (ARERA 2026, del. 575/2025), parte variabile rete+oneri+dispacciamento (€/kWh), accise, IVA 10%.
 # Gas: rete+oneri+accise medie (€/Smc) e IVA media, dal confronto con le bollette tipo a 1.400 Smc.
 REG = {
-    "luce": {"rf": 94.2, "rv": 0.06461, "iva": 0.10, "accSoglia": 1800, "accRif": 44.49 / 3200, "acc": 0.0227},
+    "luce": {"rf": 94.2, "rv": 0.06461, "iva": 0.10, "accSoglia": 1800, "accRif": 44.49 / 3200, "acc": 0.0227, "qp": 23.52},
     "gas": {"rf": 0, "rv": 0.474, "iva": 0.183, "accSoglia": 1e9, "accRif": 0},
 }
 
