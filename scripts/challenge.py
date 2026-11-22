@@ -4,7 +4,7 @@
 Non gira nei workflow automatici. Le chiavi si leggono da ~/.ai_keys
 (righe NOME=valore) o dalle variabili d'ambiente:
   GEMINI_API_KEY      aistudio.google.com/apikey (gratis)
-  GROQ_API_KEY        console.groq.com/keys (gratis, modelli Llama di Meta)
+  GROQ_API_KEY        console.groq.com/keys (gratis: GPT-OSS di OpenAI, Qwen)
   OPENROUTER_API_KEY  openrouter.ai/keys (modelli ":free")
   MISTRAL_API_KEY     console.mistral.ai (piano Experiment gratuito)
   XAI_API_KEY         console.x.ai (Grok, crediti se disponibili)
@@ -26,7 +26,7 @@ CTX = ssl.create_default_context(cafile=str(CA)) if CA.exists() else ssl.create_
 
 
 def post(url, body, headers):
-    req = urllib.request.Request(url, json.dumps(body).encode(), {"Content-Type": "application/json", **headers})
+    req = urllib.request.Request(url, json.dumps(body).encode(), {"Content-Type": "application/json", "User-Agent": "comparaofferte-challenge/1.0", **headers})
     with urllib.request.urlopen(req, timeout=300, context=CTX) as r:
         return json.load(r)
 
@@ -51,7 +51,10 @@ def providers():
     e = os.environ.get
     p = {}
     if e("GEMINI_API_KEY"): p["Gemini 3.5 Flash"] = gemini(e("GEMINI_API_KEY"))
-    if e("GROQ_API_KEY"): p["Llama 3.3 70B (Groq)"] = openai_like("https://api.groq.com/openai/v1/chat/completions", e("GROQ_API_KEY"), "llama-3.3-70b-versatile")
+    if e("GROQ_API_KEY"):
+        g = "https://api.groq.com/openai/v1/chat/completions"
+        p["GPT-OSS 120B di OpenAI (Groq)"] = openai_like(g, e("GROQ_API_KEY"), "openai/gpt-oss-120b")
+        p["Qwen 3.8 (Groq)"] = openai_like(g, e("GROQ_API_KEY"), "qwen/qwen3.8-27b")
     if e("OPENROUTER_API_KEY"): p["DeepSeek (OpenRouter free)"] = openai_like("https://openrouter.ai/api/v1/chat/completions", e("OPENROUTER_API_KEY"), "deepseek/deepseek-chat-v3-0324:free")
     if e("MISTRAL_API_KEY"): p["Mistral Small"] = openai_like("https://api.mistral.ai/v1/chat/completions", e("MISTRAL_API_KEY"), "mistral-small-latest")
     if e("XAI_API_KEY"): p["Grok"] = openai_like("https://api.x.ai/v1/chat/completions", e("XAI_API_KEY"), "grok-3-mini")
@@ -61,7 +64,7 @@ def providers():
 def prompt(c):
     d = json.load(open(ROOT / "data" / f"{c}.json"))
     html = (ROOT / "index.html").read_text()
-    js = re.search(r"function compute\(\)\{.*?\n\}", html, re.S).group(0)
+    js = re.search(r"function accLuce.*?\nfunction compute\(\)\{.*?\n\}", html, re.S).group(0)
     q = 2700 if c == "luce" else 1080
     ex = []
     for o in d["offerte"][:3] + d["offerte"][-2:]:
@@ -77,7 +80,7 @@ def prompt(c):
     return f"""Sei un revisore esperto del mercato libero energia italiano (dati Portale Offerte ARERA).
 Il sito comparaoffertelucegas.it stima la spesa mensile per {c} con consumo annuo {q} {'kWh' if c == 'luce' else 'Smc'}.
 Campi: fx quota fissa €/anno dell'offerta, p prezzo energia netto sconti €/unità, pd prezzo lordo, s sconto €/anno, ds sconto mostrato.
-Oneri regolati usati per tutte le offerte (reg): {json.dumps(d['reg'])} (rf €/anno fissi rete+oneri, rv €/unità, iva, acc = accisa €/kWh con esenzione residenti 150 kWh/mese e recupero sopra 220).
+Oneri regolati usati per tutte le offerte (reg): {json.dumps(d['reg'])} (rf €/anno fissi rete+oneri, rv €/unità: per il gas include già trasporto, oneri e accise medie; iva, acc = accisa €/kWh con esenzione residenti 150 kWh/mese e recupero sopra 220).
 Funzione JS usata:
 {js}
 Esempi calcolati dal sito:
