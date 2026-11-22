@@ -27,7 +27,7 @@ CTX = ssl.create_default_context(cafile=str(CA)) if CA.exists() else ssl.create_
 
 def post(url, body, headers):
     req = urllib.request.Request(url, json.dumps(body).encode(), {"Content-Type": "application/json", **headers})
-    with urllib.request.urlopen(req, timeout=120, context=CTX) as r:
+    with urllib.request.urlopen(req, timeout=300, context=CTX) as r:
         return json.load(r)
 
 
@@ -41,16 +41,16 @@ def openai_like(url, key, model):
 
 def gemini(key):
     def f(p):
-        d = post("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+        d = post("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent",
                  {"contents": [{"parts": [{"text": p}]}]}, {"x-goog-api-key": key})
-        return d["candidates"][0]["content"]["parts"][0]["text"]
+        return "".join(x.get("text", "") for x in d["candidates"][0]["content"]["parts"] if not x.get("thought"))
     return f
 
 
 def providers():
     e = os.environ.get
     p = {}
-    if e("GEMINI_API_KEY"): p["Gemini 2.5 Flash"] = gemini(e("GEMINI_API_KEY"))
+    if e("GEMINI_API_KEY"): p["Gemini 3.5 Flash"] = gemini(e("GEMINI_API_KEY"))
     if e("GROQ_API_KEY"): p["Llama 3.3 70B (Groq)"] = openai_like("https://api.groq.com/openai/v1/chat/completions", e("GROQ_API_KEY"), "llama-3.3-70b-versatile")
     if e("OPENROUTER_API_KEY"): p["DeepSeek (OpenRouter free)"] = openai_like("https://openrouter.ai/api/v1/chat/completions", e("OPENROUTER_API_KEY"), "deepseek/deepseek-chat-v3-0324:free")
     if e("MISTRAL_API_KEY"): p["Mistral Small"] = openai_like("https://api.mistral.ai/v1/chat/completions", e("MISTRAL_API_KEY"), "mistral-small-latest")
@@ -67,7 +67,9 @@ def prompt(c):
     for o in d["offerte"][:3] + d["offerte"][-2:]:
         r = d["reg"]
         if r and o.get("s") is not None:
-            acc = 0 if q <= r["accSoglia"] else r["accRif"] * q
+            m = q / 12
+            e = min(m, 150) if m <= 220 else max(0, 150 - (m - 220))
+            acc = (m - e) * 12 * r["acc"] if r.get("acc") else (0 if q <= r["accSoglia"] else r["accRif"] * q)
             a = (1 + r["iva"]) * (o["fx"] + o["p"] * q - o["s"] + r["rf"] + r["rv"] * q + acc)
         else:
             a = o["A"] + o["B"] * q if o.get("A") is not None else o["fx"] + o["p"] * q
@@ -75,7 +77,7 @@ def prompt(c):
     return f"""Sei un revisore esperto del mercato libero energia italiano (dati Portale Offerte ARERA).
 Il sito comparaoffertelucegas.it stima la spesa mensile per {c} con consumo annuo {q} {'kWh' if c == 'luce' else 'Smc'}.
 Campi: fx quota fissa €/anno dell'offerta, p prezzo energia netto sconti €/unità, pd prezzo lordo, s sconto €/anno, ds sconto mostrato.
-Oneri regolati usati per tutte le offerte (reg): {json.dumps(d['reg'])} (rf €/anno fissi rete+oneri, rv €/unità, iva, accisa sopra soglia).
+Oneri regolati usati per tutte le offerte (reg): {json.dumps(d['reg'])} (rf €/anno fissi rete+oneri, rv €/unità, iva, acc = accisa €/kWh con esenzione residenti 150 kWh/mese e recupero sopra 220).
 Funzione JS usata:
 {js}
 Esempi calcolati dal sito:

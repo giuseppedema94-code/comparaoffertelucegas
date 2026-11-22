@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-sD+mqXjLl8MccWSd9MzztCm3pAA5EnvARwTbxQAIak4='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://icons.duckduckgo.com; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-APwUx/SmMLay/Hy642j42fmkcMZyB8UJB2myAIQzf2A='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://icons.duckduckgo.com; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Confronto offerte luce e gas oggi, dalla più conveniente | comparaoffertelucegas</title>
@@ -293,12 +293,14 @@ function load(c){
   return fetch('data/'+c+'.json',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json()}).then(function(d){S.data[c]=d;return d});
 }
 
+// Accisa luce, residente 1,5-3 kW: 150 kWh/mese esenti, recupero sopra 220 (art. 52 D.Lgs. 504/95)
+function accLuce(y,al){var m=y/12,e=m<=220?Math.min(m,150):Math.max(0,150-(m-220));return (m-e)*12*al}
 function compute(){
   var d=S.data[S.c];if(!d)return null;
   var annuo=S.q[S.c]*12;
   var all=d.offerte.filter(function(o){return (o.min==null||annuo>=o.min)&&(o.max==null||annuo<=o.max)}).map(function(o){
     var r=d.reg,a;
-    if(r&&o.s!=null){var acc=annuo<=r.accSoglia?0:r.accRif*annuo;a=(1+r.iva)*(o.fx+o.p*annuo-o.s+r.rf+r.rv*annuo+acc)}
+    if(r&&o.s!=null){var acc=r.acc!=null?accLuce(annuo,r.acc):(annuo<=r.accSoglia?0:r.accRif*annuo);a=(1+r.iva)*(o.fx+o.p*annuo-o.s+r.rf+r.rv*annuo+acc)}
     else a=o.A!=null?o.A+o.B*annuo:o.fx+o.p*annuo;
     var dm=o.ds?(o.dsIva!=null?o.dsIva:o.ds*(1+(r?r.iva:0.1)))/12:0;
     return {o:o,m:a/12+(S.rai&&S.c==='luce'?RAI/12:0),dm:dm};
