@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-/rRdOGJoEbADQxSFxMD/C+xu/mzAeciZ2S0FfphikMA='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://icons.duckduckgo.com; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-UG8MeKpP6otr7UGabDuuK+ZV5RxzcxCNWt2tHzGrdF4='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://icons.duckduckgo.com; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Confronto offerte luce e gas oggi, dalla più conveniente | comparaoffertelucegas</title>
@@ -352,7 +352,7 @@ function render(){
   $('tbl').innerHTML=h.join('');
   $('more').hidden=list.length<=S.lim;$('more').textContent='Mostra altre offerte ('+(list.length-S.lim)+')';
   var dd=fd(d.data_open_data||d.rilevazione);
-  $('note').textContent='Spesa stimata con imposte, cliente residente'+(S.c==='luce'?' 3 kW':'')+'. Variabili con previsione '+(S.c==='luce'?'PUN':'PSV')+' a 12 mesi. €/'+cfg.u+' senza dispacciamento.';
+  $('note').textContent='Spesa stimata con imposte, cliente residente'+(S.c==='luce'?' '+String(S.kw).replace('.',',')+' kW'+(S.rai?', canone RAI incluso':''):'')+'. Variabili con previsione '+(S.c==='luce'?'PUN':'PSV')+' a 12 mesi. €/'+cfg.u+' senza dispacciamento.';
   $('fdate').textContent='Prezzi del '+dd+'.';
 }
 
