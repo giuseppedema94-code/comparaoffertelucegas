@@ -55,7 +55,9 @@ def providers():
         g = "https://api.groq.com/openai/v1/chat/completions"
         p["GPT-OSS 120B di OpenAI (Groq)"] = openai_like(g, e("GROQ_API_KEY"), "openai/gpt-oss-120b")
         p["Qwen 3.8 (Groq)"] = openai_like(g, e("GROQ_API_KEY"), "qwen/qwen3.8-27b")
-    if e("OPENROUTER_API_KEY"): p["DeepSeek (OpenRouter free)"] = openai_like("https://openrouter.ai/api/v1/chat/completions", e("OPENROUTER_API_KEY"), "deepseek/deepseek-chat-v3-0324:free")
+    if e("OPENROUTER_API_KEY"):
+        o = "https://openrouter.ai/api/v1/chat/completions"
+        p["Nemotron 3 Ultra di NVIDIA (OpenRouter)"] = openai_like(o, e("OPENROUTER_API_KEY"), "nvidia/nemotron-3-ultra-550b-a55b:free")
     if e("MISTRAL_API_KEY"): p["Mistral Small"] = openai_like("https://api.mistral.ai/v1/chat/completions", e("MISTRAL_API_KEY"), "mistral-small-latest")
     if e("XAI_API_KEY"): p["Grok"] = openai_like("https://api.x.ai/v1/chat/completions", e("XAI_API_KEY"), "grok-3-mini")
     return p
