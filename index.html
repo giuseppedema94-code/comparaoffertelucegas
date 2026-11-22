@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-H1AXhXDfdkOjxms7LbxpCHfmilK3iiiSwAJTUX4vc0c='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://icons.duckduckgo.com; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-boywvG2Fp+urtFz/q3QitbdtdvWHULIRe1Pja5P0oMo='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://icons.duckduckgo.com; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Confronto offerte luce e gas oggi, dalla più conveniente | comparaoffertelucegas</title>
@@ -192,6 +192,7 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 .logo .geco{width:40px;height:40px;display:block}.logo .geco.ic-flame{display:none}:root[data-c=gas] .logo .geco.ic-flame{display:block}:root[data-c=gas] .logo .geco.ic-bolt{display:none}.logo .wm{color:var(--ink)}.logo span.dom{color:var(--ink)}.logo .w-luce{color:#F5C518}.logo .w-gas{color:var(--ink)}:root[data-c=gas] .logo .w-luce{color:var(--ink)}:root[data-c=gas] .logo .w-gas{color:#C65B7C}
 :where(a,button,input,select,[tabindex]):focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:4px}.sort{min-height:24px}@media (pointer:coarse){.chip,.theme-btn,.seg button,.more,.stepper button{min-height:44px}}.who .o a,.best a{text-decoration:underline;text-underline-offset:2px}.chip,.tag,.pill{border-radius:8px!important}.search,.msort select{font-size:16px!important}:root[data-theme=dark] .logo .geco{filter:drop-shadow(0 0 .6px #E9E7E1) drop-shadow(0 0 .6px #E9E7E1)}@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .logo .geco{filter:drop-shadow(0 0 .6px #E9E7E1) drop-shadow(0 0 .6px #E9E7E1)}}
 .ask h1{text-align:center}.trust2{margin:2px 4px;font-size:15px;color:var(--ink2)}.trust2 strong{color:var(--ink)}.save{background:none!important;color:#4ADE80!important;padding:0!important;border-radius:0!important;font-weight:700}
+.per{display:flex;justify-content:center;gap:6px;margin:-4px 0 0}.per button{font:600 14px 'Schibsted Grotesk',sans-serif;padding:6px 14px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--ink2);cursor:pointer}.per button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 </style>
 </head>
 <body>
@@ -215,10 +216,11 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 </section>
 <section class="hero">
 <div class="card ask">
-<h1 class="h" id="q">Consumo mensile</h1>
+<h1 class="h" id="q">Il tuo consumo</h1>
+<div class="per" role="group" aria-label="Periodo del consumo"><button type="button" data-p="m" aria-pressed="true">Mensile</button><button type="button" data-p="a" aria-pressed="false">Annuo</button></div>
 <div class="stepper">
 <button type="button" id="minus" aria-label="Diminuisci il consumo">−</button>
-<label class="val"><span class="sr" id="qlab">Consumo mensile</span><input id="cons" inputmode="numeric" aria-labelledby="qlab" value="225"><span class="u" id="unit">kWh al mese</span></label>
+<label class="val"><span class="sr" id="qlab">Consumo mensile</span><input id="cons" inputmode="numeric" aria-labelledby="qlab" value="225"><span class="u" id="unit">kWh</span></label>
 <button type="button" id="plus" aria-label="Aumenta il consumo">+</button>
 </div>
 </div>
@@ -271,7 +273,7 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 
 <script>
 (function(){
-var S={c:'luce',q:{luce:225,gas:90},f:'tutte',np:false,s:'',lim:50,data:{},k:'m',dir:1};
+var S={c:'luce',per:'m',q:{luce:225,gas:90},f:'tutte',np:false,s:'',lim:50,data:{},k:'m',dir:1};
 var CFG={luce:{u:'kWh',step:10,max:3000,q:'Consumo mensile'},
 gas:{u:'Smc',step:5,max:1000,q:'Consumo mensile'}};
 var $=function(id){return document.getElementById(id)};
@@ -305,8 +307,8 @@ function compute(){
 
 function render(){
   var cfg=CFG[S.c];
-  $('q').textContent=cfg.q;$('unit').textContent=cfg.u+' al mese';
-  if(document.activeElement!==$('cons'))$('cons').value=S.q[S.c];
+  var an=S.per==='a';$('qlab').textContent=an?'Consumo annuo':'Consumo mensile';$('unit').textContent=cfg.u;document.querySelectorAll('.per button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.p===S.per)});
+  if(document.activeElement!==$('cons'))$('cons').value=Math.round(an?S.q[S.c]*12:S.q[S.c]).toLocaleString('it-IT');
   document.querySelectorAll('.seg button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.c===S.c)});
   document.querySelectorAll('[data-f]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.f===S.f)});
   
@@ -363,9 +365,10 @@ b.addEventListener('click',function(){m=(m+1)%3;if(modes[m]==='auto')r.removeAtt
 $('more').addEventListener('click',function(){S.lim+=50;render()});
 $('msort').addEventListener('change',function(e){S.k=e.target.value;S.dir=1;render()});
 $('tbl').addEventListener('click',function(e){var b=e.target.closest('.sort');if(!b)return;var k=b.dataset.k;if(S.k===k)S.dir=-S.dir;else{S.k=k;S.dir=1}render()});
-function step(dir){var c=CFG[S.c];S.q[S.c]=Math.max(c.step,Math.min(c.max,S.q[S.c]+dir*c.step));render()}
+function step(dir){var c=CFG[S.c];if(S.per==='a'){var y=Math.round(S.q[S.c]*12/(c.step*10))*c.step*10+dir*c.step*10;S.q[S.c]=Math.max(c.step,Math.min(c.max,y/12))}else S.q[S.c]=Math.max(c.step,Math.min(c.max,S.q[S.c]+dir*c.step));render()}
+document.querySelectorAll('.per button').forEach(function(b){b.addEventListener('click',function(){S.per=b.dataset.p;render()})});
 $('minus').addEventListener('click',function(){step(-1)});$('plus').addEventListener('click',function(){step(1)});
-$('cons').addEventListener('input',function(e){var v=parseInt(e.target.value.replace(/\D/g,''),10);if(v>0){S.q[S.c]=Math.min(CFG[S.c].max,v);render()}});
+$('cons').addEventListener('input',function(e){var v=parseInt(e.target.value.replace(/\D/g,''),10);if(v>0){S.q[S.c]=Math.min(CFG[S.c].max,S.per==='a'?v/12:v);render()}});
 
 var IDX=null,MESI=['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
 var ml=function(m){var p=m.split('-');return MESI[+p[1]-1]+' '+p[0]};
