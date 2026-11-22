@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-WIVs5tXhDYbHhajxXaAV6UlMA7QLpbS/IdWHWxkaLlw='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://icons.duckduckgo.com; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-P6zLZfhFIFR5AyeBGVXARX14sM6AvUMWYk3uyTMazTY='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://icons.duckduckgo.com; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Confronto offerte luce e gas oggi, dalla più conveniente | comparaoffertelucegas</title>
@@ -22,7 +22,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#14161A">
 <script>try{var t=localStorage.getItem("tema");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/img/geco-luce.svg" type="image/svg+xml">
 <link rel="preload" href="/fonts/schibsted-grotesk.woff2" as="font" type="font/woff2" crossorigin>
 <link href="/fonts/fonts.css" rel="stylesheet">
 <script type="application/ld+json">
@@ -190,6 +190,7 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 .itab td{text-align:right;padding:7px 8px;border-bottom:1px solid var(--line);font-variant-numeric:lining-nums proportional-nums}
 :root:not([data-c=gas]) .ix-gas,:root[data-c=gas] .ix-luce{display:none}
 .logo .geco{width:40px;height:40px;display:block}.logo .geco.ic-flame{display:none}:root[data-c=gas] .logo .geco.ic-flame{display:block}:root[data-c=gas] .logo .geco.ic-bolt{display:none}.logo .wm{color:var(--ink)}.logo span.dom{color:var(--ink)}.logo .w-luce{color:#F5C518}.logo .w-gas{color:var(--ink)}:root[data-c=gas] .logo .w-luce{color:var(--ink)}:root[data-c=gas] .logo .w-gas{color:#C65B7C}
+:where(a,button,input,select,[tabindex]):focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:4px}.sort{min-height:24px}@media (pointer:coarse){.chip,.theme-btn,.seg button,.more,.stepper button{min-height:44px}}.who .o a,.best a{text-decoration:underline;text-underline-offset:2px}.chip,.tag,.pill{border-radius:8px!important}.search,.msort select{font-size:16px!important}:root[data-theme=dark] .logo .geco{filter:drop-shadow(0 0 .6px #E9E7E1) drop-shadow(0 0 .6px #E9E7E1)}@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .logo .geco{filter:drop-shadow(0 0 .6px #E9E7E1) drop-shadow(0 0 .6px #E9E7E1)}}
 </style>
 </head>
 <body>
@@ -201,7 +202,7 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 <button type="button" data-c="luce" aria-pressed="true">Luce</button>
 <button type="button" data-c="gas" aria-pressed="false">Gas</button>
 </div>
-<button class="theme-btn" id="theme-toggle" type="button" aria-label="Cambia tema: dispositivo, chiaro o scuro">Tema: auto</button>
+<button class="theme-btn" id="theme-toggle" type="button">Tema: auto</button>
 </div>
 </div>
 </header>
@@ -247,17 +248,17 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 <button type="button" class="chip" data-f="v" aria-pressed="false">Variabile</button>
 </div>
 <label class="msort">Ordina per <select id="msort"><option value="m">Spesa al mese</option><option value="p">Energia €/kWh</option><option value="fx">Quota fissa</option></select></label>
-<label><span class="sr">Cerca fornitore o offerta</span><input type="search" class="search" id="search" placeholder="Cerca fornitore o offerta"></label>
+<label><span class="sr">Cerca fornitore o offerta</span><input type="search" class="search" id="search" placeholder="Es. Enel, Octopus…"></label>
 </div>
 </div>
-<div class="scroll"><div class="tbl" id="tbl"></div></div>
+<div class="scroll" role="region" aria-label="Classifica offerte" tabindex="0"><div class="tbl" id="tbl"></div></div>
 <button type="button" class="chip more" id="more" hidden>Mostra altre offerte</button>
 <p class="note" id="note"></p>
 </section>
 <section class="card" id="andamento" aria-labelledby="anh">
 <div class="tools"><h2 class="h" id="anh">Andamento PUN e PSV</h2></div>
 <div id="chart"></div>
-<div class="scroll"><table class="itab" id="itab"></table></div>
+<div class="scroll" role="region" aria-label="Tabella PUN e PSV" tabindex="0"><table class="itab" id="itab"></table></div>
 <p class="note" id="inote"></p>
 </section>
 
@@ -344,7 +345,7 @@ function render(){
     var w=Math.max(4,Math.min(100,x.m/max*100));
     h.push('<div class="row'+(first?' first':'')+'" role="row"><span class="pos">'+(i+1)+'</span><div class="who"><div class="v">'+logo(o)+'<span>'+esc(o.v)+'</span></div><div class="o">'+tags+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+(o.ok===false?' · stima parziale':'')+'</div>'+(o.nt?'<div class="nt">'+esc(o.nt)+'</div>':'')+'</div><span class="num c-p" data-l="€/'+cfg.u+'">'+num(o.pd!=null?o.pd:o.p,4)+'</span><span class="num c-fx" data-l="Q. fissa">'+num(o.fx/12,2)+' €</span><span class="num c-ds" data-l="Sconto">'+(o.ds?'<span class="dsc">−'+eur(o.ds,0)+'<span class="dlg">/anno</span></span>'+(o.dsT?'<div class="dd">'+esc(o.dsT)+'</div>':''):'<span class="unk">—</span>')+'</span><span class="num sc c-sc" data-l="Scadenza">'+(o.sc?'<span class="dlg">'+fd(o.sc)+'</span><span class="dsh">'+fd(o.sc).slice(0,6)+fd(o.sc).slice(8)+'</span>':'—')+'</span><div class="cost"><div class="m">'+eur(x.m,2)+'</div><div class="d">'+(first?'la più conveniente':'+'+eur(x.m-top,2))+'</div>'+(o.ds?'<div class="dd">senza sconto '+eur(x.m+x.dm,2)+'</div>':'')+'<div class="bar"><i style="width:'+w.toFixed(1)+'%;background:'+(first?'var(--accbar)':(o.t==='f'?'var(--barf)':'#60A5FA'))+'"></i></div></div></div>');
   });
-  if(!list.length)h.push('<p class="note">Nessuna offerta con questi filtri.</p>');
+  if(!list.length)h.push('<p class="note">Nessuna offerta con questi filtri. <button class="chip" type="button" id="reset">Azzera filtri</button></p>');
   $('tbl').innerHTML=h.join('');
   $('more').hidden=list.length<=S.lim;$('more').textContent='Mostra altre offerte ('+(list.length-S.lim)+')';
   var dd=fd(d.data_open_data||d.rilevazione);
@@ -352,10 +353,11 @@ function render(){
   $('fdate').textContent='Prezzi del '+dd+'.';
 }
 
-function setC(c){S.c=c;setTimeout(renderIdx,0);document.documentElement.setAttribute('data-c',c);var fi=document.querySelector('link[rel=icon]');if(fi)fi.href=c==='gas'?'favicon-gas.svg':'favicon.svg';S.lim=50;load(c).then(render).catch(function(){$('bs').textContent='Dati non disponibili, riprova tra poco.'});render()}
+function setC(c){S.c=c;setTimeout(renderIdx,0);document.documentElement.setAttribute('data-c',c);var fi=document.querySelector('link[rel=icon]');if(fi)fi.href=c==='gas'?'/img/geco-gas.svg':'/img/geco-luce.svg';S.lim=50;load(c).then(render).catch(function(){$('bs').textContent='Dati non disponibili, riprova tra poco.'});render()}
 document.querySelectorAll('.seg button').forEach(function(b){b.addEventListener('click',function(){setC(b.dataset.c)})});
 document.querySelectorAll('[data-f]').forEach(function(b){b.addEventListener('click',function(){S.f=b.dataset.f;S.lim=50;render()})});
 
+document.addEventListener('click',function(e){if(e.target&&e.target.id==='reset'){S.f='tutte';S.s='';$('search').value='';document.querySelectorAll('[data-f]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.f==='tutte')});render()}});
 $('search').addEventListener('input',function(e){S.s=e.target.value;S.lim=50;render()});
 (function(){var modes=['auto','light','dark'],nomi={auto:'auto',light:'chiaro',dark:'scuro'},b=$('theme-toggle'),r=document.documentElement;
 var m=Math.max(0,modes.indexOf(r.getAttribute('data-theme')||'auto'));
