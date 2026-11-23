@@ -21,7 +21,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: python scripts/internet.py
-      - run: python scripts/loghi.py
+      - run: pip install -q pillow cairosvg && python scripts/loghi.py
       - run: python scripts/pagine.py && python scripts/csp.py
       - name: Pubblica
         run: |

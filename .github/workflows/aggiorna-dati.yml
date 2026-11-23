@@ -39,7 +39,7 @@ jobs:
         env:
           CONTROLLA_LINK: "1"
       - name: Loghi fornitori
-        run: python scripts/loghi.py
+        run: pip install -q pillow cairosvg && python scripts/loghi.py
       - name: Pubblica
         run: |
           git config user.name "aggiornamento-automatico"

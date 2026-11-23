@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-hlZxVIkXRSxjOSI9Ya8/NcsqOT7UU+JB/rTQVVRGrqk='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-eKpJPtYx+hoCcDfi8va7zF+gh1cdFg8ReVR8NSAGLAg='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Confronto offerte luce e gas, aggiornato ogni giorno</title>
@@ -334,8 +334,8 @@ var num=function(n,d){return n.toLocaleString('it-IT',{minimumFractionDigits:d,m
 var fd=function(s){if(!s)return '';var p=String(s).slice(0,10).split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:s};
 var dom=function(u){u=safeUrl(u);if(!u)return null;var h=u.replace(/^https?:\/\//,'').split('/')[0].toLowerCase().split('.');return h.slice(-2).join('.')};
 document.addEventListener('error',function(e){var t=e.target;if(t&&t.tagName==='IMG'&&t.closest('.lg'))t.remove()},true);
-var logoB=function(o){var d=o.lg&&/^[a-z0-9.-]+$/.test(o.lg)?o.lg:null;return '<span class="lgb" aria-hidden="true">'+esc((o.v||'?').trim().charAt(0).toUpperCase())+(d?'<img src="/img/loghi/'+d+'.ico" alt="" loading="lazy">':'')+'</span>'};
-var logo=function(o){var d=o.lg&&/^[a-z0-9.-]+$/.test(o.lg)?o.lg:null,ini=esc((o.v||'?').trim().charAt(0).toUpperCase());return '<span class="lg" aria-hidden="true">'+ini+(d?'<img src="/img/loghi/'+d+'.ico" alt="" loading="lazy">':'')+'</span>'};
+var logoB=function(o){var d=o.lg&&/^[a-z0-9.-]+$/.test(o.lg)?o.lg:null;return '<span class="lgb" aria-hidden="true">'+esc((o.v||'?').trim().charAt(0).toUpperCase())+(d?'<img src="/img/loghi/'+d+'.png" alt="" loading="lazy">':'')+'</span>'};
+var logo=function(o){var d=o.lg&&/^[a-z0-9.-]+$/.test(o.lg)?o.lg:null,ini=esc((o.v||'?').trim().charAt(0).toUpperCase());return '<span class="lg" aria-hidden="true">'+ini+(d?'<img src="/img/loghi/'+d+'.png" alt="" loading="lazy">':'')+'</span>'};
 var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
 var safeUrl=function(u){if(!u)return null;u=String(u).trim();if(!/^https?:\/\//i.test(u))u='https://'+u;return /^https?:\/\/[^\s"'<>]+$/i.test(u)?u:null};
 
