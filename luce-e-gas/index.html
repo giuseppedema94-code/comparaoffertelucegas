@@ -2,7 +2,7 @@
 <html lang="it" data-c="lg">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at https://www.googletagmanager.com https://*.clarity.ms 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-xGa7NwxOyHAI6Pc70i3woSFYYVUqHhe4cqotRvP2piw='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; connect-src 'self' https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at https://www.googletagmanager.com https://*.clarity.ms 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-XCV8rlM4Y7bxy1Tep/8McVb1qCTRSHjL9H7iydPUtmM='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; connect-src 'self' https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Offerte luce e gas insieme: pacchetti a confronto</title>
@@ -258,6 +258,7 @@ html,button,a,input,select,label{touch-action:manipulation}
 .pk .c-x{grid-column:1/-1;font-size:13.5px;color:var(--ink2);text-align:left!important}
 .pk .c-x[data-l]::before{content:attr(data-l) ": ";color:var(--mut)}
 }
+.per{display:flex;justify-content:flex-start;gap:6px;margin:0 0 12px}.per button{font:600 14px 'Schibsted Grotesk',sans-serif;padding:6px 14px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--ink2);cursor:pointer;min-height:36px}.per button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 </style>
 <style>
 .pg{padding:28px 0 64px;display:flex;flex-direction:column;gap:18px}
@@ -279,7 +280,8 @@ html,button,a,input,select,label{touch-action:manipulation}
 <main class="wrap pg">
 <h1 class="h">Offerte luce e gas insieme</h1>
 <section class="lgh">
-<div class="card lga"><h2 class="h">I tuoi consumi al mese</h2>
+<div class="card lga"><h2 class="h">I tuoi consumi</h2>
+<div class="per" role="group" aria-label="Periodo del consumo"><button type="button" data-p="m" aria-pressed="true">Mensile</button><button type="button" data-p="a" aria-pressed="false">Annuo</button></div>
 <div class="lgq"><label for="ql">Luce</label><div class="lgst"><button type="button" class="pm" data-t="ql" data-d="-10" aria-label="Diminuisci il consumo di luce">−</button><div class="lgv"><input type="number" id="ql" value="225" min="0" step="10" inputmode="numeric"><span>kWh</span></div><button type="button" class="pm" data-t="ql" data-d="10" aria-label="Aumenta il consumo di luce">+</button></div></div>
 <div class="lgq"><label for="qg">Gas</label><div class="lgst"><button type="button" class="pm" data-t="qg" data-d="-5" aria-label="Diminuisci il consumo di gas">−</button><div class="lgv"><input type="number" id="qg" value="90" min="0" step="5" inputmode="numeric"><span>Smc</span></div><button type="button" class="pm" data-t="qg" data-d="5" aria-label="Aumenta il consumo di gas">+</button></div></div>
 <div class="prof" role="group" aria-label="Consumo tipo"><span>Non hai la bolletta?</span><button type="button" data-pf="1">Single</button><button type="button" data-pf="2">Coppia</button><button type="button" data-pf="4">Famiglia di 4</button></div>
@@ -312,8 +314,12 @@ var logoB=function(o){var d=o.lg&&/^[a-z0-9.-]+$/.test(o.lg)?o.lg:null;return '<
 function accLuce(y,al){var m=y/12,e=m<=220?Math.min(m,150):Math.max(0,150-(m-220));return (m-e)*12*al}
 function costo(o,c,y,R){var r=R[c],acc=c==='luce'?accLuce(y,r.acc):0;return (1+r.iva)*(o.fx+o.p*y-(o.s||0)+r.rf+r.rv*y+acc)/12}
 var D={};
+var PER='m';
+function setPer(x){if(x===PER)return;var f=x==='a'?12:1/12;['ql','qg'].forEach(function(id){var i=$(id),st=id==='ql'?10:5,s2=x==='a'?st*10:st;i.value=Math.round((+i.value||0)*f);i.step=s2});
+  document.querySelectorAll('.pm').forEach(function(b){var s=b.dataset.t==='ql'?10:5;b.dataset.d=(+b.dataset.d<0?-1:1)*(x==='a'?s*10:s)});
+  PER=x;document.querySelectorAll('.per button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.p===x)});render()}
 function render(){
-  var yl=Math.max(0,+$('ql').value||0)*12,yg=Math.max(0,+$('qg').value||0)*12,rai=$('rai').checked?90/12:0;
+  var k=PER==='a'?1:12,yl=Math.max(0,+$('ql').value||0)*k,yg=Math.max(0,+$('qg').value||0)*k,rai=$('rai').checked?90/12:0;
   var R=D.dual.reg;
   var ok=function(o,y){return o.ok!==false&&!(o.min!=null&&y<o.min||o.max!=null&&y>o.max)};
   var rows=D.dual.offerte.map(function(o){var l=costo(o.l,'luce',yl,R)+rai,g=costo(o.g,'gas',yg,R);return {o:o,l:l,g:g,t:l+g,k:'c'}});
@@ -346,7 +352,8 @@ function render(){
 Promise.all(['dual','luce','gas'].map(function(k){return fetch('/data/'+k+'.json',{cache:'no-cache'}).then(function(r){return r.json()})})).then(function(a){D.dual=a[0];D.luce=a[1];D.gas=a[2];
   ['ql','qg','rai'].forEach(function(id){$(id).addEventListener('input',render)});
   document.querySelectorAll('.pm').forEach(function(b){b.addEventListener('click',function(){var i=$(b.dataset.t);i.value=Math.max(0,(+i.value||0)+(+b.dataset.d));render()})});
-  var PF={1:[125,40],2:[185,75],4:[270,115]};document.querySelectorAll('[data-pf]').forEach(function(b){b.addEventListener('click',function(){$('ql').value=PF[b.dataset.pf][0];$('qg').value=PF[b.dataset.pf][1];render()})});render();
+  document.querySelectorAll('.per button').forEach(function(b){b.addEventListener('click',function(){setPer(b.dataset.p)})});
+  var PF={1:[125,40],2:[185,75],4:[270,115]};document.querySelectorAll('[data-pf]').forEach(function(b){b.addEventListener('click',function(){var k=PER==='a'?12:1;$('ql').value=PF[b.dataset.pf][0]*k;$('qg').value=PF[b.dataset.pf][1]*k;render()})});render();
   $('fsrc').textContent='Fonte: ARERA, Portale Offerte, open data del '+D.dual.data_open_data.split('-').reverse().join('/')+'.'});
 
 })();
