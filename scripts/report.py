@@ -60,7 +60,7 @@ if E_("CLARITY_TOKEN"):
         val = lambda k: next((m.get(k, {}).get(f) for f in ("sessionsCount", "subTotal", "pagesViews") if m.get(k, {}).get(f) is not None), "0")
         righe.append(f"<h3>Comportamento (Clarity, ultime 24 ore)</h3><p>{tr.get('totalSessionCount', 0)} sessioni registrate, "
                      f"{tr.get('distinctUserCount', 0)} utenti. Clic a vuoto in {val('DeadClickCount')} sessioni, clic ripetuti per frustrazione in {val('RageClickCount')}, "
-                     f"ritorni rapidi alla pagina precedente in {val('QuickbackClick')}. Scorrimento medio {m.get('ScrollDepth', {}).get('averageScrollDepth', '?')}%.</p>")
+                     f"ritorni rapidi alla pagina precedente in {val('QuickbackClick')}. Errori JavaScript in {val('ScriptErrorCount')} sessioni." + (f" Scorrimento medio {round(sd)}%." if (sd := m.get('ScrollDepth', {}).get('averageScrollDepth')) is not None else "") + "</p>")
     except Exception as e:
         err.append(f"Clarity: {e}")
 # --- Google Analytics (facoltativo)
