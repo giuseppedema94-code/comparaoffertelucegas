@@ -43,7 +43,7 @@ def get(u, n=400_000):
 
 
 def immagine(b, ct):
-    if len(b) < 100:
+    if len(b) < 100 or b.lstrip()[:1] == b"<":  # niente SVG o HTML: il .ico deve essere un'immagine raster
         return False
     if b[:4] in (b"\x89PNG", b"\x00\x00\x01\x00", b"GIF8") or b[:3] == b"\xff\xd8\xff" or b[:4] == b"RIFF":
         return True
