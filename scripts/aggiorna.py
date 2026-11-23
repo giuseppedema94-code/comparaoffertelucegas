@@ -14,6 +14,7 @@ import re
 from urllib.parse import urlparse
 
 import datetime as dt
+import hashlib
 import json
 import os
 import sys
@@ -186,7 +187,10 @@ def genera(archivio: Archivio, commodity: str, cambio: dict) -> dict:
                 durata_sconto = f"per {dm} mesi"
                 break
         fine = o.get("data_fine")
+        verde = any(k.get("macroarea") == "06" and k.get("tipologia") == "01" for k in o.get("componenti") or [])
         righe.append({
+            "id": hashlib.md5(f"{o['piva']}|{o['codice']}".encode()).hexdigest()[:8],
+            "vd": True if verde else None,
             "v": marchio(o, marchi),
             "n": bello(o.get("nome") or ""),
             "c": o["codice"],
@@ -220,6 +224,7 @@ def genera(archivio: Archivio, commodity: str, cambio: dict) -> dict:
         "data_open_data": archivio.giornata.data.isoformat(),
         "generato": dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes"),
         "indici": riferimento,
+        "idx": round(valori.get("PUN" if commodity == "luce" else "PSV") or 0, 5),
         "fornitori": len({r["v"] for r in righe}),
         "offerte": [{k: v for k, v in r.items() if v is not None and k not in ("c", "min", "max")} for r in righe],
     }
@@ -324,6 +329,58 @@ def migliori(luce: dict, gas: dict, n: int = 3) -> dict:
     return out
 
 
+def mese_tipo(o: dict, c: str) -> float:
+    """Spesa mensile con consumo tipo (225 kWh o 90 Smc al mese), come nel sito."""
+    y = 2700 if c == "luce" else 1080
+    r = REG[c]
+    acc = 0
+    if c == "luce":
+        m = y / 12
+        e = min(m, 150) if m <= 220 else max(0, 150 - (m - 220))
+        acc = (m - e) * 12 * r["acc"]
+    return (1 + r["iva"]) * (o["fx"] + o["p"] * y - (o.get("s") or 0) + r["rf"] + r["rv"] * y + acc) / 12
+
+
+def storico(c: str, dati: dict) -> None:
+    """Salva la spesa tipo di ogni offerta giorno per giorno (ultimi 35 giorni) e
+    aggiunge a ogni offerta la variazione rispetto a 7 giorni prima (campo "tr")."""
+    f = DATI / "storico" / f"{c}.json"
+    f.parent.mkdir(exist_ok=True)
+    st = json.loads(f.read_text()) if f.exists() else {"giorni": [], "v": {}}
+    oggi = dt.date.today().isoformat()
+    if st["giorni"] and st["giorni"][-1] == oggi:
+        st["giorni"].pop()
+        for k in st["v"]:
+            st["v"][k] = st["v"][k][:len(st["giorni"])]
+    n = len(st["giorni"])
+    st["giorni"].append(oggi)
+    attuali = {o["id"]: round(mese_tipo(o, c), 2) for o in dati["offerte"]}
+    for k, v in attuali.items():
+        st["v"].setdefault(k, [None] * n).append(v)
+    for k in st["v"]:
+        if len(st["v"][k]) < n + 1:
+            st["v"][k].append(None)
+    if len(st["giorni"]) > 35:
+        st["giorni"] = st["giorni"][-35:]
+        st["v"] = {k: v[-35:] for k, v in st["v"].items()}
+    st["v"] = {k: v for k, v in st["v"].items() if any(x is not None for x in v)}
+    # confronto con 7 giorni fa (o il giorno più vecchio disponibile, almeno 2 giorni fa)
+    g = st["giorni"]
+    oggi_d = dt.date.fromisoformat(oggi)
+    rif = [i for i, d in enumerate(g) if 2 <= (oggi_d - dt.date.fromisoformat(d)).days <= 7]
+    for o in dati["offerte"]:
+        o.pop("tr", None)
+        if not rif:
+            continue
+        serie = st["v"].get(o["id"], [])
+        vecchio = next((serie[i] for i in rif if i < len(serie) and serie[i] is not None), None)
+        if vecchio is not None:
+            dv = round(attuali[o["id"]] - vecchio, 2)
+            if abs(dv) >= 0.5:
+                o["tr"] = dv
+    f.write_text(json.dumps(st, separators=(",", ":")), encoding="utf-8")
+
+
 def prepara_cache(grezzi: Path) -> None:
     """Il Portale Offerte blocca i server di GitHub: i file arrivano gia scaricati
     (cartella grezzi/AAAAMMGG con i .gz) e vengono messi nella cache della libreria."""
@@ -363,6 +420,7 @@ def main() -> int:
     if os.environ.get("CONTROLLA_LINK"):
         link_vivi(list(tutti.values()) + [duale])
     for commodity, dati in tutti.items():
+        storico(commodity, dati)
         (DATI / f"{commodity}.json").write_text(json.dumps(dati, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
         print(f"{commodity}: {len(dati['offerte'])} offerte, {dati['fornitori']} fornitori, dati del {dati['data_open_data']}")
     (DATI / "top.json").write_text(json.dumps(migliori(tutti["luce"], tutti["gas"]), ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
