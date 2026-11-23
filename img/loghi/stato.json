@@ -123,6 +123,10 @@
 "data": "2026-11-23",
 "px": 180
 },
+"argos.company": {
+"data": "2026-11-23",
+"px": 28
+},
 "ariaenergia.com": {
 "data": "2026-11-23",
 "px": 256
@@ -767,6 +771,10 @@
 "data": "2026-11-23",
 "px": 192
 },
+"gjdenergiafutura.it": {
+"data": "2026-11-23",
+"px": 16
+},
 "globalpowerplus.it": {
 "data": "2026-11-23",
 "px": 0
@@ -790,6 +798,10 @@
 "greenius.it": {
 "data": "2026-11-23",
 "px": 256
+},
+"grittienergia.it": {
+"data": "2026-11-23",
+"px": 16
 },
 "gruppovisioli.it": {
 "data": "2026-11-23",
@@ -1151,6 +1163,10 @@
 "data": "2026-11-23",
 "px": 180
 },
+"postemobile.it": {
+"data": "2026-11-23",
+"px": 0
+},
 "powergas.it": {
 "data": "2026-11-23",
 "px": 256
@@ -1278,6 +1294,10 @@
 "sienergysrl.it": {
 "data": "2026-11-23",
 "px": 256
+},
+"simaenergia.it": {
+"data": "2026-11-23",
+"px": 16
 },
 "sinergas.it": {
 "data": "2026-11-23",
