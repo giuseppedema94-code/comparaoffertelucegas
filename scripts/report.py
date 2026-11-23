@@ -1,5 +1,5 @@
 """Riepilogo quotidiano via mail: GoatCounter + Clarity (+ Google Analytics se configurato).
-Segreti richiesti: GC_TOKEN, GMAIL_USER, GMAIL_APP_PASSWORD. Facoltativi: CLARITY_TOKEN, GA_PROPERTY, GA_KEY (JSON account di servizio)."""
+Segreti richiesti: GC_TOKEN, MAIL_USER, MAIL_PASSWORD (casella Aruba del sito). Facoltativi: CLARITY_TOKEN, GA_PROPERTY, GA_KEY (JSON account di servizio)."""
 import datetime as dt, json, os, smtplib, ssl, urllib.parse, urllib.request
 from email.mime.text import MIMEText
 from zoneinfo import ZoneInfo
@@ -89,11 +89,12 @@ corpo = (f"<div style='font:15px/1.5 -apple-system,Segoe UI,sans-serif;color:#14
          "<a href='https://clarity.microsoft.com'>Clarity</a>, <a href='https://analytics.google.com'>Analytics</a></p></div>")
 msg = MIMEText(corpo, "html", "utf-8")
 msg["Subject"] = f"Sito luce e gas: riepilogo del {ieri.strftime('%d/%m')}"
-msg["From"] = msg["To"] = E_("GMAIL_USER")
+msg["From"] = "comparaoffertelucegas.it <" + E_("MAIL_USER", "") + ">"
+msg["To"] = E_("MAIL_TO", "giuseppedema94@gmail.com")
 if os.environ.get("SOLO_STAMPA"):
     print(corpo)
 else:
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=ssl.create_default_context()) as s:
-        s.login(E_("GMAIL_USER"), E_("GMAIL_APP_PASSWORD"))
+    with smtplib.SMTP_SSL("smtps.aruba.it", 465, context=ssl.create_default_context()) as s:
+        s.login(E_("MAIL_USER"), E_("MAIL_PASSWORD"))
         s.send_message(msg)
     print("inviata")

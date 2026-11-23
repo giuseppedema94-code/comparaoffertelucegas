@@ -11,8 +11,9 @@ jobs:
       CLARITY_TOKEN: ${{ secrets.CLARITY_TOKEN }}
       GA_PROPERTY: ${{ secrets.GA_PROPERTY }}
       GA_KEY: ${{ secrets.GA_KEY }}
-      GMAIL_USER: ${{ secrets.GMAIL_USER }}
-      GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+      MAIL_USER: ${{ secrets.MAIL_USER }}
+      MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+      MAIL_TO: giuseppedema94@gmail.com
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
