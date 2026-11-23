@@ -98,16 +98,23 @@ def candidati(d):
 
 def salva(im, f):
     w, h = im.size
-    bb = im.getbbox()  # taglia i bordi trasparenti
+    # taglia i bordi trasparenti o bianchi
+    mask = Image.eval(im.convert("RGBA").split()[3], lambda a: 255 if a > 40 else 0)
+    chiaro = im.convert("L").point(lambda v: 0 if v > 235 else 255)
+    bb = Image.composite(chiaro, Image.new("L", im.size, 0), mask).getbbox()
     if bb and (bb[2] - bb[0]) > 8 and (bb[3] - bb[1]) > 8:
-        im = im.crop(bb)
+        m = max(2, round(max(bb[2] - bb[0], bb[3] - bb[1]) * 0.04))
+        im = im.crop((max(0, bb[0] - m), max(0, bb[1] - m), min(w, bb[2] + m), min(h, bb[3] + m)))
         w, h = im.size
+    if max(w, h) < 28 or pieno(im) < 0.02:
+        return False  # troppo piccolo o quasi invisibile su sfondo bianco: meglio l'iniziale
     k = min(LATO / w, LATO / h)
-    if k < 1:
+    if k != 1:  # adatto al riquadro: il browser lo mostra a 40 px, quindi resta nitido
         im = im.resize((max(1, round(w * k)), max(1, round(h * k))), Image.LANCZOS)
     tela = Image.new("RGBA", (LATO, LATO), (0, 0, 0, 0))
     tela.paste(im, ((LATO - im.width) // 2, (LATO - im.height) // 2), im)
     tela.save(f, optimize=True)
+    return True
 
 
 def cerca(d):
@@ -138,8 +145,9 @@ def cerca(d):
             migliore, lato = im, lt
         if lato >= 180:
             break
-    if migliore is not None:
-        salva(migliore, f)
+    if migliore is not None and not salva(migliore, f):
+        f.unlink(missing_ok=True)
+        lato = 0
     stato[d] = {"px": lato, "data": oggi.isoformat()}
 
 

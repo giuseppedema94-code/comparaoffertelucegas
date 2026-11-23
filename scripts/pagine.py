@@ -126,7 +126,7 @@ def testata(path, title, desc, c, icon):
 def scrivi(path, corpo, script=""):
     out = R / path.strip("/") / "index.html"
     out.parent.mkdir(exist_ok=True)
-    js = f"<script>\n(function(){{\nvar $=function(id){{return document.getElementById(id)}};\ndocument.addEventListener('error',function(e){{var t=e.target;if(t&&t.tagName==='IMG'&&t.closest('.lg'))t.remove()}},true);\n{tema}\n{script}\n}})();\n</script>\n"
+    js = f"<script>\n(function(){{\nvar $=function(id){{return document.getElementById(id)}};\ndocument.addEventListener('error',function(e){{var t=e.target;if(t&&t.tagName==='IMG'&&t.closest('.lg,.lgb'))t.remove()}},true);\n{tema}\n{script}\n}})();\n</script>\n"
     out.write_text(corpo + "</main>" + piede + js + "</body>\n</html>\n", encoding="utf-8")
 
 
