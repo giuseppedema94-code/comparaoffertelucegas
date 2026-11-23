@@ -16,7 +16,16 @@ testa = tpl[: tpl.index('<main')]
 piede = tpl[tpl.index('</main>') + len('</main>'): tpl.index('<script>\n(function(){')]
 tema = re.search(r"\(function\(\)\{var modes=.*?show\(\)\}\)\(\);", tpl, re.S).group(0)
 
-CSS_NET = """.lgh{display:grid;grid-template-columns:1fr 1.15fr;gap:16px;margin-bottom:16px}.lgh .card{margin:0}
+CSS_NET = """.t-luce:hover:not([aria-pressed=true]):not([aria-current]){background:rgba(245,197,24,.25)!important;color:var(--ink)!important}
+.t-gas:hover:not([aria-pressed=true]):not([aria-current]){background:rgba(198,91,124,.22)!important;color:var(--ink)!important}
+.t-lg:hover:not([aria-current]){background:linear-gradient(90deg,rgba(245,197,24,.25),rgba(198,91,124,.22))!important;color:var(--ink)!important}
+.t-net:hover:not([aria-current]){background:rgba(46,155,230,.2)!important;color:var(--ink)!important}
+.seg button,.seg a{transition:background-color .15s}
+.oc{transition:border-color .15s,box-shadow .15s,transform .15s}
+.oc:hover{border-color:var(--accbar);box-shadow:0 8px 22px rgba(0,0,0,.08);transform:translateY(-2px)}
+@media (prefers-reduced-motion:reduce){.oc,.oc:hover{transition:none;transform:none}}
+:root[data-c=lg] .oc:not(.first):hover{border-color:transparent;background:linear-gradient(var(--card),var(--card)) padding-box,var(--grad) border-box}
+.lgh{display:grid;grid-template-columns:1fr 1.15fr;gap:16px;margin-bottom:16px}.lgh .card{margin:0}
 .lga h2{margin:0 0 14px;font-size:22px}.lgq{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 10px}.lgq label{font:700 17px 'Schibsted Grotesk',sans-serif}
 .lgv{display:flex;align-items:baseline;gap:8px;border:2px solid var(--bd);border-radius:14px;padding:6px 14px;background:var(--soft)}.lgv input{width:110px;border:0;background:transparent;font:800 30px 'Schibsted Grotesk',sans-serif;color:var(--ink);text-align:right}.lgv input:focus{outline:none}.lgv:focus-within{border-color:var(--ink)}.lgv span{color:var(--mut);font-weight:600}
 .prof{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:13px;color:var(--mut);margin:12px 0 8px}.prof button{font:600 13px 'Schibsted Grotesk',sans-serif;padding:5px 10px;border-radius:8px;border:1px solid var(--bd);background:transparent;color:var(--ink2);cursor:pointer}.prof button:hover{border-color:var(--ink)}
@@ -105,8 +114,8 @@ CSS_NET = """.lgh{display:grid;grid-template-columns:1fr 1.15fr;gap:16px;margin-
 def testata(path, title, desc, c, icon):
     s = testa
     on = lambda k: ' aria-current="page"' if k == c else ""
-    nav = (f'<nav class="seg segn" aria-label="Confronti"><a href="/"{on("luce")}>Luce</a><a href="/#gas"{on("gas")}>Gas</a>'
-           f'<a href="/luce-e-gas/"{on("lg")}>Luce + gas</a><a href="/internet/"{on("net")}>Internet</a></nav>')
+    nav = (f'<nav class="seg segn" aria-label="Confronti"><a class="t-luce" href="/"{on("luce")}>Luce</a><a class="t-gas" href="/#gas"{on("gas")}>Gas</a>'
+           f'<a class="t-lg" href="/luce-e-gas/"{on("lg")}>Luce + gas</a><a class="t-net" href="/internet/"{on("net")}>Internet</a></nav>')
     s = s.replace('<a class="theme-btn" href="/" style="text-decoration:none">Confronta offerte</a>', nav)
     s = re.sub(r'<html lang="it" data-c="[^"]*">', f'<html lang="it" data-c="{c}">', s)
     s = re.sub(r"<title>.*?</title>", f"<title>{H.escape(title, quote=False)}</title>", s)
