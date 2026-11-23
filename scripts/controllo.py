@@ -78,6 +78,14 @@ for f in RADICE.glob("**/index.html"):
     if "grezzi" not in f.parts and "Content-Security-Policy" not in f.read_text(encoding="utf-8"):
         problemi.append(f"{f.relative_to(RADICE)}: manca la CSP")
 
+try:
+    import datetime as _dt
+    _v = json.loads((RADICE / "data" / "internet.json").read_text())["verificato"]
+    if (_dt.date.today() - _dt.date.fromisoformat(_v)).days > 3:
+        problemi.append(f"internet: prezzi fermi al {_v}")
+except Exception as e:
+    problemi.append(f"internet.json: {e}")
+
 if problemi:
     print("PROBLEMI:\n- " + "\n- ".join(problemi))
     sys.exit(1)

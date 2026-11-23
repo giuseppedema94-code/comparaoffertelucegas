@@ -131,12 +131,14 @@ n2 = lambda v: f"{v:.2f}".replace(".", ",") + " €" if v is not None else "—"
 ver = net["verificato"].split("-")
 ver = f"{int(ver[2])}/{ver[1]}/{ver[0]}"
 righe = sorted(net["internet"], key=lambda x: x["prezzo_mese"])
+vecchio = lambda x: x.get("letto") and x["letto"] < net["verificato"]
+dl = lambda x: f' Prezzo letto il {int(x["letto"][8:])}/{x["letto"][5:7]}.' if vecchio(x) else ""
 tr = []
 for i, x in enumerate(righe):
     nome = f'<a href="{e(x["url"])}" target="_blank" rel="nofollow noopener">{e(x["offerta"])}</a>' if x.get("url") else e(x["offerta"])
     dopo = f'poi {n2(x["prezzo_dopo"])}' + (f' dopo {x["mesi_promo"]} mesi' if x.get("mesi_promo") else "") if x.get("prezzo_dopo") and x["prezzo_dopo"] != x["prezzo_mese"] else ""
     tr.append(f'<tr{" class=\"first\"" if i == 0 else ""}><td class="c-pos">{i + 1}</td><td class="c-op"><div class="op">{e(x["operatore"])}</div><div>{nome}</div>'
-              f'<div class="nt">{e(x["nota"])}</div></td><td class="c-x" data-l="Tecnologia">{e(x["tecnologia"])}, {e(x["velocita"])}</td>'
+              f'<div class="nt">{e(x["nota"])}{dl(x)}</div></td><td class="c-x" data-l="Tecnologia">{e(x["tecnologia"])}, {e(x["velocita"])}</td>'
               f'<td class="n tot c-pr">{n2(x["prezzo_mese"])}<div class="nt">{dopo}</div></td><td class="n c-x" data-l="Attivazione">{n2(x.get("attivazione"))}</td><td class="c-x" data-l="Modem">{e(x.get("modem") or "—")}</td></tr>')
 bt = []
 for x in net["bundle"]:
@@ -153,7 +155,7 @@ corpo += f"""<main class="wrap pg">
 <thead><tr><th>#</th><th>Operatore e offerta</th><th>Tecnologia</th><th class="n">Al mese</th><th class="n">Attivazione</th><th>Modem</th></tr></thead><tbody>
 {''.join(tr)}
 </tbody></table></div>
-<p class="src">Prezzi letti sui siti degli operatori il {ver}. La velocità e la tecnologia dipendono dalla copertura del tuo indirizzo: verificala sul sito dell'operatore prima di attivare.</p></section>
+<p class="src">Prezzi letti ogni giorno in automatico dalle pagine ufficiali degli operatori, ultimo controllo il {ver}. Velocità e tecnologia dipendono dalla copertura del tuo indirizzo: verificala sul sito dell'operatore prima di attivare.</p></section>
 <section class="card xs"><h2 class="h" style="margin:0 0 4px;font-size:22px">Quanto spenderesti oggi per luce e gas</h2>
 <p class="src" style="margin:0">Le offerte più convenienti di oggi per una casa con 225 kWh di luce e 90 Smc di gas al mese, imposte e canone RAI inclusi.</p>
 <div class="rw"><div class="bx"><div class="l">Luce</div><strong id="xl">—</strong><span id="xln"></span></div><div class="bx"><div class="l">Gas</div><strong id="xg">—</strong><span id="xgn"></span></div></div>
@@ -165,7 +167,7 @@ corpo += f"""<main class="wrap pg">
 </tbody></table></div>
 <p class="src">Il prezzo della luce e del gas di questi fornitori lo trovi nella <a href="/">classifica luce e gas</a>.</p></section>
 <section class="card txt"><h2 class="h">Come leggere il confronto</h2>
-<p>Per luce e gas usiamo gli open data ufficiali di ARERA. Per internet non esiste una banca dati pubblica delle offerte, quindi questa lista la controlliamo a mano sui siti degli operatori: prima di attivare, verifica prezzo e condizioni sulla pagina dell'offerta.</p>
+<p>Per luce e gas usiamo gli open data ufficiali di ARERA. Per internet non esiste una banca dati pubblica delle offerte: ogni mattina leggiamo i prezzi direttamente dalle pagine degli operatori. Prima di attivare, controlla comunque prezzo e condizioni sulla pagina dell'offerta.</p>
 <p>Oltre al canone guarda tre cose: quanto dura il prezzo promozionale, il costo di attivazione e quanto paghi se disdici prima del vincolo.</p></section>
 """
 NET_JS = r"""
