@@ -57,6 +57,7 @@ CSS_NET = """.lgh{display:grid;grid-template-columns:1fr 1.15fr;gap:16px;margin-
 :root[data-c=lg] .oc.first{border:2px solid transparent;background:linear-gradient(var(--card),var(--card)) padding-box,var(--grad) border-box}
 :root[data-c=lg] .oc.first .oc-h{background:linear-gradient(90deg,#FEF6D8,#F9E5EC)}
 :root[data-c=lg] .oc-btn{background:var(--grad);color:#14161A!important}
+.lgbtn.bl,:root[data-c=lg] .oc-btn.bl{background:#F5C518;color:#14161A!important}.lgbtn.bg,:root[data-c=lg] .oc-btn.bg{background:#C65B7C;color:#fff!important}
 @media (prefers-color-scheme:dark){:root[data-c=lg]:not([data-theme=light]) .oc.first .oc-h{background:linear-gradient(90deg,#3a3110,#3a1f29)}}
 :root[data-c=lg][data-theme=dark] .oc.first .oc-h{background:linear-gradient(90deg,#3a3110,#3a1f29)}
 .lg{position:relative;flex:0 0 auto;width:30px;height:30px;border-radius:8px;background:#fff;border:1px solid var(--line);display:inline-flex;align-items:center;justify-content:center;font:700 13px 'Schibsted Grotesk',sans-serif;color:#14161A;overflow:hidden}
@@ -152,7 +153,7 @@ function render(){
   rows.sort(function(a,b){return a.t-b.t});
   function migliore(d,c,y){var b=null;d.offerte.forEach(function(o){if(o.ok===false)return;if(o.min!=null&&y<o.min||o.max!=null&&y>o.max)return;var x=costo(o,c,y,R);if(!b||x<b.x)b={o:o,x:x}});return b}
   var bl=migliore(D.luce,'luce',yl),bg=migliore(D.gas,'gas',yg);
-  if(bl&&bg){var sep=bl.x+rai+bg.x,pk=rows[0],vince=!pk||sep<=pk.t,lnk=function(o,t,c){var u=safe(o.u);return u?'<a class="lgbtn" href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+t+'</a>':'<a class="lgbtn" href="/?q='+encodeURIComponent(o.v)+'#'+(c||'luce')+'">'+t+'</a>'};
+  if(bl&&bg){var sep=bl.x+rai+bg.x,pk=rows[0],vince=!pk||sep<=pk.t,lnk=function(o,t,c){var u=safe(o.u),k=/luce$/.test(t)?' bl':/gas$/.test(t)?' bg':'';return u?'<a class="lgbtn'+k+'" href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+t+'</a>':'<a class="lgbtn'+k+'" href="/?q='+encodeURIComponent(o.v)+'#'+(c||'luce')+'">'+t+'</a>'};
     var riga=function(k,x,o){return '<div class="lgr1"><span class="k">'+k+'</span><span class="lgl">'+logoB(o)+'<span><strong>'+esc(o.v)+'</strong><br>'+esc(o.n)+'</span></span><span class="lgp">'+eur(x)+'</span></div>'};
     $('best').innerHTML=vince
       ?'<div class="lbk">La soluzione più conveniente oggi</div><div class="lbt">Luce e gas da due fornitori diversi</div><div class="lbm">'+big(sep)+'</div>'+riga('Luce',bl.x+rai,bl.o)+riga('Gas',bg.x,bg.o)
@@ -160,7 +161,7 @@ function render(){
       :'<div class="lbk">La soluzione più conveniente oggi</div><div class="lbt">Luce e gas con '+esc(pk.o.v)+'</div><div class="lbm">'+big(pk.t)+'</div>'+riga('Pacchetto',pk.t,pk.o)
         +'<div class="lbs">Risparmi '+eur(sep-pk.t)+' al mese rispetto a luce e gas da fornitori diversi ('+eur(sep)+')</div><div class="lbb">'+(pk.k==='s'?lnk(pk.o.L,'Offerta luce','luce')+lnk(pk.o.G,'Offerta gas','gas'):lnk(pk.o,'Vai all\'offerta'))+'</div>'}
   var stab=function(o){return o.t!=='f'?'D':(o.d>=36&&o.d<99?'A':o.d>=24&&o.d<99?'B':'C')};
-  var bt=function(o,t,c){var u=safe(o.u);return '<a class="oc-btn" href="'+(u?esc(u)+'" target="_blank" rel="nofollow noopener':'/?q='+encodeURIComponent(o.v)+'#'+c)+'">'+t+'</a>'};
+  var bt=function(o,t,c){var u=safe(o.u),k=/luce$/.test(t)?' bl':/gas$/.test(t)?' bg':'';return '<a class="oc-btn'+k+'" href="'+(u?esc(u)+'" target="_blank" rel="nofollow noopener':'/?q='+encodeURIComponent(o.v)+'#'+c)+'">'+t+'</a>'};
   var h='',top=rows.length?rows[0].t:0;
   rows.forEach(function(x,i){var o=x.o,u=safe(o.u),tipo=o.t==='f'?'Fisso'+(o.d>=12&&o.d<99?' · '+(o.d%12?o.d+' mesi':o.d/12+(o.d===12?' anno':' anni')):''):'Variabile';
     h+='<article class="oc'+(i===0?' first':'')+'"><div class="oc-h"><span class="oc-n">'+(i+1)+'</span>'+logoB(o)+'<div class="oc-t"><div class="oc-v">'+esc(o.v)+'</div><div class="oc-o">'+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+'</div></div>'
