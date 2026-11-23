@@ -1,0 +1,145 @@
+#!/usr/bin/env python3
+"""Genera le pagine /luce-e-gas/ e /internet/ partendo dalla testata di /psv/.
+
+Uso: python3 scripts/pagine.py   (poi python3 scripts/csp.py)
+I dati internet stanno in data/internet.json e si aggiornano a mano.
+"""
+import html as H
+import json
+import re
+from pathlib import Path
+
+R = Path(__file__).resolve().parent.parent
+BASE = "https://comparaoffertelucegas.it"
+tpl = (R / "psv" / "index.html").read_text(encoding="utf-8")
+testa = tpl[: tpl.index('<main')]
+piede = tpl[tpl.index('</main>') + len('</main>'): tpl.index('<script>\n(function(){')]
+tema = re.search(r"\(function\(\)\{var modes=.*?show\(\)\}\)\(\);", tpl, re.S).group(0)
+
+CSS_NET = """:root[data-c=net]{--acc:#2E9BE6;--accbg:#2E9BE6;--accbar:#2E9BE6;--first:#E3F1FB}
+:root[data-c=net] .w-luce,:root[data-c=net] .w-gas{color:var(--ink)}
+@media (prefers-color-scheme:dark){:root[data-c=net]:not([data-theme=light]){--acc:#5AB4F0;--first:#14283a}}
+:root[data-c=net][data-theme=dark]{--acc:#5AB4F0;--first:#14283a}
+.pk{width:100%;border-collapse:collapse;font-size:14.5px}.pk th{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);text-align:left;padding:10px 8px;border-bottom:1px solid var(--line)}
+.pk td{padding:12px 8px;border-bottom:1px solid var(--line);vertical-align:top}.pk td.n{text-align:right;white-space:nowrap;font-variant-numeric:proportional-nums}
+.pk tr.first td{background:var(--first)}.pk .op{font-weight:700}.pk .nt{font-size:12.5px;color:var(--mut);margin-top:4px;max-width:46ch;white-space:normal;overflow:visible;text-overflow:clip}.pk td{font-variant-numeric:proportional-nums}
+.pk .tot{font-weight:800;font-size:17px}.pk a{color:var(--ink)}
+.inp{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;margin:4px 0 0}.inp label{display:flex;align-items:center;gap:8px;font-weight:600}
+.inp input[type=number]{width:96px;font:600 16px 'Schibsted Grotesk',sans-serif;padding:8px 10px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--ink)}
+.best2{display:grid;gap:4px;margin-top:6px}.best2 strong{font-size:22px}
+.txt{margin-top:16px}.txt h2{margin:0 0 8px;font-size:22px}.txt p{margin:10px 0 0;line-height:1.55;max-width:72ch}
+.pg .card+.card{margin-top:16px}
+@media (max-width:520px){.pg h1{font-size:30px}}
+"""
+
+
+def testata(path, title, desc, c, icon):
+    s = testa
+    s = re.sub(r'<html lang="it" data-c="[^"]*">', f'<html lang="it" data-c="{c}">', s)
+    s = re.sub(r"<title>.*?</title>", f"<title>{H.escape(title, quote=False)}</title>", s)
+    for k in ('name="description"', 'property="og:description"'):
+        s = re.sub(rf'(<meta {k} content=")[^"]*', lambda m: m.group(1) + H.escape(desc), s)
+    s = re.sub(r'(<meta property="og:title" content=")[^"]*', lambda m: m.group(1) + H.escape(title), s)
+    s = re.sub(r'(<link rel="canonical" href=")[^"]*', lambda m: m.group(1) + BASE + path, s)
+    s = re.sub(r'(<meta property="og:url" content=")[^"]*', lambda m: m.group(1) + BASE + path, s)
+    s = re.sub(r'(<link rel="icon" href=")[^"]*', lambda m: m.group(1) + icon, s)
+    s = s.replace("\n</style>", "\n" + CSS_NET + "</style>", 1)
+    if c == "net":
+        s = re.sub(r'<img class="geco ic-bolt"[^>]*><img class="geco ic-flame"[^>]*>',
+                   '<img class="geco" src="/img/geco-net.svg" width="40" height="40" alt="">', s)
+    return s
+
+
+def scrivi(path, corpo, script=""):
+    out = R / path.strip("/") / "index.html"
+    out.parent.mkdir(exist_ok=True)
+    js = f"<script>\n(function(){{\nvar $=function(id){{return document.getElementById(id)}};\n{tema}\n{script}\n}})();\n</script>\n"
+    out.write_text(corpo + "</main>" + piede + js + "</body>\n</html>\n", encoding="utf-8")
+
+
+# ---------- luce + gas ----------
+LG_JS = r"""
+var num=function(n,d){return n.toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d})};
+var eur=function(n){return num(n,2)+' €'};
+var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+var safe=function(u){return /^https:\/\//.test(u||'')?u:null};
+function accLuce(y,al){var m=y/12,e=m<=220?Math.min(m,150):Math.max(0,150-(m-220));return (m-e)*12*al}
+function costo(o,c,y,R){var r=R[c],acc=c==='luce'?accLuce(y,r.acc):0;return (1+r.iva)*(o.fx+o.p*y-(o.s||0)+r.rf+r.rv*y+acc)/12}
+var D={};
+function render(){
+  var yl=Math.max(0,+$('ql').value||0)*12,yg=Math.max(0,+$('qg').value||0)*12,rai=$('rai').checked?90/12:0;
+  var R=D.dual.reg;
+  var rows=D.dual.offerte.map(function(o){var l=costo(o.l,'luce',yl,R)+rai,g=costo(o.g,'gas',yg,R);return {o:o,l:l,g:g,t:l+g}}).sort(function(a,b){return a.t-b.t});
+  function migliore(d,c,y){var b=null;d.offerte.forEach(function(o){if(o.ok===false)return;if(o.min!=null&&y<o.min||o.max!=null&&y>o.max)return;var x=costo(o,c,y,R);if(!b||x<b.x)b={o:o,x:x}});return b}
+  var bl=migliore(D.luce,'luce',yl),bg=migliore(D.gas,'gas',yg);
+  if(bl&&bg){var sep=bl.x+rai+bg.x;$('sep').innerHTML='<strong>'+eur(sep)+' al mese</strong><span>Luce: '+esc(bl.o.v)+', '+esc(bl.o.n)+' ('+eur(bl.x+rai)+')</span><span>Gas: '+esc(bg.o.v)+', '+esc(bg.o.n)+' ('+eur(bg.x)+')</span>'+(rows.length?'<span>'+(rows[0].t>sep?'Il pacchetto più economico costa '+eur(rows[0].t-sep)+' al mese in più.':'Il pacchetto più economico costa '+eur(sep-rows[0].t)+' al mese in meno.')+'</span>':'')}
+  var h='<thead><tr><th>#</th><th>Fornitore e pacchetto</th><th class="n">Luce</th><th class="n">Gas</th><th class="n">Totale al mese</th></tr></thead><tbody>';
+  rows.forEach(function(x,i){var o=x.o,u=safe(o.u),tipo=o.t==='f'?'fisso'+(o.d>=12&&o.d<99?' '+(o.d%12?o.d+' mesi':o.d/12+(o.d===12?' anno':' anni')):''):'variabile';
+    h+='<tr'+(i===0?' class="first"':'')+'><td>'+(i+1)+'</td><td><div class="op">'+esc(o.v)+'</div><div>'+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+'</div><div class="nt">Prezzo '+tipo+(o.pen?' · costo di uscita anticipata':'')+'</div></td><td class="n">'+eur(x.l)+'</td><td class="n">'+eur(x.g)+'</td><td class="n tot">'+eur(x.t)+'</td></tr>'});
+  $('tab').innerHTML=h+'</tbody>';
+  $('cnt').textContent=rows.length+' pacchetti di '+D.dual.fornitori+' fornitori';
+}
+Promise.all(['dual','luce','gas'].map(function(k){return fetch('/data/'+k+'.json',{cache:'no-cache'}).then(function(r){return r.json()})})).then(function(a){D.dual=a[0];D.luce=a[1];D.gas=a[2];
+  ['ql','qg','rai'].forEach(function(id){$(id).addEventListener('input',render)});render();
+  $('fsrc').textContent='Fonte: ARERA, Portale Offerte, open data del '+D.dual.data_open_data.split('-').reverse().join('/')+'.'});
+"""
+
+corpo = testata("/luce-e-gas/", "Offerte luce e gas insieme: pacchetti a confronto",
+                "Le offerte luce e gas in un unico contratto dagli open data ARERA, con la spesa sui tuoi consumi e il confronto con le migliori offerte separate.",
+                "luce", "/img/geco-luce.svg")
+corpo += """<main class="wrap pg">
+<h1 class="h">Offerte luce e gas insieme</h1>
+<section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">I tuoi consumi al mese</h2>
+<div class="inp"><label>Luce <input type="number" id="ql" value="225" min="0" step="10" inputmode="numeric"> kWh</label><label>Gas <input type="number" id="qg" value="90" min="0" step="5" inputmode="numeric"> Smc</label><label><input type="checkbox" id="rai" checked> Canone RAI</label></div>
+<p class="src">Cliente residente, contatore da 3 kW. Spesa con imposte, stimata come nella <a href="/">classifica principale</a>.</p></section>
+<section class="card"><h2 class="h" style="margin:0 0 4px;font-size:22px">Luce e gas da fornitori diversi</h2><div class="best2" id="sep">—</div></section>
+<section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Pacchetti luce + gas <span class="src" id="cnt"></span></h2>
+<div class="scroll" role="region" aria-label="Pacchetti luce e gas" tabindex="0"><table class="pk" id="tab"></table></div></section>
+<section class="card txt"><h2 class="h">Conviene il pacchetto unico?</h2>
+<p>Un'offerta dual lega luce e gas allo stesso venditore: una sola bolletta e, a volte, uno sconto. Non è detto che costi meno di due offerte separate scelte ciascuna al prezzo più basso, per questo le mettiamo a confronto qui sopra.</p>
+<p>Se un domani vuoi cambiare solo la luce o solo il gas, controlla nella scheda dell'offerta se lo sconto del pacchetto si perde.</p></section>
+"""
+scrivi("/luce-e-gas/", corpo, LG_JS)
+
+# ---------- internet ----------
+net = json.loads((R / "data" / "internet.json").read_text(encoding="utf-8"))
+e = lambda s: H.escape(str(s), quote=True)
+n2 = lambda v: f"{v:.2f}".replace(".", ",") + " €" if v is not None else "—"
+ver = net["verificato"].split("-")
+ver = f"{int(ver[2])}/{ver[1]}/{ver[0]}"
+righe = sorted(net["internet"], key=lambda x: x["prezzo_mese"])
+tr = []
+for i, x in enumerate(righe):
+    nome = f'<a href="{e(x["url"])}" target="_blank" rel="nofollow noopener">{e(x["offerta"])}</a>' if x.get("url") else e(x["offerta"])
+    dopo = f'poi {n2(x["prezzo_dopo"])}' + (f' dopo {x["mesi_promo"]} mesi' if x.get("mesi_promo") else "") if x.get("prezzo_dopo") and x["prezzo_dopo"] != x["prezzo_mese"] else ""
+    tr.append(f'<tr{" class=\"first\"" if i == 0 else ""}><td>{i + 1}</td><td><div class="op">{e(x["operatore"])}</div><div>{nome}</div>'
+              f'<div class="nt">{e(x["nota"])}</div></td><td>{e(x["tecnologia"])}<div class="nt">{e(x["velocita"])}</div></td>'
+              f'<td class="n tot">{n2(x["prezzo_mese"])}<div class="nt">{dopo}</div></td><td class="n">{n2(x.get("attivazione"))}</td><td>{e(x.get("modem") or "—")}</td></tr>')
+bt = []
+for x in net["bundle"]:
+    nome = f'<a href="{e(x["url"])}" target="_blank" rel="nofollow noopener">{e(x["offerta"])}</a>' if x.get("url") else e(x["offerta"])
+    bt.append(f'<tr><td><div class="op">{e(x["fornitore"])}</div><div>{nome}</div><div class="nt">{e(x["nota"])}</div></td><td>{e(x["vantaggio"])}</td><td class="n tot">{n2(x["prezzo_fibra_mese"])}</td></tr>')
+
+corpo = testata("/internet/", "Offerte fibra e internet casa a confronto",
+                "Le offerte fibra per la casa dei principali operatori, ordinate per canone mensile, e i pacchetti energia più internet dei fornitori di luce e gas.",
+                "net", "/img/geco-net.svg")
+corpo += f"""<main class="wrap pg">
+<h1 class="h">Offerte fibra e internet casa</h1>
+<section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Fibra per la casa, dal canone più basso</h2>
+<div class="scroll" role="region" aria-label="Offerte internet casa" tabindex="0"><table class="pk">
+<thead><tr><th>#</th><th>Operatore e offerta</th><th>Tecnologia</th><th class="n">Al mese</th><th class="n">Attivazione</th><th>Modem</th></tr></thead><tbody>
+{''.join(tr)}
+</tbody></table></div>
+<p class="src">Prezzi letti sui siti degli operatori il {ver}. La velocità e la tecnologia dipendono dalla copertura del tuo indirizzo: verificala sul sito dell'operatore prima di attivare.</p></section>
+<section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Pacchetti energia + internet</h2>
+<div class="scroll" role="region" aria-label="Pacchetti energia e internet" tabindex="0"><table class="pk">
+<thead><tr><th>Fornitore e offerta</th><th>Vantaggio</th><th class="n">Fibra al mese</th></tr></thead><tbody>
+{''.join(bt)}
+</tbody></table></div>
+<p class="src">Il prezzo della luce e del gas di questi fornitori lo trovi nella <a href="/">classifica luce e gas</a>.</p></section>
+<section class="card txt"><h2 class="h">Come leggere il confronto</h2>
+<p>Per luce e gas usiamo gli open data ufficiali di ARERA. Per internet non esiste una banca dati pubblica delle offerte, quindi questa lista la controlliamo a mano sui siti degli operatori: prima di attivare, verifica prezzo e condizioni sulla pagina dell'offerta.</p>
+<p>Oltre al canone guarda tre cose: quanto dura il prezzo promozionale, il costo di attivazione e quanto paghi se disdici prima del vincolo.</p></section>
+"""
+scrivi("/internet/", corpo)
+print("pagine generate")

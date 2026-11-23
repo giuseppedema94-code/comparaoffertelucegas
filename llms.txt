@@ -1,0 +1,13 @@
+# comparaoffertelucegas.it
+
+> Confronto gratuito delle offerte luce e gas per le famiglie in Italia, costruito sugli open data del Portale Offerte ARERA e aggiornato due volte al giorno. Le offerte sono ordinate solo per spesa mensile stimata, con trasporto, oneri di sistema, accise e IVA, per un cliente residente. Non chiediamo dati personali.
+
+## Pagine
+- [Classifica offerte luce e gas](https://comparaoffertelucegas.it/): tutte le offerte del mercato libero, con consumo mensile o annuo, potenza del contatore e canone RAI.
+- [Pacchetti luce + gas](https://comparaoffertelucegas.it/luce-e-gas/): offerte dual a confronto con la migliore combinazione di offerte separate.
+- [Internet casa](https://comparaoffertelucegas.it/internet/): offerte fibra dei principali operatori e pacchetti energia più internet, verificate a mano.
+- [PUN oggi](https://comparaoffertelucegas.it/prezzo-energia-oggi/): prezzo dell'energia elettrica di oggi e domani, ora per ora.
+- [PSV](https://comparaoffertelucegas.it/psv/): prezzo mensile del gas all'ingrosso.
+
+## Contatti
+info@comparaoffertelucegas.it

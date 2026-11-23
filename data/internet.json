@@ -1,0 +1,14 @@
+{"verificato":"2026-11-23",
+"internet":[
+{"operatore":"WindTre","offerta":"Super Fibra","tecnologia":"FTTH o FTTC","velocita":"fino a 2,5 Gbit/s","prezzo_mese":19.99,"prezzo_dopo":24.99,"mesi_promo":24,"attivazione":1.99,"modem":"Wi-Fi 7 incluso","url":"https://www.windtre.it/offerte-fibra/offerta-fibra-luce-gas","nota":"Prezzo con una linea mobile WindTre."},
+{"operatore":"Sky","offerta":"Sky Wifi Fibra100%","tecnologia":"FTTH","velocita":"fino a 1 Gbit/s","prezzo_mese":20.90,"prezzo_dopo":null,"mesi_promo":18,"attivazione":0,"modem":"Sky Wifi Hub in comodato","url":"https://www.sky.it/sky-wifi-fibra","nota":"Solo con un abbonamento Sky TV da 9 €/mese. Vincolo 18 mesi."},
+{"operatore":"Eolo","offerta":"EOLO Fibra","tecnologia":"Fibra","velocita":"fino a 1 Gbit/s","prezzo_mese":24.90,"prezzo_dopo":null,"mesi_promo":null,"attivazione":19.90,"modem":"Wi-Fi 7 incluso","url":"https://www.eolo.it/offerte-internet-casa/eolo-fibra","nota":"Vincolo 24 mesi, 24,90 € se disdici prima."},
+{"operatore":"Aruba","offerta":"Fibra Aruba","tecnologia":"FTTH","velocita":"fino a 2,5 Gbit/s","prezzo_mese":24.90,"prezzo_dopo":null,"mesi_promo":null,"attivazione":29.90,"modem":"Non incluso","url":"https://fibra.aruba.it/offerte-fibra-casa.aspx","nota":"Nelle aree bianche il canone sale di 2 €/mese."},
+{"operatore":"Poste","offerta":"PosteCasa Ultraveloce Start","tecnologia":"Fibra","velocita":"fino a 2,5 Gbit/s","prezzo_mese":24.90,"prezzo_dopo":null,"mesi_promo":null,"attivazione":39.00,"modem":"In comodato d'uso","url":"https://www.poste.it/fibra/postecasa-ultraveloce-start","nota":"Installazione con tecnico inclusa."},
+{"operatore":"TIM","offerta":"TIM WiFi Casa","tecnologia":"FTTH","velocita":"fino a 2,5 Gbit/s","prezzo_mese":27.90,"prezzo_dopo":null,"mesi_promo":null,"attivazione":39.90,"modem":"TIM HUB Pro","url":"https://www.tim.it/fisso-e-mobile/fibra-e-adsl/fibra-internet-casa","nota":"27,90 € con addebito su conto, altrimenti 31,90 €. Vincolo 24 mesi."},
+{"operatore":"Fastweb","offerta":"Fastweb Casa Start","tecnologia":"FTTH, FTTC o FWA","velocita":"fino a 2,5 Gbit/s in FTTH","prezzo_mese":27.95,"prezzo_dopo":null,"mesi_promo":null,"attivazione":0,"modem":"In comodato d'uso","url":"https://www.fastweb.it/adsl-fibra-ottica/fastweb-casa-start/","nota":"23,95 € con una SIM Fastweb Mobile e ricarica automatica."}
+],
+"bundle":[
+{"fornitore":"Enel Energia","offerta":"Enel Fibra Per Te Trio Web","vantaggio":"5 € al mese di sconto per 2 anni se hai luce e gas con Enel","prezzo_fibra_mese":19.90,"url":"https://www.enel.it/en-us/offerte-fibra/enel-fibra-per-te-trio","nota":"Prezzo pieno 24,90 €. Lo sconto si perde se chiudi il contratto luce o gas."},
+{"fornitore":"WindTre","offerta":"Super Fibra con Luce e Gas","vantaggio":"Fibra e energia nello stesso contratto WindTre","prezzo_fibra_mese":19.99,"url":"https://www.windtre.it/offerte-fibra/offerta-fibra-luce-gas","nota":"Poi 24,99 € dopo 24 mesi. Serve una linea mobile WindTre."}
+]}

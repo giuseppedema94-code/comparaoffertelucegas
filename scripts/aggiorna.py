@@ -225,6 +225,83 @@ def genera(archivio: Archivio, commodity: str, cambio: dict) -> dict:
     }
 
 
+def prezzi(o: dict, commodity: str, parametri: dict, valori, riferimento) -> dict | None:
+    """Quota fissa, prezzo e sconto annuo di una singola offerta (stessa logica di genera)."""
+    a, b = PUNTI[commodity]
+    sa = costi.stima(o, a, parametri, valori, riferimento)
+    sb = costi.stima(o, b, parametri, valori, riferimento)
+    ca, cb = sa["costo_vendita_anno"], sb["costo_vendita_anno"]
+    za = (sa.get("voci") or {}).get("sconti") or 0
+    zb = (sb.get("voci") or {}).get("sconti") or 0
+    z_var = (zb - za) / (b - a)
+    z_fix = za - z_var * a
+    pd_ = ((cb - zb) - (ca - za)) / (b - a)
+    fx = (ca - za) - pd_ * a
+    p_ = pd_ + z_var
+    pmax = 1.0 if commodity == "luce" else 3.0
+    if p_ <= 0 or p_ > pmax or not (0 <= fx <= 600):
+        return None
+    sc = round(-z_fix, 2)
+    return {"fx": round(fx, 2), "p": round(p_, 5), "pd": round(pd_, 5), "s": sc if sc > 0.5 else 0,
+            "t": "f" if o.get("tipo_prezzo") == "fisso" else "v", "ok": bool(sa.get("stima_completa") and sb.get("stima_completa"))}
+
+
+def genera_dual(archivio: Archivio) -> dict:
+    """Pacchetti luce + gas: ogni offerta dual rimanda a un'offerta luce e una gas collegate."""
+    duali, _ = archivio.cerca(commodity="dual", tipo_cliente="domestico", residente=True)
+    valori, riferimento = archivio.valori_indici("ultimo_mese")
+    per_codice = {}
+    for c in ("luce", "gas"):
+        tutte, _ = archivio.cerca(commodity=c, tipo_cliente="domestico", residente=True)
+        for o in tutte:
+            per_codice[(c, o["piva"], o["codice"])] = o
+    marchi = json.loads(MARCHI_FILE.read_text()) if MARCHI_FILE.exists() else {}
+    oggi = dt.date.today().isoformat()
+    righe, visti = [], set()
+    for d in duali:
+        fine = d.get("data_fine")
+        if fine and str(fine)[:10] < oggi:
+            continue
+        if zona(archivio, d):
+            continue
+        cg = d.get("offerte_congiunte") or {}
+        parti = {}
+        for c in ("luce", "gas"):
+            for cod in cg.get(c) or []:
+                o = per_codice.get((c, d["piva"], cod))
+                if o and not zona(archivio, o):
+                    x = prezzi(senza_doppioni(o), c, archivio.parametri.get(c, {}), valori, riferimento)
+                    if x:
+                        parti[c] = x
+                        break
+        if len(parti) < 2:
+            continue
+        chiave = (d["piva"], d["codice"])
+        if chiave in visti:
+            continue
+        visti.add(chiave)
+        pen, pen_testo = penale(d)
+        contatti = d.get("contatti") or {}
+        righe.append({
+            "v": marchio(d, marchi),
+            "n": bello(d.get("nome") or ""),
+            "t": "f" if d.get("tipo_prezzo") == "fisso" else "v",
+            "d": d.get("durata_mesi"),
+            "sc": str(fine)[:10] if fine else None,
+            "pen": pen,
+            "u": link(contatti.get("pagina_offerta") or contatti.get("sito")),
+            "l": parti["luce"],
+            "g": parti["gas"],
+        })
+    return {
+        "reg": REG,
+        "data_open_data": archivio.giornata.data.isoformat(),
+        "generato": dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes"),
+        "fornitori": len({r["v"] for r in righe}),
+        "offerte": [{k: v for k, v in r.items() if v is not None} for r in righe],
+    }
+
+
 def prepara_cache(grezzi: Path) -> None:
     """Il Portale Offerte blocca i server di GitHub: i file arrivano gia scaricati
     (cartella grezzi/AAAAMMGG con i .gz) e vengono messi nella cache della libreria."""
@@ -260,11 +337,15 @@ def main() -> int:
             print(f"{commodity}: solo {len(dati['offerte'])} offerte, file non aggiornato", file=sys.stderr)
             return 1
         tutti[commodity] = dati
+    duale = genera_dual(archivio)
     if os.environ.get("CONTROLLA_LINK"):
-        link_vivi(list(tutti.values()))
+        link_vivi(list(tutti.values()) + [duale])
     for commodity, dati in tutti.items():
         (DATI / f"{commodity}.json").write_text(json.dumps(dati, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
         print(f"{commodity}: {len(dati['offerte'])} offerte, {dati['fornitori']} fornitori, dati del {dati['data_open_data']}")
+    if len(duale["offerte"]) >= 5:
+        (DATI / "dual.json").write_text(json.dumps(duale, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+        print(f"dual: {len(duale['offerte'])} pacchetti")
     return 0
 
 
