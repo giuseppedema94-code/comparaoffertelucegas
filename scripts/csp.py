@@ -4,8 +4,9 @@ import base64, hashlib, re
 from pathlib import Path
 
 RADICE = Path(__file__).resolve().parent.parent
-BASE = ("default-src 'self'; script-src 'self' {h}; style-src 'self' 'unsafe-inline'; "
-        "font-src 'self'; img-src 'self' data:; connect-src 'self'; "
+EST = "https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com"
+BASE = ("default-src 'self'; script-src 'self' https://gc.zgo.at https://www.googletagmanager.com https://*.clarity.ms {h}; style-src 'self' 'unsafe-inline'; "
+        "font-src 'self'; img-src 'self' data: " + EST + "; connect-src 'self' " + EST + "; "
         "object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests")
 
 for f in sorted(RADICE.glob("**/index.html")):
@@ -14,6 +15,8 @@ for f in sorted(RADICE.glob("**/index.html")):
     s = f.read_text(encoding="utf-8")
     s = re.sub(r'\s*<meta http-equiv="Content-Security-Policy"[^>]*>', "", s)
     s = re.sub(r'\s*<meta name="referrer"[^>]*>', "", s)
+    s = re.sub(r'\s*<script src="/js/stat.js" defer></script>', "", s)
+    s = s.replace("</head>", '<script src="/js/stat.js" defer></script>\n</head>', 1)
     hashes = []
     for m in re.finditer(r"<script(?![^>]*\bsrc=)(?![^>]*ld\+json)[^>]*>(.*?)</script>", s, re.S):
         hashes.append("'sha256-" + base64.b64encode(hashlib.sha256(m.group(1).encode()).digest()).decode() + "'")
