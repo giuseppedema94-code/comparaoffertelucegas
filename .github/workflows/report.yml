@@ -1,0 +1,25 @@
+name: Riepilogo statistiche
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+jobs:
+  mail:
+    runs-on: ubuntu-latest
+    env:
+      GC_TOKEN: ${{ secrets.GC_TOKEN }}
+      CLARITY_TOKEN: ${{ secrets.CLARITY_TOKEN }}
+      GA_PROPERTY: ${{ secrets.GA_PROPERTY }}
+      GA_KEY: ${{ secrets.GA_KEY }}
+      GMAIL_USER: ${{ secrets.GMAIL_USER }}
+      GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Dipendenze Google Analytics
+        if: ${{ env.GA_KEY != '' }}
+        run: pip install google-analytics-data
+      - name: Invia riepilogo
+        run: python scripts/report.py
