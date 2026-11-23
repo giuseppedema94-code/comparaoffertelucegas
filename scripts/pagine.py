@@ -22,7 +22,8 @@ CSS_NET = """.lg{position:relative;flex:0 0 auto;width:30px;height:30px;border-r
 .seg{display:flex;background:var(--soft);border-radius:12px;padding:4px}
 .segn a{font:600 15px 'Schibsted Grotesk',sans-serif;padding:10px 20px;border-radius:9px;color:var(--ink);text-decoration:none}
 .segn a[aria-current=page]{background:var(--accbg);color:#fff}
-@media (max-width:520px){.segn a{padding:10px 15px}}
+@media (max-width:520px){.segn a{padding:10px 11px;font-size:14px}}
+:root[data-c=lg]{--acc:#F5C518;--accbg:#F5C518;--accbar:#F5C518}:root[data-c=lg] .segn a[aria-current=page]{color:#14161A}
 .flt{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0 10px}.flt button{font:600 14px 'Schibsted Grotesk',sans-serif;padding:7px 12px;border-radius:8px;border:1px solid var(--bd);background:transparent;color:var(--ink);cursor:pointer}.flt button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}.flt label{font-size:14px;display:flex;gap:6px;align-items:center;margin-left:4px}
 .ar{display:inline-block;font-size:11.5px;font-weight:700;background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:0 6px;margin-right:4px;color:var(--ink2)}.pk tr[hidden]{display:none}
 .xs{border:2px solid var(--acc)}.xs .rw{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
@@ -61,7 +62,7 @@ def testata(path, title, desc, c, icon):
     s = testa
     on = lambda k: ' aria-current="page"' if k == c else ""
     nav = (f'<nav class="seg segn" aria-label="Confronti"><a href="/"{on("luce")}>Luce</a><a href="/#gas"{on("gas")}>Gas</a>'
-           f'<a href="/internet/"{on("net")}>Internet</a></nav>')
+           f'<a href="/luce-e-gas/"{on("lg")}>Luce + gas</a><a href="/internet/"{on("net")}>Internet</a></nav>')
     s = s.replace('<a class="theme-btn" href="/" style="text-decoration:none">Confronta offerte</a>', nav)
     s = re.sub(r'<html lang="it" data-c="[^"]*">', f'<html lang="it" data-c="{c}">', s)
     s = re.sub(r"<title>.*?</title>", f"<title>{H.escape(title, quote=False)}</title>", s)
@@ -115,7 +116,7 @@ Promise.all(['dual','luce','gas'].map(function(k){return fetch('/data/'+k+'.json
 
 corpo = testata("/luce-e-gas/", "Offerte luce e gas insieme: pacchetti a confronto",
                 "Le offerte luce e gas in un unico contratto dagli open data ARERA, con la spesa sui tuoi consumi e il confronto con le migliori offerte separate.",
-                "luce", "/img/geco-luce.svg")
+                "lg", "/img/geco-luce.svg")
 corpo += """<main class="wrap pg">
 <h1 class="h">Offerte luce e gas insieme</h1>
 <section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">I tuoi consumi al mese</h2>
