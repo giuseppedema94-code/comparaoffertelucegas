@@ -486,7 +486,7 @@
   "mesi_promo": null,
   "prezzo_dopo": null,
   "attivazione": 49.9,
-  "nota": "Senza Vincoli, Modem FRITZ!Box 5630 incluso, IP pubblico statico incluso.",
+  "nota": "Senza vincoli, modem FRITZ!Box 5630 incluso, IP pubblico statico incluso.",
   "area": "Lazio",
   "bundle": false,
   "letto": "2026-11-23"
@@ -515,7 +515,7 @@
   "url": "https://www.mandarin.it/casa/",
   "regex": "\\bUltra Casa 30\\b.*?a partire da (\\d{1,3},\\d{2}) € al mese",
   "tecnologia": "Fibra",
-  "velocita": "massima velocità",
+  "velocita": "",
   "prezzo_mese": 25.0,
   "mesi_promo": null,
   "prezzo_dopo": null,

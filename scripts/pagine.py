@@ -249,7 +249,7 @@ def scheda(x, i, top, bundle=False):
     if x.get("attivazione") is not None: dati.append(("Attivazione", n2(x["attivazione"]), ""))
     if x.get("modem"): dati.append(("Modem", e(x["modem"]), ""))
     if bundle and x.get("vantaggio"): dati.append(("Vantaggio", e(x["vantaggio"]), "w"))
-    if x.get("nota"): dati.append(("Condizioni", e(x["nota"]) + dl(x), "w"))
+    if x.get("nota"): dati.append(("Condizioni", e(x["nota"][:1].upper()+x["nota"][1:]) + dl(x), "w"))
     dd = "".join(f'<div class="{w}"><dt>{k}</dt><dd{" class=nt" if k in ("Condizioni", "Vantaggio") else ""}>{v}</dd></div>' for k, v, w in dati)
     dopo = (f'poi {n2(x["prezzo_dopo"])}' + (f' dopo {x["mesi_promo"]} mesi' if x.get("mesi_promo") else "")) if x.get("prezzo_dopo") and x["prezzo_dopo"] != pm else ""
     diff = "" if bundle else ('<div class="oc-dd top1">Il canone più basso</div>' if i == 0 else f'<div class="oc-dd">+{n2(pm - top)} al mese</div>')
