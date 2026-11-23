@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-cDHI5dB6zCBMlMV8Oh9WIkGg/QC9xlUAYZbeNGb/vYU='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-AemDvOJ8TLn+uxx9FFqtLrBQnsELDUs0KXLAqtImZhw='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Confronto offerte luce e gas, aggiornato ogni giorno</title>
@@ -241,6 +241,7 @@ html,button,a,input,select,label{touch-action:manipulation}
 .ctab{table-layout:fixed}.ctab td{overflow-wrap:anywhere}.ctab .oc-btn{white-space:normal;text-align:center;justify-content:center}.ctab th{color:var(--mut);font-weight:600;width:32%}.ctab td.w{color:var(--ok);font-weight:700}.ctab thead td{font-weight:800;font-size:15px}.ctab .oc-btn{padding:10px 12px;font-size:14px}
 @media (max-width:520px){.ctab .oc-btn{padding:9px 8px;font-size:13px}.ctab .oc-btn:after{content:none}.ctab{font-size:13.5px}.ctab th{width:28%;padding:8px 4px}.ctab td{padding:8px 4px}#cdlg{padding:16px 12px}.shr{margin-left:0}.cbar{bottom:10px}}
 .altre{display:flex;flex-wrap:wrap;gap:8px}.altre a{border:1px solid var(--bd);border-radius:99px;padding:9px 14px;font-weight:600;font-size:14px;color:var(--ink);text-decoration:none}.altre a:hover{border-color:var(--ink)}
+@media (min-width:701px){.stepper .val{display:grid;grid-template-columns:1fr auto 1fr;column-gap:8px}.stepper .val:before{content:''}.stepper input{width:auto;min-width:1ch;text-align:center;font-variant-numeric:tabular-nums}.stepper .u{justify-self:start}}
 </style>
 </head>
 <body>
@@ -400,7 +401,7 @@ function compute(){
 function render(){
   var cfg=CFG[S.c];
   var an=S.per==='a';$('qlab').textContent=an?'Consumo annuo':'Consumo mensile';$('unit').textContent=cfg.u;$('raiw').hidden=S.c!=='luce';document.querySelectorAll('.per button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.p===S.per)});
-  if(document.activeElement!==$('cons'))$('cons').value=Math.round(an?S.q[S.c]*12:S.q[S.c]).toLocaleString('it-IT');
+  if(document.activeElement!==$('cons'))$('cons').value=Math.round(an?S.q[S.c]*12:S.q[S.c]).toLocaleString('it-IT');fitC();
   document.querySelectorAll('.seg button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.c===S.c)});
   document.querySelectorAll('[data-f]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.f===S.f)});
   
@@ -516,7 +517,8 @@ function step(dir){var c=CFG[S.c];if(S.per==='a'){var y=Math.round(S.q[S.c]*12/(
 $('rai').addEventListener('change',function(e){S.rai=e.target.checked;render()});$('kw').addEventListener('change',function(e){S.kw=parseFloat(e.target.value);render()});
 document.querySelectorAll('.per button').forEach(function(b){b.addEventListener('click',function(){S.per=b.dataset.p;render()})});
 $('minus').addEventListener('click',function(){step(-1)});$('plus').addEventListener('click',function(){step(1)});
-$('cons').addEventListener('input',function(e){var v=parseInt(e.target.value.replace(/\D/g,''),10);if(v>0){S.q[S.c]=Math.min(CFG[S.c].max,S.per==='a'?v/12:v);render()}});
+function fitC(){var c=$('cons');c.style.width=Math.max(1,c.value.length)+0.3+'ch'}
+$('cons').addEventListener('input',function(e){fitC();var v=parseInt(e.target.value.replace(/\D/g,''),10);if(v>0){S.q[S.c]=Math.min(CFG[S.c].max,S.per==='a'?v/12:v);render()}});
 
 var IDX=null,MESI=['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
 var ml=function(m){var p=m.split('-');return MESI[+p[1]-1]+' '+p[0]};
