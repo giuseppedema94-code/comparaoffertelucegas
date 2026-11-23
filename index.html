@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-nnux2UZV/ReHdv+eDgmbQCEdSke1VWEGRBk+zK9hhz4='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-hlZxVIkXRSxjOSI9Ya8/NcsqOT7UU+JB/rTQVVRGrqk='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Confronto offerte luce e gas, aggiornato ogni giorno</title>
@@ -478,6 +478,7 @@ function renderIdx(){
 }
 var EL=null;fetch('data/elettricita.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){EL=d;renderIdx()}).catch(function(){});
 fetch('data/indici.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){IDX=d;renderIdx()}).catch(function(){});
+try{var qq=new URLSearchParams(location.search).get('q');if(qq){S.s=qq.slice(0,60);$('search').value=S.s}}catch(e){}
 setC(location.hash==='#gas'?'gas':'luce');load('gas');
 })();
 </script>
