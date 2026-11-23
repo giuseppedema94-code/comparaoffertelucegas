@@ -20,6 +20,8 @@ CSS_NET = """.seg{display:flex;background:var(--soft);border-radius:12px;padding
 .segn a{font:600 15px 'Schibsted Grotesk',sans-serif;padding:10px 20px;border-radius:9px;color:var(--ink);text-decoration:none}
 .segn a[aria-current=page]{background:var(--accbg);color:#fff}
 @media (max-width:520px){.segn a{padding:10px 15px}}
+.flt{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0 10px}.flt button{font:600 14px 'Schibsted Grotesk',sans-serif;padding:7px 12px;border-radius:8px;border:1px solid var(--bd);background:transparent;color:var(--ink);cursor:pointer}.flt button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}.flt label{font-size:14px;display:flex;gap:6px;align-items:center;margin-left:4px}
+.ar{display:inline-block;font-size:11.5px;font-weight:700;background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:0 6px;margin-right:4px;color:var(--ink2)}.pk tr[hidden]{display:none}
 .xs{border:2px solid var(--acc)}.xs .rw{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
 .xs .bx{background:var(--soft);border-radius:14px;padding:14px}.xs .bx .l{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut)}
 .xs .bx strong{display:block;font-size:24px;margin:4px 0}.xs .bx span{font-size:13.5px;color:var(--ink2)}
@@ -130,15 +132,22 @@ e = lambda s: H.escape(str(s), quote=True)
 n2 = lambda v: f"{v:.2f}".replace(".", ",") + " €" if v is not None else "—"
 ver = net["verificato"].split("-")
 ver = f"{int(ver[2])}/{ver[1]}/{ver[0]}"
-righe = sorted(net["internet"], key=lambda x: x["prezzo_mese"])
+import datetime as _dt
+auto = json.loads((R / "data" / "internet_auto.json").read_text(encoding="utf-8"))
+fresco = lambda x: not x.get("letto") or (_dt.date.fromisoformat(net["verificato"]) - _dt.date.fromisoformat(x["letto"])).days <= 7
+righe = sorted([x for x in net["internet"] + [a for a in auto if not a["bundle"]] if fresco(x)], key=lambda x: x["prezzo_mese"])
+net["bundle"] = net["bundle"] + [{"fornitore": a["operatore"], "offerta": a["offerta"], "vantaggio": a["nota"], "prezzo_fibra_mese": a["prezzo_mese"], "url": a["url"], "nota": (f"Poi {a['prezzo_dopo']:.2f} €".replace(".", ",") + (f" dopo {a['mesi_promo']} mesi." if a.get("mesi_promo") else ".")) if a.get("prezzo_dopo") and a["prezzo_dopo"] != a["prezzo_mese"] else ""} for a in auto if a["bundle"] and fresco(a)]
 vecchio = lambda x: x.get("letto") and x["letto"] < net["verificato"]
 dl = lambda x: f' Prezzo letto il {int(x["letto"][8:])}/{x["letto"][5:7]}.' if vecchio(x) else ""
 tr = []
 for i, x in enumerate(righe):
     nome = f'<a href="{e(x["url"])}" target="_blank" rel="nofollow noopener">{e(x["offerta"])}</a>' if x.get("url") else e(x["offerta"])
     dopo = f'poi {n2(x["prezzo_dopo"])}' + (f' dopo {x["mesi_promo"]} mesi' if x.get("mesi_promo") else "") if x.get("prezzo_dopo") and x["prezzo_dopo"] != x["prezzo_mese"] else ""
-    tr.append(f'<tr{" class=\"first\"" if i == 0 else ""}><td class="c-pos">{i + 1}</td><td class="c-op"><div class="op">{e(x["operatore"])}</div><div>{nome}</div>'
-              f'<div class="nt">{e(x["nota"])}{dl(x)}</div></td><td class="c-x" data-l="Tecnologia">{e(x["tecnologia"])}, {e(x["velocita"])}</td>'
+    tec = (x.get("tecnologia") or "").upper()
+    cat = "fwa" if "FWA" in tec else "ftth" if "FTTH" in tec else "altro"
+    area = f'<span class="ar">Solo {e(x["area"])}</span> ' if x.get("area") else ""
+    tr.append(f'<tr data-cat="{cat}" data-reg="{1 if x.get("area") else 0}"{" class=\"first\"" if i == 0 else ""}><td class="c-pos">{i + 1}</td><td class="c-op"><div class="op">{e(x["operatore"])}</div><div>{nome}</div>'
+              f'<div class="nt">{area}{e(x.get("nota") or "")}{dl(x)}</div></td><td class="c-x" data-l="Tecnologia">{e(x.get("tecnologia") or "—")}{", " + e(x["velocita"]) if x.get("velocita") else ""}</td>'
               f'<td class="n tot c-pr">{n2(x["prezzo_mese"])}<div class="nt">{dopo}</div></td><td class="n c-x" data-l="Attivazione">{n2(x.get("attivazione"))}</td><td class="c-x" data-l="Modem">{e(x.get("modem") or "—")}</td></tr>')
 bt = []
 for x in net["bundle"]:
@@ -150,8 +159,9 @@ corpo = testata("/internet/", "Offerte fibra e internet casa a confronto",
                 "net", "/img/geco-net.svg")
 corpo += f"""<main class="wrap pg">
 <h1 class="h">Offerte fibra e internet casa</h1>
-<section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Fibra per la casa, dal canone più basso</h2>
-<div class="scroll" role="region" aria-label="Offerte internet casa" tabindex="0"><table class="pk">
+<section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Internet casa, dal canone più basso <span class="src" id="ncnt"></span></h2>
+<div class="flt" role="group" aria-label="Filtra"><button type="button" data-t="tutte" aria-pressed="true">Tutte</button><button type="button" data-t="ftth" aria-pressed="false">Fibra FTTH</button><button type="button" data-t="fwa" aria-pressed="false">FWA senza linea</button><label><input type="checkbox" id="noreg"> Nascondi offerte regionali</label></div>
+<div class="scroll" role="region" aria-label="Offerte internet casa" tabindex="0"><table class="pk" id="nt">
 <thead><tr><th>#</th><th>Operatore e offerta</th><th>Tecnologia</th><th class="n">Al mese</th><th class="n">Attivazione</th><th>Modem</th></tr></thead><tbody>
 {''.join(tr)}
 </tbody></table></div>
@@ -171,6 +181,8 @@ corpo += f"""<main class="wrap pg">
 <p>Oltre al canone guarda tre cose: quanto dura il prezzo promozionale, il costo di attivazione e quanto paghi se disdici prima del vincolo.</p></section>
 """
 NET_JS = r"""
+var T='tutte';function flt(){var n=0,rr=document.querySelectorAll('#nt tbody tr');rr.forEach(function(r){var ok=(T==='tutte'||r.dataset.cat===T)&&!($('noreg').checked&&r.dataset.reg==='1');r.hidden=!ok;if(ok)n++});$('ncnt').textContent=n+' offerte';document.querySelectorAll('.flt button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.t===T)})}
+document.querySelectorAll('.flt button').forEach(function(b){b.addEventListener('click',function(){T=b.dataset.t;flt()})});$('noreg').addEventListener('change',flt);flt();
 var eur=function(n){return n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})+' € al mese'};
 fetch('/data/top.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){
   var l=d.luce[0],g=d.gas[0];$('xl').textContent=eur(l.m);$('xln').textContent=l.v+', '+l.n;$('xg').textContent=eur(g.m);$('xgn').textContent=g.v+', '+g.n;});

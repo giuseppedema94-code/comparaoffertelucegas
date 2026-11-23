@@ -126,6 +126,30 @@ def main() -> int:
                 esito.append(f"{lista}/{nome}: ok" + (f" {cambi}" if cambi else ""))
             else:
                 esito.append(f"{lista}/{nome}: regola non trovata, resta il dato del {x.get('letto', d.get('verificato'))}")
+    # offerte con regola generica (data/internet_auto.json): aggiorno solo il canone mensile
+    auto = json.loads((R / "data" / "internet_auto.json").read_text(encoding="utf-8"))
+    for x in auto:
+        try:
+            if x["url"] not in cache:
+                raw = scarica(x["url"])
+                cache[x["url"]] = (testo(raw), raw)
+            m = re.search(x["regex"], cache[x["url"]][0])
+        except Exception as e:
+            m = None
+            print(f"{x['operatore']}: errore {e!r}"[:200], file=sys.stderr)
+        if m:
+            v = f(m.group(1))
+            if v != x["prezzo_mese"]:
+                esito.append(f"auto/{x['operatore']} {x['offerta']}: {x['prezzo_mese']} -> {v}")
+                if x.get("prezzo_dopo") == x["prezzo_mese"]:
+                    x["prezzo_dopo"] = v
+                x["prezzo_mese"] = v
+            x["letto"] = oggi
+        else:
+            esito.append(f"auto/{x['operatore']} {x['offerta']}: regola non trovata")
+    (R / "data" / "internet_auto.json").write_text(json.dumps(auto, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    ok = sum(1 for x in auto if x.get("letto") == oggi)
+    esito.append(f"auto: {ok}/{len(auto)} lette oggi")
     date = [x.get("letto") for k in ("internet", "bundle") for x in d[k] if x.get("letto")]
     if date:
         d["verificato"] = max(date)
