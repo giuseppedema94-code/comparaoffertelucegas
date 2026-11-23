@@ -2,7 +2,7 @@
 <html lang="it" data-c="luce">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-b0If3W4g+X/j7H/KRC78SILQJLaRjWCaWk+1HfcpHv0='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://icons.duckduckgo.com; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-DiOlWcE0gCncBg2BPoweYmZQUlJO/LQC5GanRNQnxgw='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://icons.duckduckgo.com; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Offerte luce e gas insieme: pacchetti a confronto</title>
@@ -156,6 +156,16 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 .logo .geco{width:40px;height:40px;display:block}.logo .geco.ic-flame{display:none}:root[data-c=gas] .logo .geco.ic-flame{display:block}:root[data-c=gas] .logo .geco.ic-bolt{display:none}.logo .wm{color:var(--ink)}.logo span.dom{color:var(--ink)}.logo .w-luce{color:#F5C518}.logo .w-gas{color:var(--ink)}:root[data-c=gas] .logo .w-luce{color:var(--ink)}:root[data-c=gas] .logo .w-gas{color:#C65B7C}
 :where(a,button,input,select,[tabindex]):focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:4px}.sort{min-height:24px}@media (pointer:coarse){.chip,.theme-btn,.seg button,.more,.stepper button{min-height:44px}}.who .o a,.best a{text-decoration:underline;text-underline-offset:2px}.chip,.tag,.pill{border-radius:8px!important}.search,.msort select{font-size:16px!important}:root[data-theme=dark] .logo .geco{filter:drop-shadow(0 0 .6px #E9E7E1) drop-shadow(0 0 .6px #E9E7E1)}@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .logo .geco{filter:drop-shadow(0 0 .6px #E9E7E1) drop-shadow(0 0 .6px #E9E7E1)}}
 .txt{margin-top:16px}.txt h2{margin:0 0 8px;font-size:22px}.txt p{margin:10px 0 0;line-height:1.55;max-width:72ch}
+.seg{display:flex;background:var(--soft);border-radius:12px;padding:4px}
+.segn a{font:600 15px 'Schibsted Grotesk',sans-serif;padding:10px 20px;border-radius:9px;color:var(--ink);text-decoration:none}
+.segn a[aria-current=page]{background:var(--accbg);color:#fff}
+@media (max-width:520px){.segn a{padding:10px 15px}}
+.xs{border:2px solid var(--acc)}.xs .rw{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+.xs .bx{background:var(--soft);border-radius:14px;padding:14px}.xs .bx .l{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut)}
+.xs .bx strong{display:block;font-size:24px;margin:4px 0}.xs .bx span{font-size:13.5px;color:var(--ink2)}
+.xs .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.xs .cta a{font:700 14px 'Schibsted Grotesk',sans-serif;padding:10px 14px;border-radius:9px;text-decoration:none;background:var(--ink);color:var(--bg)}
+.xs .cta a+a{background:transparent;color:var(--ink);border:1px solid var(--bd)}
+@media (max-width:520px){.xs .rw{grid-template-columns:1fr}}
 :root[data-c=net]{--acc:#2E9BE6;--accbg:#2E9BE6;--accbar:#2E9BE6;--first:#E3F1FB}
 :root[data-c=net] .w-luce,:root[data-c=net] .w-gas{color:var(--ink)}
 @media (prefers-color-scheme:dark){:root[data-c=net]:not([data-theme=light]){--acc:#5AB4F0;--first:#14283a}}
@@ -170,6 +180,15 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 .txt{margin-top:16px}.txt h2{margin:0 0 8px;font-size:22px}.txt p{margin:10px 0 0;line-height:1.55;max-width:72ch}
 .pg .card+.card{margin-top:16px}
 @media (max-width:520px){.pg h1{font-size:30px}}
+@media (max-width:640px){
+.pk thead{display:none}.pk,.pk tbody{display:block}
+.pk tr{display:grid;grid-template-columns:1fr auto;gap:6px 14px;padding:14px 2px;border-bottom:1px solid var(--line)}
+.pk tr.first{background:var(--first);border-radius:12px;padding:14px 12px}.pk tr.first td{background:none}
+.pk td{display:block;padding:0;border:0}.pk td.n{text-align:right}
+.pk .c-pos{display:none}.pk .c-op{grid-column:1}.pk .c-pr{grid-column:2;grid-row:1}
+.pk .c-x{grid-column:1/-1;font-size:13.5px;color:var(--ink2);text-align:left!important}
+.pk .c-x[data-l]::before{content:attr(data-l) ": ";color:var(--mut)}
+}
 </style>
 <style>
 .pg{padding:28px 0 64px;display:flex;flex-direction:column;gap:18px}
@@ -185,7 +204,7 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 </head>
 <body>
 <header class="top"><div class="wrap"><a class="logo h" href="/"><img class="geco ic-bolt" src="/img/geco-luce.svg" width="40" height="40" alt=""><img class="geco ic-flame" src="/img/geco-gas.svg" width="40" height="40" alt=""><span class="wm">comparaofferte<span class="w-luce">luce</span><span class="w-gas">gas</span><span class="dom">.it</span></span></a>
-<div class="hdr-r"><a class="theme-btn" href="/" style="text-decoration:none">Confronta offerte</a><button class="theme-btn" id="theme-toggle" type="button">Tema: auto</button></div>
+<div class="hdr-r"><nav class="seg segn" aria-label="Confronti"><a href="/" aria-current="page">Luce</a><a href="/#gas">Gas</a><a href="/internet/">Internet</a></nav><button class="theme-btn" id="theme-toggle" type="button">Tema: auto</button></div>
 </div></header>
 <main class="wrap pg">
 <h1 class="h">Offerte luce e gas insieme</h1>
@@ -223,7 +242,7 @@ function render(){
   if(bl&&bg){var sep=bl.x+rai+bg.x;$('sep').innerHTML='<strong>'+eur(sep)+' al mese</strong><span>Luce: '+esc(bl.o.v)+', '+esc(bl.o.n)+' ('+eur(bl.x+rai)+')</span><span>Gas: '+esc(bg.o.v)+', '+esc(bg.o.n)+' ('+eur(bg.x)+')</span>'+(rows.length?'<span>'+(rows[0].t>sep?'Il pacchetto più economico costa '+eur(rows[0].t-sep)+' al mese in più.':'Il pacchetto più economico costa '+eur(sep-rows[0].t)+' al mese in meno.')+'</span>':'')}
   var h='<thead><tr><th>#</th><th>Fornitore e pacchetto</th><th class="n">Luce</th><th class="n">Gas</th><th class="n">Totale al mese</th></tr></thead><tbody>';
   rows.forEach(function(x,i){var o=x.o,u=safe(o.u),tipo=o.t==='f'?'fisso'+(o.d>=12&&o.d<99?' '+(o.d%12?o.d+' mesi':o.d/12+(o.d===12?' anno':' anni')):''):'variabile';
-    h+='<tr'+(i===0?' class="first"':'')+'><td>'+(i+1)+'</td><td><div class="op">'+esc(o.v)+'</div><div>'+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+'</div><div class="nt">Prezzo '+tipo+(o.pen?' · costo di uscita anticipata':'')+'</div></td><td class="n">'+eur(x.l)+'</td><td class="n">'+eur(x.g)+'</td><td class="n tot">'+eur(x.t)+'</td></tr>'});
+    h+='<tr'+(i===0?' class="first"':'')+'><td class="c-pos">'+(i+1)+'</td><td class="c-op"><div class="op">'+esc(o.v)+'</div><div>'+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+'</div><div class="nt">Prezzo '+tipo+(o.pen?' · costo di uscita anticipata':'')+'</div></td><td class="n c-x" data-l="Luce">'+eur(x.l)+'</td><td class="n c-x" data-l="Gas">'+eur(x.g)+'</td><td class="n tot c-pr">'+eur(x.t)+'</td></tr>'});
   $('tab').innerHTML=h+'</tbody>';
   $('cnt').textContent=rows.length+' pacchetti di '+D.dual.fornitori+' fornitori';
 }

@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-3SxMAz3b5LT8+U/LNx/QX+iq09tQKuqFqirHNZnzMco='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://icons.duckduckgo.com; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-fpg56Vdo014CGTC2rMn4AL7aovBZA/gz0FkF6rN6+gM='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://icons.duckduckgo.com; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Confronto offerte luce e gas, aggiornato ogni giorno</title>
@@ -185,6 +185,8 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 .per{display:flex;justify-content:center;gap:6px;margin:-4px 0 0}.per button{font:600 14px 'Schibsted Grotesk',sans-serif;padding:6px 14px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--ink2);cursor:pointer}.per button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}.opz{display:flex;justify-content:center;align-items:center;gap:8px 18px;flex-wrap:wrap;font-size:14px;color:var(--ink2)}.opz[hidden]{display:none}.rai,.kw{display:flex;align-items:center;gap:6px;cursor:pointer}.kw select{font:600 14px 'Schibsted Grotesk',sans-serif;padding:4px 6px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}.rai input{width:18px;height:18px;accent-color:var(--ink);margin:0}.rai span{font-size:12.5px;opacity:.8}
 .faq{margin-top:24px}.faq h2{margin:0 0 8px}.faq details{border-top:1px solid var(--line);padding:14px 0}.faq summary{cursor:pointer;font-weight:700;font-size:16.5px;list-style-position:outside}.faq p{margin:8px 0 0;color:var(--ink2);line-height:1.55;max-width:72ch}
 .altri{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}.altri a{font:600 14px 'Schibsted Grotesk',sans-serif;padding:7px 12px;border:1px solid var(--bd);border-radius:8px;color:var(--ink);text-decoration:none;background:var(--card)}.altri a:hover{border-color:var(--ink)}.altri a.net{border-color:#2E9BE6}
+.seg a{display:inline-flex;align-items:center;font:600 15px 'Schibsted Grotesk',sans-serif;padding:10px 22px;border-radius:9px;color:var(--ink);text-decoration:none}.seg a:hover{color:#1d7fc4}
+@media (max-width:520px){.seg button,.seg a{padding:10px 15px}}
 </style>
 </head>
 <body>
@@ -195,6 +197,7 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 <div class="seg" role="group" aria-label="Fornitura">
 <button type="button" data-c="luce" aria-pressed="true">Luce</button>
 <button type="button" data-c="gas" aria-pressed="false">Gas</button>
+<a class="seg-net" href="/internet/">Internet</a>
 </div>
 <button class="theme-btn" id="theme-toggle" type="button">Tema: auto</button>
 </div>
@@ -206,7 +209,7 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 <a class="ix ix-luce" href="/prezzo-energia-oggi/"><span class="ixl">PUN <span id="pm"></span></span><span class="ixv"><strong id="pv">—</strong> €/kWh <span class="dl" id="pd"></span></span></a>
 <a class="ix ix-gas" href="/psv/"><span class="ixl">PSV <span id="gm"></span></span><span class="ixv"><strong id="gv">—</strong> €/Smc <span class="dl" id="gd"></span></span></a>
 </section>
-<nav class="altri" aria-label="Altri confronti"><a href="/luce-e-gas/">Pacchetti luce + gas</a><a href="/internet/" class="net">Internet casa</a></nav>
+<nav class="altri" aria-label="Altri confronti"><a href="/luce-e-gas/">Pacchetti luce + gas</a></nav>
 <section class="hero">
 <div class="card ask">
 <h2 class="h" id="q">Il tuo consumo</h2>
@@ -398,7 +401,7 @@ function renderIdx(){
 }
 var EL=null;fetch('data/elettricita.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){EL=d;renderIdx()}).catch(function(){});
 fetch('data/indici.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){IDX=d;renderIdx()}).catch(function(){});
-setC('luce');load('gas');
+setC(location.hash==='#gas'?'gas':'luce');load('gas');
 })();
 </script>
 </body>

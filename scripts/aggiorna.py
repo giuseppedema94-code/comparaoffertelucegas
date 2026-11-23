@@ -302,6 +302,28 @@ def genera_dual(archivio: Archivio) -> dict:
     }
 
 
+def migliori(luce: dict, gas: dict, n: int = 3) -> dict:
+    """Prime offerte per consumi tipici (225 kWh e 90 Smc al mese), per le pagine che non caricano tutta la classifica."""
+    def acc_luce(y, al):
+        m = y / 12
+        e = min(m, 150) if m <= 220 else max(0, 150 - (m - 220))
+        return (m - e) * 12 * al
+
+    def mese(o, c, y):
+        r = REG[c]
+        acc = acc_luce(y, r["acc"]) if c == "luce" else 0
+        return (1 + r["iva"]) * (o["fx"] + o["p"] * y - (o.get("s") or 0) + r["rf"] + r["rv"] * y + acc) / 12 + (90 / 12 if c == "luce" else 0)
+
+    out = {}
+    for c, d, y in (("luce", luce, 2700), ("gas", gas, 1080)):
+        ok = [o for o in d["offerte"] if o.get("ok", True)]
+        top = sorted(ok, key=lambda o: mese(o, c, y))[:n]
+        out[c] = [{"v": o["v"], "n": o["n"], "t": o["t"], "m": round(mese(o, c, y), 2)} for o in top]
+    out["consumi"] = {"luce_kwh_mese": 225, "gas_smc_mese": 90}
+    out["data_open_data"] = luce["data_open_data"]
+    return out
+
+
 def prepara_cache(grezzi: Path) -> None:
     """Il Portale Offerte blocca i server di GitHub: i file arrivano gia scaricati
     (cartella grezzi/AAAAMMGG con i .gz) e vengono messi nella cache della libreria."""
@@ -343,6 +365,7 @@ def main() -> int:
     for commodity, dati in tutti.items():
         (DATI / f"{commodity}.json").write_text(json.dumps(dati, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
         print(f"{commodity}: {len(dati['offerte'])} offerte, {dati['fornitori']} fornitori, dati del {dati['data_open_data']}")
+    (DATI / "top.json").write_text(json.dumps(migliori(tutti["luce"], tutti["gas"]), ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     if len(duale["offerte"]) >= 5:
         (DATI / "dual.json").write_text(json.dumps(duale, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
         print(f"dual: {len(duale['offerte'])} pacchetti")

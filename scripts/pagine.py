@@ -16,7 +16,17 @@ testa = tpl[: tpl.index('<main')]
 piede = tpl[tpl.index('</main>') + len('</main>'): tpl.index('<script>\n(function(){')]
 tema = re.search(r"\(function\(\)\{var modes=.*?show\(\)\}\)\(\);", tpl, re.S).group(0)
 
-CSS_NET = """:root[data-c=net]{--acc:#2E9BE6;--accbg:#2E9BE6;--accbar:#2E9BE6;--first:#E3F1FB}
+CSS_NET = """.seg{display:flex;background:var(--soft);border-radius:12px;padding:4px}
+.segn a{font:600 15px 'Schibsted Grotesk',sans-serif;padding:10px 20px;border-radius:9px;color:var(--ink);text-decoration:none}
+.segn a[aria-current=page]{background:var(--accbg);color:#fff}
+@media (max-width:520px){.segn a{padding:10px 15px}}
+.xs{border:2px solid var(--acc)}.xs .rw{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+.xs .bx{background:var(--soft);border-radius:14px;padding:14px}.xs .bx .l{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut)}
+.xs .bx strong{display:block;font-size:24px;margin:4px 0}.xs .bx span{font-size:13.5px;color:var(--ink2)}
+.xs .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.xs .cta a{font:700 14px 'Schibsted Grotesk',sans-serif;padding:10px 14px;border-radius:9px;text-decoration:none;background:var(--ink);color:var(--bg)}
+.xs .cta a+a{background:transparent;color:var(--ink);border:1px solid var(--bd)}
+@media (max-width:520px){.xs .rw{grid-template-columns:1fr}}
+:root[data-c=net]{--acc:#2E9BE6;--accbg:#2E9BE6;--accbar:#2E9BE6;--first:#E3F1FB}
 :root[data-c=net] .w-luce,:root[data-c=net] .w-gas{color:var(--ink)}
 @media (prefers-color-scheme:dark){:root[data-c=net]:not([data-theme=light]){--acc:#5AB4F0;--first:#14283a}}
 :root[data-c=net][data-theme=dark]{--acc:#5AB4F0;--first:#14283a}
@@ -30,11 +40,24 @@ CSS_NET = """:root[data-c=net]{--acc:#2E9BE6;--accbg:#2E9BE6;--accbar:#2E9BE6;--
 .txt{margin-top:16px}.txt h2{margin:0 0 8px;font-size:22px}.txt p{margin:10px 0 0;line-height:1.55;max-width:72ch}
 .pg .card+.card{margin-top:16px}
 @media (max-width:520px){.pg h1{font-size:30px}}
+@media (max-width:640px){
+.pk thead{display:none}.pk,.pk tbody{display:block}
+.pk tr{display:grid;grid-template-columns:1fr auto;gap:6px 14px;padding:14px 2px;border-bottom:1px solid var(--line)}
+.pk tr.first{background:var(--first);border-radius:12px;padding:14px 12px}.pk tr.first td{background:none}
+.pk td{display:block;padding:0;border:0}.pk td.n{text-align:right}
+.pk .c-pos{display:none}.pk .c-op{grid-column:1}.pk .c-pr{grid-column:2;grid-row:1}
+.pk .c-x{grid-column:1/-1;font-size:13.5px;color:var(--ink2);text-align:left!important}
+.pk .c-x[data-l]::before{content:attr(data-l) ": ";color:var(--mut)}
+}
 """
 
 
 def testata(path, title, desc, c, icon):
     s = testa
+    on = lambda k: ' aria-current="page"' if k == c else ""
+    nav = (f'<nav class="seg segn" aria-label="Confronti"><a href="/"{on("luce")}>Luce</a><a href="/#gas"{on("gas")}>Gas</a>'
+           f'<a href="/internet/"{on("net")}>Internet</a></nav>')
+    s = s.replace('<a class="theme-btn" href="/" style="text-decoration:none">Confronta offerte</a>', nav)
     s = re.sub(r'<html lang="it" data-c="[^"]*">', f'<html lang="it" data-c="{c}">', s)
     s = re.sub(r"<title>.*?</title>", f"<title>{H.escape(title, quote=False)}</title>", s)
     for k in ('name="description"', 'property="og:description"'):
@@ -75,7 +98,7 @@ function render(){
   if(bl&&bg){var sep=bl.x+rai+bg.x;$('sep').innerHTML='<strong>'+eur(sep)+' al mese</strong><span>Luce: '+esc(bl.o.v)+', '+esc(bl.o.n)+' ('+eur(bl.x+rai)+')</span><span>Gas: '+esc(bg.o.v)+', '+esc(bg.o.n)+' ('+eur(bg.x)+')</span>'+(rows.length?'<span>'+(rows[0].t>sep?'Il pacchetto più economico costa '+eur(rows[0].t-sep)+' al mese in più.':'Il pacchetto più economico costa '+eur(sep-rows[0].t)+' al mese in meno.')+'</span>':'')}
   var h='<thead><tr><th>#</th><th>Fornitore e pacchetto</th><th class="n">Luce</th><th class="n">Gas</th><th class="n">Totale al mese</th></tr></thead><tbody>';
   rows.forEach(function(x,i){var o=x.o,u=safe(o.u),tipo=o.t==='f'?'fisso'+(o.d>=12&&o.d<99?' '+(o.d%12?o.d+' mesi':o.d/12+(o.d===12?' anno':' anni')):''):'variabile';
-    h+='<tr'+(i===0?' class="first"':'')+'><td>'+(i+1)+'</td><td><div class="op">'+esc(o.v)+'</div><div>'+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+'</div><div class="nt">Prezzo '+tipo+(o.pen?' · costo di uscita anticipata':'')+'</div></td><td class="n">'+eur(x.l)+'</td><td class="n">'+eur(x.g)+'</td><td class="n tot">'+eur(x.t)+'</td></tr>'});
+    h+='<tr'+(i===0?' class="first"':'')+'><td class="c-pos">'+(i+1)+'</td><td class="c-op"><div class="op">'+esc(o.v)+'</div><div>'+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+'</div><div class="nt">Prezzo '+tipo+(o.pen?' · costo di uscita anticipata':'')+'</div></td><td class="n c-x" data-l="Luce">'+eur(x.l)+'</td><td class="n c-x" data-l="Gas">'+eur(x.g)+'</td><td class="n tot c-pr">'+eur(x.t)+'</td></tr>'});
   $('tab').innerHTML=h+'</tbody>';
   $('cnt').textContent=rows.length+' pacchetti di '+D.dual.fornitori+' fornitori';
 }
@@ -112,13 +135,13 @@ tr = []
 for i, x in enumerate(righe):
     nome = f'<a href="{e(x["url"])}" target="_blank" rel="nofollow noopener">{e(x["offerta"])}</a>' if x.get("url") else e(x["offerta"])
     dopo = f'poi {n2(x["prezzo_dopo"])}' + (f' dopo {x["mesi_promo"]} mesi' if x.get("mesi_promo") else "") if x.get("prezzo_dopo") and x["prezzo_dopo"] != x["prezzo_mese"] else ""
-    tr.append(f'<tr{" class=\"first\"" if i == 0 else ""}><td>{i + 1}</td><td><div class="op">{e(x["operatore"])}</div><div>{nome}</div>'
-              f'<div class="nt">{e(x["nota"])}</div></td><td>{e(x["tecnologia"])}<div class="nt">{e(x["velocita"])}</div></td>'
-              f'<td class="n tot">{n2(x["prezzo_mese"])}<div class="nt">{dopo}</div></td><td class="n">{n2(x.get("attivazione"))}</td><td>{e(x.get("modem") or "—")}</td></tr>')
+    tr.append(f'<tr{" class=\"first\"" if i == 0 else ""}><td class="c-pos">{i + 1}</td><td class="c-op"><div class="op">{e(x["operatore"])}</div><div>{nome}</div>'
+              f'<div class="nt">{e(x["nota"])}</div></td><td class="c-x" data-l="Tecnologia">{e(x["tecnologia"])}, {e(x["velocita"])}</td>'
+              f'<td class="n tot c-pr">{n2(x["prezzo_mese"])}<div class="nt">{dopo}</div></td><td class="n c-x" data-l="Attivazione">{n2(x.get("attivazione"))}</td><td class="c-x" data-l="Modem">{e(x.get("modem") or "—")}</td></tr>')
 bt = []
 for x in net["bundle"]:
     nome = f'<a href="{e(x["url"])}" target="_blank" rel="nofollow noopener">{e(x["offerta"])}</a>' if x.get("url") else e(x["offerta"])
-    bt.append(f'<tr><td><div class="op">{e(x["fornitore"])}</div><div>{nome}</div><div class="nt">{e(x["nota"])}</div></td><td>{e(x["vantaggio"])}</td><td class="n tot">{n2(x["prezzo_fibra_mese"])}</td></tr>')
+    bt.append(f'<tr><td class="c-op"><div class="op">{e(x["fornitore"])}</div><div>{nome}</div><div class="nt">{e(x["nota"])}</div></td><td class="c-x">{e(x["vantaggio"])}</td><td class="n tot c-pr">{n2(x["prezzo_fibra_mese"])}</td></tr>')
 
 corpo = testata("/internet/", "Offerte fibra e internet casa a confronto",
                 "Le offerte fibra per la casa dei principali operatori, ordinate per canone mensile, e i pacchetti energia più internet dei fornitori di luce e gas.",
@@ -131,6 +154,10 @@ corpo += f"""<main class="wrap pg">
 {''.join(tr)}
 </tbody></table></div>
 <p class="src">Prezzi letti sui siti degli operatori il {ver}. La velocità e la tecnologia dipendono dalla copertura del tuo indirizzo: verificala sul sito dell'operatore prima di attivare.</p></section>
+<section class="card xs"><h2 class="h" style="margin:0 0 4px;font-size:22px">Quanto spenderesti oggi per luce e gas</h2>
+<p class="src" style="margin:0">Le offerte più convenienti di oggi per una casa con 225 kWh di luce e 90 Smc di gas al mese, imposte e canone RAI inclusi.</p>
+<div class="rw"><div class="bx"><div class="l">Luce</div><strong id="xl">—</strong><span id="xln"></span></div><div class="bx"><div class="l">Gas</div><strong id="xg">—</strong><span id="xgn"></span></div></div>
+<div class="cta"><a href="/">Confronta la luce</a><a href="/#gas">Confronta il gas</a><a href="/luce-e-gas/">Pacchetti luce + gas</a></div></section>
 <section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Pacchetti energia + internet</h2>
 <div class="scroll" role="region" aria-label="Pacchetti energia e internet" tabindex="0"><table class="pk">
 <thead><tr><th>Fornitore e offerta</th><th>Vantaggio</th><th class="n">Fibra al mese</th></tr></thead><tbody>
@@ -141,5 +168,10 @@ corpo += f"""<main class="wrap pg">
 <p>Per luce e gas usiamo gli open data ufficiali di ARERA. Per internet non esiste una banca dati pubblica delle offerte, quindi questa lista la controlliamo a mano sui siti degli operatori: prima di attivare, verifica prezzo e condizioni sulla pagina dell'offerta.</p>
 <p>Oltre al canone guarda tre cose: quanto dura il prezzo promozionale, il costo di attivazione e quanto paghi se disdici prima del vincolo.</p></section>
 """
-scrivi("/internet/", corpo)
+NET_JS = r"""
+var eur=function(n){return n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})+' € al mese'};
+fetch('/data/top.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){
+  var l=d.luce[0],g=d.gas[0];$('xl').textContent=eur(l.m);$('xln').textContent=l.v+', '+l.n;$('xg').textContent=eur(g.m);$('xgn').textContent=g.v+', '+g.n;});
+"""
+scrivi("/internet/", corpo, NET_JS)
 print("pagine generate")
