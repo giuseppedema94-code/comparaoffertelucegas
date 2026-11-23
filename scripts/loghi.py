@@ -56,7 +56,7 @@ def apri(b):
         return None
     if b.lstrip()[:5].lower().startswith((b"<svg", b"<?xml")) and cairosvg:
         try:
-            b = cairosvg.svg2png(bytestring=b, output_width=LATO * 2, output_height=LATO * 2)
+            b = cairosvg.svg2png(bytestring=b, output_width=512)
         except Exception:
             return None
     try:
@@ -78,8 +78,9 @@ def pieno(im):
 
 
 def candidati(d):
+    """Restituisce (icone, loghi): icone del sito e immagini del logo nella testata."""
     host = f"www.{d}" if d.count(".") == 1 else d
-    fonti = []
+    icone, loghi = [], []
     try:
         st, b, fin = get(f"https://{host}/")
         t = b.decode("utf-8", "replace")
@@ -87,13 +88,17 @@ def candidati(d):
             if re.search(r'rel=["\'][^"\']*(apple-touch-icon|icon)', tag, re.I):
                 h = re.search(r'href=["\']([^"\']+)', tag)
                 if h:
-                    fonti.append(urllib.parse.urljoin(fin, html.unescape(h.group(1))))
-        fonti.append(urllib.parse.urljoin(fin, "/apple-touch-icon.png"))
-        fonti.append(urllib.parse.urljoin(fin, "/favicon.ico"))
+                    icone.append(urllib.parse.urljoin(fin, html.unescape(h.group(1))))
+        for tag in re.findall(r"<img[^>]+>", t, re.I)[:80]:
+            if re.search(r"logo", tag, re.I):
+                h = re.search(r'\ssrc=["\']([^"\']+)', tag)
+                if h and not h.group(1).startswith("data:"):
+                    loghi.append(urllib.parse.urljoin(fin, html.unescape(h.group(1))))
+        icone += [urllib.parse.urljoin(fin, "/apple-touch-icon.png"), urllib.parse.urljoin(fin, "/favicon.ico")]
     except Exception:
-        fonti += [f"https://{host}/apple-touch-icon.png", f"https://{host}/favicon.ico"]
-    fonti += [f"https://www.google.com/s2/favicons?domain={d}&sz=256", f"https://icons.duckduckgo.com/ip3/{d}.ico"]
-    return list(dict.fromkeys(fonti))
+        icone += [f"https://{host}/apple-touch-icon.png", f"https://{host}/favicon.ico"]
+    icone += [f"https://www.google.com/s2/favicons?domain={d}&sz=256", f"https://icons.duckduckgo.com/ip3/{d}.ico"]
+    return list(dict.fromkeys(icone)), list(dict.fromkeys(loghi))[:4]
 
 
 def salva(im, f):
@@ -130,21 +135,30 @@ def cerca(d):
         im = apri(vecchio.read_bytes())
         if im is not None and pieno(im) >= 0.01:
             migliore, lato = im, min(im.size)
-    for u in candidati(d):
+    icone, loghi = candidati(d)
+
+    def scarica_img(u):
         try:
             st, b, _ = get(u)
         except Exception:
-            continue
+            return None
         if st != 200:
-            continue
+            return None
         im = apri(b)
-        if im is None or pieno(im) < 0.01:
-            continue
-        lt = min(im.size)
-        if lt > lato and lt >= 16:
-            migliore, lato = im, lt
+        return im if im is not None and pieno(im) >= 0.01 else None
+
+    for u in icone:
+        im = scarica_img(u)
+        if im is not None and min(im.size) > lato and min(im.size) >= 16:
+            migliore, lato = im, min(im.size)
         if lato >= 180:
             break
+    if lato < BUONO:  # icone piccole: provo il logo nella testata del sito (spesso SVG, quindi nitido)
+        for u in loghi:
+            im = scarica_img(u)
+            if im is not None and max(im.size) >= 120:
+                migliore, lato = im, max(BUONO, min(im.size))
+                break
     if migliore is not None and not salva(migliore, f):
         f.unlink(missing_ok=True)
         lato = 0
