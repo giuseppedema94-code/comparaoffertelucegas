@@ -32,7 +32,7 @@ righe, err = [], []
 # --- GoatCounter
 try:
     t = E_("GC_TOKEN")
-    rng = lambda d: {"start": f"{d}T00:00:00Z", "end": f"{d}T23:59:59Z"}
+    rng = lambda d: {"start": str(d), "end": str(d)}
     tot = get(GC + "/stats/total", t, **rng(ieri))
     tot2 = get(GC + "/stats/total", t, **rng(altro))
     v, v2 = tot.get("total", 0), tot2.get("total", 0)
@@ -85,7 +85,7 @@ if err:
 corpo = (f"<div style='font:15px/1.5 -apple-system,Segoe UI,sans-serif;color:#14161A;max-width:620px'>"
          f"<h2 style='margin:0 0 4px'>comparaoffertelucegas.it</h2><p style='color:#666;margin:0 0 12px'>Riepilogo del {ieri.strftime('%d/%m/%Y')}</p>"
          + "".join(righe) +
-         "<p style='color:#666;font-size:13px'>Dettagli: <a href='https://comparaoffertelucegas.goatcounter.com'>GoatCounter</a> · "
+         "<p style='color:#666;font-size:13px'>Dettagli: <a href='https://comparaoffertelucegas.goatcounter.com'>GoatCounter</a>, "
          "<a href='https://clarity.microsoft.com'>Clarity</a>, <a href='https://analytics.google.com'>Analytics</a></p></div>")
 msg = MIMEText(corpo, "html", "utf-8")
 msg["Subject"] = f"Sito luce e gas: riepilogo del {ieri.strftime('%d/%m')}"
