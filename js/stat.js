@@ -1,6 +1,6 @@
 /* Statistiche e consenso cookie. Inserire gli ID quando gli account sono pronti. */
 (function(){
-var CFG={gc:'',ga:'',clarity:''};
+var CFG={gc:'comparaoffertelucegas',ga:'',clarity:''};
 var K='cc',SEI_MESI=182*864e5,d=document,w=window;
 function get(){try{var v=JSON.parse(localStorage.getItem(K)||'null');if(v&&Date.now()-v.t<SEI_MESI)return v.s}catch(e){}return null}
 function set(s){try{localStorage.setItem(K,JSON.stringify({s:s,t:Date.now()}))}catch(e){}}
