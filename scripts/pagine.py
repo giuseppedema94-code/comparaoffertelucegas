@@ -16,7 +16,10 @@ testa = tpl[: tpl.index('<main')]
 piede = tpl[tpl.index('</main>') + len('</main>'): tpl.index('<script>\n(function(){')]
 tema = re.search(r"\(function\(\)\{var modes=.*?show\(\)\}\)\(\);", tpl, re.S).group(0)
 
-CSS_NET = """.seg{display:flex;background:var(--soft);border-radius:12px;padding:4px}
+CSS_NET = """.lg{position:relative;flex:0 0 auto;width:30px;height:30px;border-radius:8px;background:#fff;border:1px solid var(--line);display:inline-flex;align-items:center;justify-content:center;font:700 13px 'Schibsted Grotesk',sans-serif;color:#14161A;overflow:hidden}
+.lg img{position:absolute;inset:3px;width:calc(100% - 6px);height:calc(100% - 6px);object-fit:contain;background:#fff}
+.pk .op{display:flex;align-items:center;gap:8px}
+.seg{display:flex;background:var(--soft);border-radius:12px;padding:4px}
 .segn a{font:600 15px 'Schibsted Grotesk',sans-serif;padding:10px 20px;border-radius:9px;color:var(--ink);text-decoration:none}
 .segn a[aria-current=page]{background:var(--accbg);color:#fff}
 @media (max-width:520px){.segn a{padding:10px 15px}}
@@ -78,7 +81,7 @@ def testata(path, title, desc, c, icon):
 def scrivi(path, corpo, script=""):
     out = R / path.strip("/") / "index.html"
     out.parent.mkdir(exist_ok=True)
-    js = f"<script>\n(function(){{\nvar $=function(id){{return document.getElementById(id)}};\n{tema}\n{script}\n}})();\n</script>\n"
+    js = f"<script>\n(function(){{\nvar $=function(id){{return document.getElementById(id)}};\ndocument.addEventListener('error',function(e){{var t=e.target;if(t&&t.tagName==='IMG'&&t.closest('.lg'))t.remove()}},true);\n{tema}\n{script}\n}})();\n</script>\n"
     out.write_text(corpo + "</main>" + piede + js + "</body>\n</html>\n", encoding="utf-8")
 
 
@@ -88,6 +91,7 @@ var num=function(n,d){return n.toLocaleString('it-IT',{minimumFractionDigits:d,m
 var eur=function(n){return num(n,2)+' €'};
 var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
 var safe=function(u){return /^https:\/\//.test(u||'')?u:null};
+var logo=function(o){var u=safe(o.u),d=u?u.replace(/^https:\/\//,'').split('/')[0].toLowerCase().split('.').slice(-2).join('.'):null;return '<span class="lg" aria-hidden="true">'+esc((o.v||'?').charAt(0).toUpperCase())+(d?'<img src="https://icons.duckduckgo.com/ip3/'+d+'.ico" alt="" loading="lazy" referrerpolicy="no-referrer">':'')+'</span>'};
 function accLuce(y,al){var m=y/12,e=m<=220?Math.min(m,150):Math.max(0,150-(m-220));return (m-e)*12*al}
 function costo(o,c,y,R){var r=R[c],acc=c==='luce'?accLuce(y,r.acc):0;return (1+r.iva)*(o.fx+o.p*y-(o.s||0)+r.rf+r.rv*y+acc)/12}
 var D={};
@@ -100,7 +104,7 @@ function render(){
   if(bl&&bg){var sep=bl.x+rai+bg.x;$('sep').innerHTML='<strong>'+eur(sep)+' al mese</strong><span>Luce: '+esc(bl.o.v)+', '+esc(bl.o.n)+' ('+eur(bl.x+rai)+')</span><span>Gas: '+esc(bg.o.v)+', '+esc(bg.o.n)+' ('+eur(bg.x)+')</span>'+(rows.length?'<span>'+(rows[0].t>sep?'Conviene più di un pacchetto unico: il più economico ('+esc(rows[0].o.v)+', '+eur(rows[0].t)+') costa '+eur(rows[0].t-sep)+' al mese in più.':'Il pacchetto unico più economico ('+esc(rows[0].o.v)+', '+eur(rows[0].t)+') costa '+eur(sep-rows[0].t)+' al mese in meno: conviene il pacchetto.')+'</span>':'')}
   var h='<thead><tr><th>#</th><th>Fornitore e pacchetto</th><th class="n">Luce</th><th class="n">Gas</th><th class="n">Totale al mese</th></tr></thead><tbody>';
   rows.forEach(function(x,i){var o=x.o,u=safe(o.u),tipo=o.t==='f'?'fisso'+(o.d>=12&&o.d<99?' '+(o.d%12?o.d+' mesi':o.d/12+(o.d===12?' anno':' anni')):''):'variabile';
-    h+='<tr'+(i===0?' class="first"':'')+'><td class="c-pos">'+(i+1)+'</td><td class="c-op"><div class="op">'+esc(o.v)+'</div><div>'+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+'</div><div class="nt">Prezzo '+tipo+(o.pen?' · costo di uscita anticipata':'')+'</div></td><td class="n c-x" data-l="Luce">'+eur(x.l)+'</td><td class="n c-x" data-l="Gas">'+eur(x.g)+'</td><td class="n tot c-pr">'+eur(x.t)+'</td></tr>'});
+    h+='<tr'+(i===0?' class="first"':'')+'><td class="c-pos">'+(i+1)+'</td><td class="c-op"><div class="op">'+logo(o)+esc(o.v)+'</div><div>'+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+'</div><div class="nt">Prezzo '+tipo+(o.pen?' · costo di uscita anticipata':'')+'</div></td><td class="n c-x" data-l="Luce">'+eur(x.l)+'</td><td class="n c-x" data-l="Gas">'+eur(x.g)+'</td><td class="n tot c-pr">'+eur(x.t)+'</td></tr>'});
   $('tab').innerHTML=h+'</tbody>';
   $('cnt').textContent=rows.length+' pacchetti di '+D.dual.fornitori+' fornitori';
 }
@@ -129,6 +133,13 @@ scrivi("/luce-e-gas/", corpo, LG_JS)
 # ---------- internet ----------
 net = json.loads((R / "data" / "internet.json").read_text(encoding="utf-8"))
 e = lambda s: H.escape(str(s), quote=True)
+
+
+def logo(nome, url):
+    from urllib.parse import urlparse
+    d = ".".join(urlparse(url or "").netloc.lower().split(".")[-2:]) if url else ""
+    img = f'<img src="https://icons.duckduckgo.com/ip3/{e(d)}.ico" alt="" loading="lazy" referrerpolicy="no-referrer">' if d else ""
+    return f'<span class="lg" aria-hidden="true">{e(nome.strip()[:1].upper())}{img}</span>'
 n2 = lambda v: f"{v:.2f}".replace(".", ",") + " €" if v is not None else "—"
 ver = net["verificato"].split("-")
 ver = f"{int(ver[2])}/{ver[1]}/{ver[0]}"
@@ -146,13 +157,13 @@ for i, x in enumerate(righe):
     tec = (x.get("tecnologia") or "").upper()
     cat = "fwa" if "FWA" in tec else "ftth" if "FTTH" in tec else "altro"
     area = f'<span class="ar">Solo {e(x["area"])}</span> ' if x.get("area") else ""
-    tr.append(f'<tr data-cat="{cat}" data-reg="{1 if x.get("area") else 0}"{" class=\"first\"" if i == 0 else ""}><td class="c-pos">{i + 1}</td><td class="c-op"><div class="op">{e(x["operatore"])}</div><div>{nome}</div>'
+    tr.append(f'<tr data-cat="{cat}" data-reg="{1 if x.get("area") else 0}"{" class=\"first\"" if i == 0 else ""}><td class="c-pos">{i + 1}</td><td class="c-op"><div class="op">{logo(x["operatore"], x.get("url"))}{e(x["operatore"])}</div><div>{nome}</div>'
               f'<div class="nt">{area}{e(x.get("nota") or "")}{dl(x)}</div></td><td class="c-x" data-l="Tecnologia">{e(x.get("tecnologia") or "—")}{", " + e(x["velocita"]) if x.get("velocita") else ""}</td>'
               f'<td class="n tot c-pr">{n2(x["prezzo_mese"])}<div class="nt">{dopo}</div></td><td class="n c-x" data-l="Attivazione">{n2(x.get("attivazione"))}</td><td class="c-x" data-l="Modem">{e(x.get("modem") or "—")}</td></tr>')
 bt = []
 for x in net["bundle"]:
     nome = f'<a href="{e(x["url"])}" target="_blank" rel="nofollow noopener">{e(x["offerta"])}</a>' if x.get("url") else e(x["offerta"])
-    bt.append(f'<tr><td class="c-op"><div class="op">{e(x["fornitore"])}</div><div>{nome}</div><div class="nt">{e(x["nota"])}</div></td><td class="c-x">{e(x["vantaggio"])}</td><td class="n tot c-pr">{n2(x["prezzo_fibra_mese"])}</td></tr>')
+    bt.append(f'<tr><td class="c-op"><div class="op">{logo(x["fornitore"], x.get("url"))}{e(x["fornitore"])}</div><div>{nome}</div><div class="nt">{e(x["nota"])}</div></td><td class="c-x">{e(x["vantaggio"])}</td><td class="n tot c-pr">{n2(x["prezzo_fibra_mese"])}</td></tr>')
 
 corpo = testata("/internet/", "Offerte fibra e internet casa a confronto",
                 "Le offerte fibra per la casa dei principali operatori, ordinate per canone mensile, e i pacchetti energia più internet dei fornitori di luce e gas.",
