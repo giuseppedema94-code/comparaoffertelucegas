@@ -5,7 +5,7 @@ from pathlib import Path
 
 RADICE = Path(__file__).resolve().parent.parent
 BASE = ("default-src 'self'; script-src 'self' {h}; style-src 'self' 'unsafe-inline'; "
-        "font-src 'self'; img-src 'self' data: https://icons.duckduckgo.com; connect-src 'self'; "
+        "font-src 'self'; img-src 'self' data:; connect-src 'self'; "
         "object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests")
 
 for f in sorted(RADICE.glob("**/index.html")):

@@ -91,7 +91,7 @@ var num=function(n,d){return n.toLocaleString('it-IT',{minimumFractionDigits:d,m
 var eur=function(n){return num(n,2)+' €'};
 var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
 var safe=function(u){return /^https:\/\//.test(u||'')?u:null};
-var logo=function(o){var u=safe(o.u),d=u?u.replace(/^https:\/\//,'').split('/')[0].toLowerCase().split('.').slice(-2).join('.'):null;return '<span class="lg" aria-hidden="true">'+esc((o.v||'?').charAt(0).toUpperCase())+(d?'<img src="https://icons.duckduckgo.com/ip3/'+d+'.ico" alt="" loading="lazy" referrerpolicy="no-referrer">':'')+'</span>'};
+var logo=function(o){var d=o.lg&&/^[a-z0-9.-]+$/.test(o.lg)?o.lg:null;return '<span class="lg" aria-hidden="true">'+esc((o.v||'?').charAt(0).toUpperCase())+(d?'<img src="/img/loghi/'+d+'.ico" alt="" loading="lazy">':'')+'</span>'};
 function accLuce(y,al){var m=y/12,e=m<=220?Math.min(m,150):Math.max(0,150-(m-220));return (m-e)*12*al}
 function costo(o,c,y,R){var r=R[c],acc=c==='luce'?accLuce(y,r.acc):0;return (1+r.iva)*(o.fx+o.p*y-(o.s||0)+r.rf+r.rv*y+acc)/12}
 var D={};
@@ -138,7 +138,7 @@ e = lambda s: H.escape(str(s), quote=True)
 def logo(nome, url):
     from urllib.parse import urlparse
     d = ".".join(urlparse(url or "").netloc.lower().split(".")[-2:]) if url else ""
-    img = f'<img src="https://icons.duckduckgo.com/ip3/{e(d)}.ico" alt="" loading="lazy" referrerpolicy="no-referrer">' if d else ""
+    img = f'<img src="/img/loghi/{e(d)}.ico" alt="" loading="lazy">' if d and (R / "img" / "loghi" / f"{d}.ico").exists() else ""
     return f'<span class="lg" aria-hidden="true">{e(nome.strip()[:1].upper())}{img}</span>'
 n2 = lambda v: f"{v:.2f}".replace(".", ",") + " €" if v is not None else "—"
 ver = net["verificato"].split("-")

@@ -2,7 +2,7 @@
 <html lang="it" data-c="luce">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-vCskoAHuVSxwXdHYBPE+QMPJBgi14Ub/XiUpHMfzLPk='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://icons.duckduckgo.com; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-wFoc1Ri4dz9bVOLnCWb4v0ohrA7CQa+4P34DivB+Tpc='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Offerte luce e gas insieme: pacchetti a confronto</title>
@@ -236,7 +236,7 @@ var num=function(n,d){return n.toLocaleString('it-IT',{minimumFractionDigits:d,m
 var eur=function(n){return num(n,2)+' €'};
 var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
 var safe=function(u){return /^https:\/\//.test(u||'')?u:null};
-var logo=function(o){var u=safe(o.u),d=u?u.replace(/^https:\/\//,'').split('/')[0].toLowerCase().split('.').slice(-2).join('.'):null;return '<span class="lg" aria-hidden="true">'+esc((o.v||'?').charAt(0).toUpperCase())+(d?'<img src="https://icons.duckduckgo.com/ip3/'+d+'.ico" alt="" loading="lazy" referrerpolicy="no-referrer">':'')+'</span>'};
+var logo=function(o){var d=o.lg&&/^[a-z0-9.-]+$/.test(o.lg)?o.lg:null;return '<span class="lg" aria-hidden="true">'+esc((o.v||'?').charAt(0).toUpperCase())+(d?'<img src="/img/loghi/'+d+'.ico" alt="" loading="lazy">':'')+'</span>'};
 function accLuce(y,al){var m=y/12,e=m<=220?Math.min(m,150):Math.max(0,150-(m-220));return (m-e)*12*al}
 function costo(o,c,y,R){var r=R[c],acc=c==='luce'?accLuce(y,r.acc):0;return (1+r.iva)*(o.fx+o.p*y-(o.s||0)+r.rf+r.rv*y+acc)/12}
 var D={};

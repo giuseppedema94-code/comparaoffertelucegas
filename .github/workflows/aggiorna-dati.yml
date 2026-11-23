@@ -38,11 +38,13 @@ jobs:
         run: python scripts/aggiorna.py grezzi
         env:
           CONTROLLA_LINK: "1"
+      - name: Loghi fornitori
+        run: python scripts/loghi.py
       - name: Pubblica
         run: |
           git config user.name "aggiornamento-automatico"
           git config user.email "actions@users.noreply.github.com"
-          git add data/luce.json data/gas.json data/dual.json data/top.json
+          git add data/luce.json data/gas.json data/dual.json data/top.json img/loghi
           git diff --cached --quiet && exit 0
           git commit -m "Offerte aggiornate $(date -u +%Y-%m-%dT%H:%MZ)"
           git pull --rebase origin main
