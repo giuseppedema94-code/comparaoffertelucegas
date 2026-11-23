@@ -2,7 +2,7 @@
 <html lang="it" data-c="luce">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at https://www.googletagmanager.com https://*.clarity.ms 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-kywremkpiYaLYctDaBMy/bKlXzMpslmGys7nyCBfC1I='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; connect-src 'self' https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at https://www.googletagmanager.com https://*.clarity.ms 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-Tza6WwmV2g3/Y2ZYXUZEbWHZrZJcBXlE++rWHRemew8='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; connect-src 'self' https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PUN oggi e domani: prezzo dell'energia elettrica</title>
@@ -30,7 +30,7 @@
 :root[data-c=gas][data-theme=dark]{--acc:#D97A97;--first:#3a1f29}
 @media (prefers-color-scheme:dark){:root[data-c=gas]:not([data-theme=light]){--acc:#D97A97;--first:#3a1f29}}
 :root[data-theme=dark]{--bg:#0f1114;--card:#171a1e;--ink:#e8eaed;--ink2:#c3c8cf;--ink3:#aab1ba;--mut:#98a1ad;--mut2:#8a929d;--line:#272c33;--bd:#3a414b;--soft:#1f2329;--alt:#1a1d22;--first:#3a3110;--track:#2a2f36;--tf:#2a2f36;--tvb:#1e2a44;--tvi:#bcd0ff;--tzb:#3a2617;--tzi:#fdba74;--ok:#4ade80;--warn:#fb923c;--diff:#fdba74;--inv:#e8eaed;--invi:#0f1114;--best:#262b33;--barf:#c3c8cf;color-scheme:dark}
-.theme-btn{border:1px solid var(--bd);background:transparent;color:var(--ink2);border-radius:10px;padding:9px 12px;font:600 13px 'Schibsted Grotesk',sans-serif;cursor:pointer}
+.theme-btn{flex:none;width:44px;height:44px;padding:0;font-size:0;border:1px solid var(--bd);background:transparent;color:var(--ink2);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}.theme-btn::before{content:'';width:18px;height:18px;border-radius:50%;border:2px solid currentColor;background:linear-gradient(90deg,currentColor 50%,transparent 50%)}.theme-btn:hover{border-color:var(--ink)}
 .theme-btn:hover{color:var(--ink)}
 .hdr-r{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 *{box-sizing:border-box}
@@ -208,7 +208,7 @@ var num=function(n,d){return n.toLocaleString('it-IT',{minimumFractionDigits:d,m
 var MESI=['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
 var fd=function(s){var p=s.split('-');return p.length===3?(+p[2])+' '+MESI[+p[1]-1]:MESI[+p[1]-1]+' '+p[0]};
 (function(){var modes=['auto','light','dark'],nomi={auto:'auto',light:'chiaro',dark:'scuro'},b=$('theme-toggle'),r=document.documentElement;
-var m=Math.max(0,modes.indexOf(r.getAttribute('data-theme')||'auto'));var show=function(){b.textContent='Tema: '+nomi[modes[m]]};
+var m=Math.max(0,modes.indexOf(r.getAttribute('data-theme')||'auto'));var show=function(){b.textContent='Tema: '+nomi[modes[m]];b.title=b.textContent;b.setAttribute('aria-label','Cambia tema, ora: '+nomi[modes[m]])};
 b.addEventListener('click',function(){m=(m+1)%3;if(modes[m]==='auto')r.removeAttribute('data-theme');else r.setAttribute('data-theme',modes[m]);try{modes[m]==='auto'?localStorage.removeItem('tema'):localStorage.setItem('tema',modes[m])}catch(e){}show()});show()})();
 function chart(el,pts,lab,dec){var n=pts.length,W=800,H=230,P=40;if(!n)return;
 var mx=Math.max.apply(null,pts)*1.08,mn=Math.min(0,Math.min.apply(null,pts));
