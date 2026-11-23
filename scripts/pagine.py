@@ -137,7 +137,7 @@ def testata(path, title, desc, c, icon):
 def scrivi(path, corpo, script=""):
     out = R / path.strip("/") / "index.html"
     out.parent.mkdir(exist_ok=True)
-    js = f"<script>\n(function(){{\nvar $=function(id){{return document.getElementById(id)}};\ndocument.addEventListener('error',function(e){{var t=e.target;if(t&&t.tagName==='IMG'&&t.closest('.lg,.lgb'))t.remove()}},true);\n{tema}\n{script}\n}})();\n</script>\n"
+    js = f"<script>\n(function(){{\nvar $=function(id){{return document.getElementById(id)}};\ndocument.addEventListener('error',function(e){{var t=e.target;if(t&&t.tagName==='IMG'&&t.closest('.lg,.lgb'))t.remove()}},true);\n['click','auxclick','contextmenu'].forEach(function(ev){{document.addEventListener(ev,function(e){{var a=e.target.closest&&e.target.closest('a[href^=http]');if(!a||a.dataset.u)return;a.dataset.u=1;try{{var x=new URL(a.href);if(/comparaoffertelucegas|ilportaleofferte/.test(x.hostname))return;x.searchParams.set('utm_source','comparaoffertelucegas.it');x.searchParams.set('utm_medium','referral');x.searchParams.set('utm_campaign',location.pathname.replace(/\\//g,'')||'home');a.href=x.toString()}}catch(_){{}}}},true)}});\n{tema}\n{script}\n}})();\n</script>\n"
     out.write_text(corpo + "</main>" + piede + js + "</body>\n</html>\n", encoding="utf-8")
 
 

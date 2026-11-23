@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-ZEyp4iToQPm6pup29EzoiQtDIiRfzlqjuGYL2h33pl8='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-cDHI5dB6zCBMlMV8Oh9WIkGg/QC9xlUAYZbeNGb/vYU='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Confronto offerte luce e gas, aggiornato ogni giorno</title>
@@ -365,6 +365,8 @@ var logo=function(o){var d=o.lg&&/^[a-z0-9.-]+$/.test(o.lg)?o.lg:null,ini=esc((o
 var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
 var safeUrl=function(u){if(!u)return null;u=String(u).trim();if(!/^https?:\/\//i.test(u))u='https://'+u;return /^https?:\/\/[^\s"'<>]+$/i.test(u)?u:null};
 
+function utm(u,c){try{var x=new URL(u);if(/comparaoffertelucegas|ilportaleofferte/.test(x.hostname))return u;x.searchParams.set('utm_source','comparaoffertelucegas.it');x.searchParams.set('utm_medium','referral');x.searchParams.set('utm_campaign',c);return x.toString()}catch(e){return u}}
+['click','auxclick','contextmenu'].forEach(function(ev){document.addEventListener(ev,function(e){var a=e.target.closest&&e.target.closest('a[href^="http"]');if(a&&!a.dataset.u){a.dataset.u=1;a.href=utm(a.href,'classifica')}},true)});
 function load(c){
   if(S.data[c])return Promise.resolve(S.data[c]);
   return fetch('data/'+c+'.json',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json()}).then(function(d){S.data[c]=d;return d});
@@ -492,7 +494,7 @@ var show=function(){b.textContent='Tema: '+nomi[modes[m]];b.title=modes[m]==='au
 b.addEventListener('click',function(){m=(m+1)%3;if(modes[m]==='auto')r.removeAttribute('data-theme');else r.setAttribute('data-theme',modes[m]);try{modes[m]==='auto'?localStorage.removeItem('tema'):localStorage.setItem('tema',modes[m])}catch(e){}show()});show()})();
 $('more').addEventListener('click',function(){S.lim+=50;render()});
 $('tbl').addEventListener('click',function(e){var sh=e.target.closest('.oc-sh');if(sh){var x=S.cur&&S.cur[+sh.dataset.s];if(!x)return;
-  var p=new URLSearchParams(location.search);p.set('q',x.o.n);var u=location.origin+'/?'+p.toString(),cu=CFG[S.c].u,
+  var p=new URLSearchParams(location.search);p.set('q',x.o.n);var ou=safeUrl(x.o.u)||safeUrl(x.o.us),u=ou?utm(ou,'condividi'):location.origin+'/?'+p.toString(),cu=CFG[S.c].u,
   t=x.o.v+', '+x.o.n+': '+eur(x.m,2)+' al mese con un consumo di '+Math.round(S.q[S.c])+' '+cu+' al mese.';
   if(navigator.share){navigator.share({title:x.o.n,text:t,url:u}).catch(function(){})}
   else if(navigator.clipboard){navigator.clipboard.writeText(t+' '+u).then(function(){var h=sh.innerHTML;sh.textContent='Link copiato';setTimeout(function(){sh.innerHTML=h},2000)})}
