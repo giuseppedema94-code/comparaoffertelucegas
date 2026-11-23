@@ -196,6 +196,13 @@ for p in file_offerte:
             x = dominio(o.get("u"))
             if x in ci:
                 per_nome.setdefault(o.get("v"), x)
+# sito del fornitore per le offerte senza link: da un'altra offerta dello stesso fornitore o dall'elenco marchi
+sito_nome = dict(nome_dom)
+for p in file_offerte:
+    if p.exists():
+        for o in json.loads(p.read_text())["offerte"]:
+            if o.get("u"):
+                sito_nome.setdefault(o.get("v"), urlparse(o["u"] if o["u"].startswith("http") else "https://" + o["u"]).netloc.lower())
 for p in file_offerte:
     if p.exists():
         d = json.loads(p.read_text())
@@ -206,6 +213,10 @@ for p in file_offerte:
                 o["lg"] = x
             else:
                 o.pop("lg", None)
+            o.pop("us", None)
+            if not o.get("u") and sito_nome.get(o.get("v")):
+                h = sito_nome[o["v"]]
+                o["us"] = "https://" + (h if h.count(".") >= 2 else "www." + h) + "/"
         p.write_text(json.dumps(d, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 buoni = sum(1 for d in ci if stato.get(d, {}).get("px", 0) >= BUONO)
 print(f"loghi: {len(ci)} su {len(domini)} domini, {buoni} in buona qualità (>= {BUONO} px)")

@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-Zt+RprQnmDnjaLzI1/y812VY9oy+A+ah9UTqCMmLJTw='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-Z6G+LyCpMEtR0nB+4zQEr3Lp2KOObKzuJiXp9ueSoZo='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Confronto offerte luce e gas, aggiornato ogni giorno</title>
@@ -394,7 +394,7 @@ function render(){
   $('bs').innerHTML=logo(best.o)+'<span>'+esc(best.o.v)+'</span>';$('bn').textContent=best.o.n;$('bm').textContent=eur(best.m,2);
   $('bsub').innerHTML='<span>'+(S.c==='luce'?'Energia':'Gas')+' <strong>'+num(best.o.pd!=null?best.o.pd:best.o.p,4)+' €/'+cfg.u+'</strong></span><span>Quota fissa <strong>'+eur(best.o.fx/12,2)+'/mese</strong></span>'+(best.o.ds?'<span>Sconto <strong>'+eur(best.o.ds,0)+'/anno</strong>'+(best.o.dsT?' ('+esc(best.o.dsT)+')':'')+'</span>':'')+(best.o.sc?'<span>Offerta valida fino al <strong>'+fd(best.o.sc)+'</strong></span>':'');
   $('bsave').hidden=false;$('bsave').textContent="Risparmio medio di "+eur(med.m-best.m,2)+"/mese";$('bsave').title="Rispetto a un'offerta tipica tra quelle in elenco";
-  var bu=safeUrl(best.o.u);$('blink').hidden=!bu;if(bu)$('blink').href=bu;
+  var bu=safeUrl(best.o.u)||safeUrl(best.o.us);$('blink').hidden=!bu;if(bu){$('blink').href=bu;$('blink').textContent=safeUrl(best.o.u)?'Vai all\'offerta':'Sito del fornitore'}
   var pl=valid.filter(function(x){return x.o.pl})[0];$('bplc').hidden=!pl;if(pl)$('bplc').textContent='PLACET più conveniente (condizioni standard ARERA): '+eur(pl.m,2)+' al mese, '+eur(Math.max(0,pl.m-best.m),2)+' in più di questa.';
   $('ovdw').hidden=S.c!=='luce';$('prio').hidden=S.k!=='pr';
   $('tcount').textContent=all.length.toLocaleString('it-IT')+' offerte di '+d.fornitori.toLocaleString('it-IT')+' fornitori';
@@ -428,7 +428,7 @@ function render(){
      +'<div class="oc-tg"><span class="tg '+(o.t==='f'?'tg-f':'tg-v')+'">'+tipo+'</span>'+'<span class="tg st-'+stab(o)+'" title="'+STT[stab(o)]+'">Stabilità '+stab(o)+'</span>'+(o.vd?'<span class="tg tg-g">Verde</span>':'')+(o.tr?'<span class="tg tg-tr '+(o.tr<0?'dn':'up')+'" title="Variazione della spesa per un consumo tipo rispetto a una settimana fa">'+(o.tr<0?'▼ ':'▲ ')+eur(Math.abs(o.tr),2)+' in 7 giorni</span>':'')+(o.pl?'<span class="tg tg-p">PLACET</span>':'')+(o.pen?'<span class="tg tg-w" title="'+esc(o.penT||'')+'">Penale di uscita</span>':'')+(dd!=null&&dd>=0&&dd<=30?'<span class="tg tg-s">Scade tra '+dd+(dd===1?' giorno':' giorni')+'</span>':'')+'</div></div>'
      +'<div class="oc-b"><dl class="oc-d"><div><dt>Energia</dt><dd>'+num(o.pd!=null?o.pd:o.p,4)+' €/'+cfg.u+'</dd></div><div><dt>Quota fissa</dt><dd>'+num(o.fx/12,2)+' €/mese</dd></div>'+(o.ds?'<div><dt>Sconto</dt><dd class="ok">−'+eur(o.ds,0)+'/anno</dd></div>':'')+(o.sc?'<div><dt>Offerta valida fino al</dt><dd>'+fd(o.sc)+'</dd></div>':'')+'</dl>'
      +'<div class="oc-p"><div class="oc-m"><strong>'+num(Math.floor(Math.round(x.m*100)/100),0)+'</strong><span>,'+String(Math.round(x.m*100)%100).padStart(2,'0')+' €/mese</span></div><div class="oc-y">'+eur(x.m*12,0)+' l\'anno</div><div class="oc-dd'+(first?' top1':'')+'">'+(first?'La più conveniente':'+'+eur(x.m-top,2)+' al mese')+'</div></div>'
-     +'<div class="oc-a">'+(u?'<a class="oc-btn" href="'+esc(u)+'" target="_blank" rel="nofollow noopener">Vai all\'offerta</a>':'')+(o.t==='f'&&o.d>=6&&o.d<99?'<button type="button" class="oc-rem" data-i="'+i+'" title="Scarica un promemoria per il calendario un mese prima che finisca il prezzo bloccato">Ricordami la scadenza</button>':'')+'</div></div></article>');
+     +'<div class="oc-a">'+(u?'<a class="oc-btn" href="'+esc(u)+'" target="_blank" rel="nofollow noopener">Vai all\'offerta</a>':(safeUrl(o.us)?'<a class="oc-btn" href="'+esc(safeUrl(o.us))+'" target="_blank" rel="nofollow noopener" title="Questa offerta non ha un link diretto nei dati ARERA">Sito del fornitore</a>':'<a class="oc-btn" href="https://www.ilportaleofferte.it/portaleOfferte/" target="_blank" rel="noopener" title="Cerca l\'offerta sul Portale Offerte di ARERA">Portale ARERA</a>'))+(o.t==='f'&&o.d>=6&&o.d<99?'<button type="button" class="oc-rem" data-i="'+i+'" title="Scarica un promemoria per il calendario un mese prima che finisca il prezzo bloccato">Ricordami la scadenza</button>':'')+'</div></div></article>');
   });
   if(!list.length)h.push('<p class="note">Nessuna offerta con questi filtri. <button class="chip" type="button" id="reset">Azzera filtri</button></p>');
   $('tbl').innerHTML=h.join('');
