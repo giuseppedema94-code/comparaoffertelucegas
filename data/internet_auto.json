@@ -13,7 +13,8 @@
   "attivazione": 39.9,
   "nota": "Riservata ai clienti TIM sul mobile (con TIM Unica Power).",
   "area": null,
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "fastweb",
@@ -29,7 +30,8 @@
   "attivazione": 0.0,
   "nota": "",
   "area": null,
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "vodafone",
@@ -61,7 +63,8 @@
   "attivazione": null,
   "nota": "Sconto di 4€/mese per clienti con SIM mobile WINDTRE.",
   "area": null,
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "windtre",
@@ -77,7 +80,8 @@
   "attivazione": null,
   "nota": "Sconto di 4€/mese per clienti con SIM mobile WINDTRE.",
   "area": null,
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "windtre",
@@ -93,7 +97,8 @@
   "attivazione": null,
   "nota": "Offerta online, sconto di 4€/mese per clienti con SIM mobile WINDTRE.",
   "area": null,
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "windtre",
@@ -109,7 +114,8 @@
   "attivazione": 39.99,
   "nota": "Senza modem incluso, sconto di 4€/mese per clienti con SIM mobile WINDTRE.",
   "area": null,
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "windtre",
@@ -125,7 +131,8 @@
   "attivazione": 39.99,
   "nota": "Senza modem incluso, sconto di 4€/mese per clienti con SIM mobile WINDTRE.",
   "area": null,
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "windtre",
@@ -141,7 +148,8 @@
   "attivazione": 39.99,
   "nota": "Senza modem incluso, sconto di 4€/mese per clienti con SIM mobile WINDTRE.",
   "area": null,
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "iliad",
@@ -157,7 +165,8 @@
   "attivazione": null,
   "nota": "installazione autonoma senza tecnico, router Wi-Fi 5G incluso.",
   "area": null,
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "linkem",
@@ -173,7 +182,8 @@
   "attivazione": 29.9,
   "nota": "Installazione 29,90€ una tantum. Attivazione 120€ suddivisi in 24 rate da 5€ incluse nel costo mensile.",
   "area": null,
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "sorgenia",
@@ -189,7 +199,8 @@
   "attivazione": 19.9,
   "nota": "In bundle con luce e gas.",
   "area": null,
-  "bundle": true
+  "bundle": true,
+  "letto": "2026-11-23"
  },
  {
   "k": "enelenergia",
@@ -205,7 +216,8 @@
   "attivazione": 0.0,
   "nota": "Offerta solo fibra per nuovi clienti residenziali.",
   "area": null,
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "enelenergia",
@@ -221,7 +233,8 @@
   "attivazione": 0.0,
   "nota": "Per clienti Luce e Gas Enel Energia, include minuti illimitati.",
   "area": null,
-  "bundle": true
+  "bundle": true,
+  "letto": "2026-11-23"
  },
  {
   "k": "enelenergia",
@@ -237,7 +250,8 @@
   "attivazione": 0.0,
   "nota": "Per clienti Luce o Gas Enel Energia, include minuti illimitati.",
   "area": null,
-  "bundle": true
+  "bundle": true,
+  "letto": "2026-11-23"
  },
  {
   "k": "bbbell",
@@ -253,7 +267,8 @@
   "attivazione": null,
   "nota": "valida per i profili FTTH.",
   "area": "Piemonte e Liguria",
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "bbbell",
@@ -269,7 +284,8 @@
   "attivazione": null,
   "nota": "valida per i profili FTTH.",
   "area": "Piemonte e Liguria",
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "bbbell",
@@ -285,7 +301,8 @@
   "attivazione": null,
   "nota": "valida per i profili FTTH.",
   "area": "Piemonte e Liguria",
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "dolomitienergi",
@@ -301,7 +318,8 @@
   "attivazione": 0.0,
   "nota": "Riservata ai clienti Dolomiti Energia nel mercato libero.",
   "area": null,
-  "bundle": true
+  "bundle": true,
+  "letto": "2026-11-23"
  },
  {
   "k": "dolomitienergi",
@@ -317,7 +335,8 @@
   "attivazione": 49.0,
   "nota": "Per chi attiva solo la connessione internet senza contratto luce o gas.",
   "area": null,
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "illumia",
@@ -333,7 +352,8 @@
   "attivazione": 29.9,
   "nota": "Prezzo promozionale 22,90 €/mese per i primi 12 mesi, poi 24,90 €/mese; attivazione una tantum 29,90 € (scontata a 0 € con contratto luce/gas).",
   "area": null,
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "intred",
@@ -349,7 +369,8 @@
   "attivazione": null,
   "nota": "",
   "area": "Lombardia",
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "intred",
@@ -365,7 +386,8 @@
   "attivazione": null,
   "nota": "",
   "area": "Lombardia",
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "intred",
@@ -381,7 +403,8 @@
   "attivazione": null,
   "nota": "",
   "area": "Lombardia",
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "navigabene",
@@ -397,7 +420,8 @@
   "attivazione": null,
   "nota": "prezzo bloccato.",
   "area": null,
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "navigabene",
@@ -413,7 +437,8 @@
   "attivazione": null,
   "nota": "prezzo bloccato, promozione.",
   "area": null,
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "navigabene",
@@ -429,7 +454,8 @@
   "attivazione": null,
   "nota": "prezzo bloccato.",
   "area": null,
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "pianetafibra",
@@ -445,7 +471,8 @@
   "attivazione": null,
   "nota": "promo prezzo bloccato fino al 31.01.2027.",
   "area": null,
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "pianetafibra",
@@ -461,7 +488,8 @@
   "attivazione": null,
   "nota": "promo prezzo bloccato fino al 31.01.2027.",
   "area": null,
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "pianetafibra",
@@ -477,7 +505,8 @@
   "attivazione": null,
   "nota": "promo prezzo bloccato.",
   "area": null,
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "postemobilepos",
@@ -493,7 +522,8 @@
   "attivazione": 29.0,
   "nota": "Nuovi clienti privati, rete radiomobile, modem in comodato gratuito.",
   "area": null,
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "unidata",
@@ -509,7 +539,8 @@
   "attivazione": 49.9,
   "nota": "Senza Vincoli, Modem FRITZ!Box 5630 incluso, IP pubblico statico incluso.",
   "area": "Lazio",
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "mandarin",
@@ -525,7 +556,8 @@
   "attivazione": null,
   "nota": "Rimborso costi di installazione.",
   "area": "Sicilia",
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  },
  {
   "k": "mandarin",
@@ -541,6 +573,7 @@
   "attivazione": null,
   "nota": "Rimborso costi d'installazione.",
   "area": "Sicilia",
-  "bundle": false
+  "bundle": false,
+  "letto": "2026-11-23"
  }
 ]
