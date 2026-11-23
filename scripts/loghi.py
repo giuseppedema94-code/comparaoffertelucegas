@@ -71,6 +71,12 @@ def apri(b):
         return None
 
 
+def pieno(im):
+    """Quota di pixel visibili e non bianchi: scarta icone vuote o quasi bianche."""
+    px = im.convert("RGBA").resize((64, 64)).getdata()
+    return sum(1 for r, g, b, a in px if a > 40 and not (r > 235 and g > 235 and b > 235)) / 4096
+
+
 def candidati(d):
     host = f"www.{d}" if d.count(".") == 1 else d
     fonti = []
@@ -115,7 +121,7 @@ def cerca(d):
     vecchio = DIR / f"{d}.ico"  # logo già scaricato con la versione precedente
     if vecchio.exists() and not f.exists():
         im = apri(vecchio.read_bytes())
-        if im is not None:
+        if im is not None and pieno(im) >= 0.01:
             migliore, lato = im, min(im.size)
     for u in candidati(d):
         try:
@@ -125,7 +131,7 @@ def cerca(d):
         if st != 200:
             continue
         im = apri(b)
-        if im is None:
+        if im is None or pieno(im) < 0.01:
             continue
         lt = min(im.size)
         if lt > lato and lt >= 16:
