@@ -16,14 +16,43 @@ testa = tpl[: tpl.index('<main')]
 piede = tpl[tpl.index('</main>') + len('</main>'): tpl.index('<script>\n(function(){')]
 tema = re.search(r"\(function\(\)\{var modes=.*?show\(\)\}\)\(\);", tpl, re.S).group(0)
 
-CSS_NET = """.lg{position:relative;flex:0 0 auto;width:30px;height:30px;border-radius:8px;background:#fff;border:1px solid var(--line);display:inline-flex;align-items:center;justify-content:center;font:700 13px 'Schibsted Grotesk',sans-serif;color:#14161A;overflow:hidden}
+CSS_NET = """.oc{border:1px solid var(--line);border-radius:16px;background:var(--card);margin:0 0 12px;overflow:hidden}.oc[hidden]{display:none}
+.oc.first{border:2px solid var(--accbar);box-shadow:0 6px 18px rgba(0,0,0,.06)}
+.oc-h{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line)}.oc.first .oc-h{background:var(--first)}
+.oc-n{font:800 15px 'Schibsted Grotesk',sans-serif;color:var(--mut);width:22px}
+.lgb{position:relative;flex:0 0 auto;width:52px;height:52px;border-radius:12px;background:#fff;border:1px solid var(--line);display:inline-flex;align-items:center;justify-content:center;font:800 22px 'Schibsted Grotesk',sans-serif;color:#14161A;overflow:hidden}
+.lgb img{position:absolute;inset:6px;width:calc(100% - 12px);height:calc(100% - 12px);object-fit:contain;background:#fff}
+.oc-t{min-width:0;flex:1}.oc-v{font:800 18px 'Schibsted Grotesk',sans-serif}.oc-o{font-size:14.5px;color:var(--ink2);margin-top:2px}.oc-o a{color:var(--ink2)}
+.oc-tg{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.tg{font:700 12px 'Schibsted Grotesk',sans-serif;padding:5px 9px;border-radius:7px;white-space:nowrap}
+.tg-f{background:#14161A;color:#fff}.tg-v{background:#DBEAFE;color:#1E3A8A}.tg-w{background:#FFEDD5;color:#9A3412}.tg-s{background:transparent;border:1px solid var(--bd);color:var(--ink2)}
+.tg-ftth{background:#14161A;color:#fff}.tg-fwa{background:#E0F2FE;color:#075985}.tg-altro{background:#E7E9E4;color:#3A3F47}
+.st-A{background:#DCFCE7;color:#166534}.st-B{background:#ECFCCB;color:#3F6212}.st-C{background:#FEF9C3;color:#854D0E}.st-D{background:#FFE4E6;color:#9F1239}
+.oc-b{display:grid;grid-template-columns:1.4fr 1fr auto;align-items:center}
+.oc-d{margin:0;padding:14px 18px;display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;border-right:1px solid var(--line)}
+.oc-d div{display:flex;flex-direction:column}.oc-d div.w{grid-column:1/-1}.oc-d dt{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}.oc-d dd{margin:2px 0 0;font-weight:700;font-size:15px}.oc-d dd.nt{font-weight:400;font-size:13.5px;color:var(--ink2);white-space:normal;overflow:visible;text-overflow:clip;max-width:none}
+.oc-p{text-align:center;padding:14px 18px;border-right:1px solid var(--line)}
+.oc-m{white-space:nowrap}.oc-m strong{font:800 46px/1 'Schibsted Grotesk',sans-serif;letter-spacing:-.03em}.oc-m span{font:700 18px 'Schibsted Grotesk',sans-serif}
+.oc-y{color:var(--mut);font-size:14px;margin-top:4px}.oc-dd{font-size:13.5px;font-weight:700;color:#B45309;margin-top:4px;white-space:nowrap}.oc-dd.top1{color:#15803d}
+.oc-a{padding:14px 18px;display:flex;flex-direction:column;gap:8px;align-items:stretch}
+.oc-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--accbg);color:#fff!important;font:800 15px 'Schibsted Grotesk',sans-serif;padding:13px 18px;border-radius:12px;text-decoration:none;white-space:nowrap}.oc-btn:after{content:'›';font-size:20px;line-height:1}.oc-btn:hover{filter:brightness(.94)}
+@media (max-width:760px){.oc-h{flex-wrap:wrap;padding:12px 14px}.oc-tg{width:100%;justify-content:flex-start}.oc-b{grid-template-columns:minmax(0,1fr) auto}.oc-d{grid-column:1/-1;border-right:0;border-bottom:1px solid var(--line);padding:12px 14px}.oc-p{text-align:left;border-right:0;padding:12px 14px}.oc-a{padding:12px 14px 12px 0}.oc-m strong{font-size:34px}.oc-m span{font-size:16px}.oc-btn{padding:12px 14px;font-size:14px}.lgb{width:46px;height:46px}}
+:root[data-c=lg]{--grad:linear-gradient(90deg,#F5C518,#C65B7C);--first:#FDF1E4}
+:root[data-c=lg] header.top::before{background:var(--grad)}
+:root[data-c=lg] .segn a[aria-current=page]{background:var(--grad);color:#14161A}
+:root[data-c=lg] .oc.first{border:2px solid transparent;background:linear-gradient(var(--card),var(--card)) padding-box,var(--grad) border-box}
+:root[data-c=lg] .oc.first .oc-h{background:linear-gradient(90deg,#FEF6D8,#F9E5EC)}
+:root[data-c=lg] .oc-btn{background:var(--grad);color:#14161A!important}
+@media (prefers-color-scheme:dark){:root[data-c=lg]:not([data-theme=light]) .oc.first .oc-h{background:linear-gradient(90deg,#3a3110,#3a1f29)}}
+:root[data-c=lg][data-theme=dark] .oc.first .oc-h{background:linear-gradient(90deg,#3a3110,#3a1f29)}
+.lg{position:relative;flex:0 0 auto;width:30px;height:30px;border-radius:8px;background:#fff;border:1px solid var(--line);display:inline-flex;align-items:center;justify-content:center;font:700 13px 'Schibsted Grotesk',sans-serif;color:#14161A;overflow:hidden}
 .lg img{position:absolute;inset:3px;width:calc(100% - 6px);height:calc(100% - 6px);object-fit:contain;background:#fff}
 .pk .op{display:flex;align-items:center;gap:8px}
 .seg{display:flex;background:var(--soft);border-radius:12px;padding:4px}
 .segn a{font:600 15px 'Schibsted Grotesk',sans-serif;padding:10px 20px;border-radius:9px;color:var(--ink);text-decoration:none}
 .segn a[aria-current=page]{background:var(--accbg);color:#fff}
 @media (max-width:520px){.segn a{padding:10px 11px;font-size:14px}}
-:root[data-c=lg]{--acc:#F5C518;--accbg:#F5C518;--accbar:#F5C518}:root[data-c=lg] .segn a[aria-current=page]{color:#14161A}
+:root[data-c=lg]{--acc:#F5C518;--accbg:#F5C518;--accbar:#F5C518}
 .flt{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0 10px}.flt button{font:600 14px 'Schibsted Grotesk',sans-serif;padding:7px 12px;border-radius:8px;border:1px solid var(--bd);background:transparent;color:var(--ink);cursor:pointer}.flt button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}.flt label{font-size:14px;display:flex;gap:6px;align-items:center;margin-left:4px}
 .ar{display:inline-block;font-size:11.5px;font-weight:700;background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:0 6px;margin-right:4px;color:var(--ink2)}.pk tr[hidden]{display:none}
 .xs{border:2px solid var(--acc)}.xs .rw{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
@@ -92,7 +121,7 @@ var num=function(n,d){return n.toLocaleString('it-IT',{minimumFractionDigits:d,m
 var eur=function(n){return num(n,2)+' €'};
 var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
 var safe=function(u){return /^https:\/\//.test(u||'')?u:null};
-var logo=function(o){var d=o.lg&&/^[a-z0-9.-]+$/.test(o.lg)?o.lg:null;return '<span class="lg" aria-hidden="true">'+esc((o.v||'?').charAt(0).toUpperCase())+(d?'<img src="/img/loghi/'+d+'.ico" alt="" loading="lazy">':'')+'</span>'};
+var logoB=function(o){var d=o.lg&&/^[a-z0-9.-]+$/.test(o.lg)?o.lg:null;return '<span class="lgb" aria-hidden="true">'+esc((o.v||'?').charAt(0).toUpperCase())+(d?'<img src="/img/loghi/'+d+'.ico" alt="" loading="lazy">':'')+'</span>'};
 function accLuce(y,al){var m=y/12,e=m<=220?Math.min(m,150):Math.max(0,150-(m-220));return (m-e)*12*al}
 function costo(o,c,y,R){var r=R[c],acc=c==='luce'?accLuce(y,r.acc):0;return (1+r.iva)*(o.fx+o.p*y-(o.s||0)+r.rf+r.rv*y+acc)/12}
 var D={};
@@ -103,10 +132,16 @@ function render(){
   function migliore(d,c,y){var b=null;d.offerte.forEach(function(o){if(o.ok===false)return;if(o.min!=null&&y<o.min||o.max!=null&&y>o.max)return;var x=costo(o,c,y,R);if(!b||x<b.x)b={o:o,x:x}});return b}
   var bl=migliore(D.luce,'luce',yl),bg=migliore(D.gas,'gas',yg);
   if(bl&&bg){var sep=bl.x+rai+bg.x;$('sep').innerHTML='<strong>'+eur(sep)+' al mese</strong><span>Luce: '+esc(bl.o.v)+', '+esc(bl.o.n)+' ('+eur(bl.x+rai)+')</span><span>Gas: '+esc(bg.o.v)+', '+esc(bg.o.n)+' ('+eur(bg.x)+')</span>'+(rows.length?'<span>'+(rows[0].t>sep?'Conviene più di un pacchetto unico: il più economico ('+esc(rows[0].o.v)+', '+eur(rows[0].t)+') costa '+eur(rows[0].t-sep)+' al mese in più.':'Il pacchetto unico più economico ('+esc(rows[0].o.v)+', '+eur(rows[0].t)+') costa '+eur(sep-rows[0].t)+' al mese in meno: conviene il pacchetto.')+'</span>':'')}
-  var h='<thead><tr><th>#</th><th>Fornitore e pacchetto</th><th class="n">Luce</th><th class="n">Gas</th><th class="n">Totale al mese</th></tr></thead><tbody>';
-  rows.forEach(function(x,i){var o=x.o,u=safe(o.u),tipo=o.t==='f'?'fisso'+(o.d>=12&&o.d<99?' '+(o.d%12?o.d+' mesi':o.d/12+(o.d===12?' anno':' anni')):''):'variabile';
-    h+='<tr'+(i===0?' class="first"':'')+'><td class="c-pos">'+(i+1)+'</td><td class="c-op"><div class="op">'+logo(o)+esc(o.v)+'</div><div>'+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+'</div><div class="nt">Prezzo '+tipo+(o.pen?' · costo di uscita anticipata':'')+'</div></td><td class="n c-x" data-l="Luce">'+eur(x.l)+'</td><td class="n c-x" data-l="Gas">'+eur(x.g)+'</td><td class="n tot c-pr">'+eur(x.t)+'</td></tr>'});
-  $('tab').innerHTML=h+'</tbody>';
+  var big=function(v){var c=Math.round(v*100);return '<strong>'+Math.floor(c/100)+'</strong><span>,'+String(c%100).padStart(2,'0')+' €/mese</span>'};
+  var stab=function(o){return o.t!=='f'?'D':(o.d>=36&&o.d<99?'A':o.d>=24&&o.d<99?'B':'C')};
+  var h='',top=rows.length?rows[0].t:0;
+  rows.forEach(function(x,i){var o=x.o,u=safe(o.u),tipo=o.t==='f'?'Fisso'+(o.d>=12&&o.d<99?' · '+(o.d%12?o.d+' mesi':o.d/12+(o.d===12?' anno':' anni')):''):'Variabile';
+    h+='<article class="oc'+(i===0?' first':'')+'"><div class="oc-h"><span class="oc-n">'+(i+1)+'</span>'+logoB(o)+'<div class="oc-t"><div class="oc-v">'+esc(o.v)+'</div><div class="oc-o">'+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+'</div></div>'
+     +'<div class="oc-tg"><span class="tg '+(o.t==='f'?'tg-f':'tg-v')+'">'+tipo+'</span><span class="tg st-'+stab(o)+'">Stabilità '+stab(o)+'</span>'+(o.pen?'<span class="tg tg-w">Penale di uscita</span>':'')+'</div></div>'
+     +'<div class="oc-b"><dl class="oc-d"><div><dt>Luce</dt><dd>'+eur(x.l)+' al mese</dd></div><div><dt>Gas</dt><dd>'+eur(x.g)+' al mese</dd></div><div><dt>Energia luce</dt><dd>'+num(o.l.pd,4)+' €/kWh</dd></div><div><dt>Energia gas</dt><dd>'+num(o.g.pd,4)+' €/Smc</dd></div></dl>'
+     +'<div class="oc-p"><div class="oc-m">'+big(x.t)+'</div><div class="oc-y">luce + gas</div>'+(i===0?'<div class="oc-dd top1">Il pacchetto più conveniente</div>':'<div class="oc-dd">+'+eur(x.t-top)+' al mese</div>')+'</div>'
+     +'<div class="oc-a">'+(u?'<a class="oc-btn" href="'+esc(u)+'" target="_blank" rel="nofollow noopener">Vai all\'offerta</a>':'')+'</div></div></article>'});
+  $('tab').innerHTML=h;
   $('cnt').textContent=rows.length+' pacchetti di '+D.dual.fornitori+' fornitori';
 }
 Promise.all(['dual','luce','gas'].map(function(k){return fetch('/data/'+k+'.json',{cache:'no-cache'}).then(function(r){return r.json()})})).then(function(a){D.dual=a[0];D.luce=a[1];D.gas=a[2];
@@ -124,7 +159,7 @@ corpo += """<main class="wrap pg">
 <p class="src">Cliente residente, contatore da 3 kW. Spesa con imposte, stimata come nella <a href="/">classifica principale</a>.</p></section>
 <section class="card"><h2 class="h" style="margin:0 0 4px;font-size:22px">Luce e gas da fornitori diversi</h2><div class="best2" id="sep">—</div></section>
 <section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Pacchetti luce + gas <span class="src" id="cnt"></span></h2>
-<div class="scroll" role="region" aria-label="Pacchetti luce e gas" tabindex="0"><table class="pk" id="tab"></table></div></section>
+<div id="tab"></div></section>
 <section class="card txt"><h2 class="h">Conviene il pacchetto unico?</h2>
 <p>Un'offerta dual lega luce e gas allo stesso venditore: una sola bolletta e, a volte, uno sconto. Non è detto che costi meno di due offerte separate scelte ciascuna al prezzo più basso, per questo le mettiamo a confronto qui sopra.</p>
 <p>Se un domani vuoi cambiare solo la luce o solo il gas, controlla nella scheda dell'offerta se lo sconto del pacchetto si perde.</p></section>
@@ -136,11 +171,11 @@ net = json.loads((R / "data" / "internet.json").read_text(encoding="utf-8"))
 e = lambda s: H.escape(str(s), quote=True)
 
 
-def logo(nome, url):
+def logo(nome, url, cls="lg"):
     from urllib.parse import urlparse
     d = ".".join(urlparse(url or "").netloc.lower().split(".")[-2:]) if url else ""
     img = f'<img src="/img/loghi/{e(d)}.ico" alt="" loading="lazy">' if d and (R / "img" / "loghi" / f"{d}.ico").exists() else ""
-    return f'<span class="lg" aria-hidden="true">{e(nome.strip()[:1].upper())}{img}</span>'
+    return f'<span class="{cls}" aria-hidden="true">{e(nome.strip()[:1].upper())}{img}</span>'
 n2 = lambda v: f"{v:.2f}".replace(".", ",") + " €" if v is not None else "—"
 ver = net["verificato"].split("-")
 ver = f"{int(ver[2])}/{ver[1]}/{ver[0]}"
@@ -151,20 +186,39 @@ righe = sorted([x for x in net["internet"] + [a for a in auto if not a["bundle"]
 net["bundle"] = net["bundle"] + [{"fornitore": a["operatore"], "offerta": a["offerta"], "vantaggio": a["nota"], "prezzo_fibra_mese": a["prezzo_mese"], "url": a["url"], "nota": (f"Poi {a['prezzo_dopo']:.2f} €".replace(".", ",") + (f" dopo {a['mesi_promo']} mesi." if a.get("mesi_promo") else ".")) if a.get("prezzo_dopo") and a["prezzo_dopo"] != a["prezzo_mese"] else ""} for a in auto if a["bundle"] and fresco(a)]
 vecchio = lambda x: x.get("letto") and x["letto"] < net["verificato"]
 dl = lambda x: f' Prezzo letto il {int(x["letto"][8:])}/{x["letto"][5:7]}.' if vecchio(x) else ""
-tr = []
-for i, x in enumerate(righe):
+def eur_big(v):
+    c = round(v * 100)
+    return f'<strong>{c // 100}</strong><span>,{c % 100:02d} €/mese</span>'
+
+
+def scheda(x, i, top, bundle=False):
     nome = f'<a href="{e(x["url"])}" target="_blank" rel="nofollow noopener">{e(x["offerta"])}</a>' if x.get("url") else e(x["offerta"])
-    dopo = f'poi {n2(x["prezzo_dopo"])}' + (f' dopo {x["mesi_promo"]} mesi' if x.get("mesi_promo") else "") if x.get("prezzo_dopo") and x["prezzo_dopo"] != x["prezzo_mese"] else ""
+    op = x.get("operatore") or x.get("fornitore")
+    pm = x.get("prezzo_mese", x.get("prezzo_fibra_mese"))
     tec = (x.get("tecnologia") or "").upper()
     cat = "fwa" if "FWA" in tec else "ftth" if "FTTH" in tec else "altro"
-    area = f'<span class="ar">Solo {e(x["area"])}</span> ' if x.get("area") else ""
-    tr.append(f'<tr data-cat="{cat}" data-reg="{1 if x.get("area") else 0}"{" class=\"first\"" if i == 0 else ""}><td class="c-pos">{i + 1}</td><td class="c-op"><div class="op">{logo(x["operatore"], x.get("url"))}{e(x["operatore"])}</div><div>{nome}</div>'
-              f'<div class="nt">{area}{e(x.get("nota") or "")}{dl(x)}</div></td><td class="c-x" data-l="Tecnologia">{e(x.get("tecnologia") or "—")}{", " + e(x["velocita"]) if x.get("velocita") else ""}</td>'
-              f'<td class="n tot c-pr">{n2(x["prezzo_mese"])}<div class="nt">{dopo}</div></td><td class="n c-x" data-l="Attivazione">{n2(x.get("attivazione"))}</td><td class="c-x" data-l="Modem">{e(x.get("modem") or "—")}</td></tr>')
-bt = []
-for x in net["bundle"]:
-    nome = f'<a href="{e(x["url"])}" target="_blank" rel="nofollow noopener">{e(x["offerta"])}</a>' if x.get("url") else e(x["offerta"])
-    bt.append(f'<tr><td class="c-op"><div class="op">{logo(x["fornitore"], x.get("url"))}{e(x["fornitore"])}</div><div>{nome}</div><div class="nt">{e(x["nota"])}</div></td><td class="c-x">{e(x["vantaggio"])}</td><td class="n tot c-pr">{n2(x["prezzo_fibra_mese"])}</td></tr>')
+    tags = (f'<span class="tg tg-{cat}">{e(x["tecnologia"])}</span>' if x.get("tecnologia") else "") + (f'<span class="tg tg-s">Solo {e(x["area"])}</span>' if x.get("area") else "")
+    dati = []
+    if x.get("velocita"): dati.append(("Velocità", e(x["velocita"]), ""))
+    if x.get("attivazione") is not None: dati.append(("Attivazione", n2(x["attivazione"]), ""))
+    if x.get("modem"): dati.append(("Modem", e(x["modem"]), ""))
+    if bundle and x.get("vantaggio"): dati.append(("Vantaggio", e(x["vantaggio"]), "w"))
+    if x.get("nota"): dati.append(("Condizioni", e(x["nota"]) + dl(x), "w"))
+    dd = "".join(f'<div class="{w}"><dt>{k}</dt><dd{" class=nt" if k in ("Condizioni", "Vantaggio") else ""}>{v}</dd></div>' for k, v, w in dati)
+    dopo = (f'poi {n2(x["prezzo_dopo"])}' + (f' dopo {x["mesi_promo"]} mesi' if x.get("mesi_promo") else "")) if x.get("prezzo_dopo") and x["prezzo_dopo"] != pm else ""
+    diff = "" if bundle else ('<div class="oc-dd top1">Il canone più basso</div>' if i == 0 else f'<div class="oc-dd">+{n2(pm - top)} al mese</div>')
+    btn = f'<a class="oc-btn" href="{e(x["url"])}" target="_blank" rel="nofollow noopener">Vai all\'offerta</a>' if x.get("url") else ""
+    num = "" if bundle else f'<span class="oc-n">{i + 1}</span>'
+    first = " first" if (i == 0 and not bundle) else ""
+    return (f'<article class="oc{first}" data-cat="{cat}" data-reg="{1 if x.get("area") else 0}"><div class="oc-h">{num}{logo(op, x.get("url"), "lgb")}'
+            f'<div class="oc-t"><div class="oc-v">{e(op)}</div><div class="oc-o">{nome}</div></div><div class="oc-tg">{tags}</div></div>'
+            f'<div class="oc-b"><dl class="oc-d">{dd}</dl><div class="oc-p"><div class="oc-m">{eur_big(pm)}</div>'
+            f'{f"<div class=oc-y>{dopo}</div>" if dopo else ""}{diff}</div><div class="oc-a">{btn}</div></div></article>')
+
+
+top = righe[0]["prezzo_mese"] if righe else 0
+tr = [scheda(x, i, top) for i, x in enumerate(righe)]
+bt = [scheda(x, 0, 0, bundle=True) for x in sorted(net["bundle"], key=lambda b: b["prezzo_fibra_mese"])]
 
 corpo = testata("/internet/", "Offerte fibra e internet casa a confronto",
                 "Le offerte fibra per la casa dei principali operatori, ordinate per canone mensile, e i pacchetti energia più internet dei fornitori di luce e gas.",
@@ -173,27 +227,25 @@ corpo += f"""<main class="wrap pg">
 <h1 class="h">Offerte fibra e internet casa</h1>
 <section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Internet casa, dal canone più basso <span class="src" id="ncnt"></span></h2>
 <div class="flt" role="group" aria-label="Filtra"><button type="button" data-t="tutte" aria-pressed="true">Tutte</button><button type="button" data-t="ftth" aria-pressed="false">Fibra FTTH</button><button type="button" data-t="fwa" aria-pressed="false">FWA senza linea</button><label><input type="checkbox" id="noreg"> Nascondi offerte regionali</label></div>
-<div class="scroll" role="region" aria-label="Offerte internet casa" tabindex="0"><table class="pk" id="nt">
-<thead><tr><th>#</th><th>Operatore e offerta</th><th>Tecnologia</th><th class="n">Al mese</th><th class="n">Attivazione</th><th>Modem</th></tr></thead><tbody>
+<div id="nt">
 {''.join(tr)}
-</tbody></table></div>
+</div>
 <p class="src">Prezzi letti ogni giorno in automatico dalle pagine ufficiali degli operatori, ultimo controllo il {ver}. Velocità e tecnologia dipendono dalla copertura del tuo indirizzo: verificala sul sito dell'operatore prima di attivare.</p></section>
 <section class="card xs"><h2 class="h" style="margin:0 0 4px;font-size:22px">Quanto spenderesti oggi per luce e gas</h2>
 <p class="src" style="margin:0">Le offerte più convenienti di oggi per una casa con 225 kWh di luce e 90 Smc di gas al mese, imposte e canone RAI inclusi.</p>
 <div class="rw"><div class="bx"><div class="l">Luce</div><strong id="xl">—</strong><span id="xln"></span></div><div class="bx"><div class="l">Gas</div><strong id="xg">—</strong><span id="xgn"></span></div></div>
 <div class="cta"><a href="/">Confronta la luce</a><a href="/#gas">Confronta il gas</a><a href="/luce-e-gas/">Pacchetti luce + gas</a></div></section>
 <section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Pacchetti energia + internet</h2>
-<div class="scroll" role="region" aria-label="Pacchetti energia e internet" tabindex="0"><table class="pk">
-<thead><tr><th>Fornitore e offerta</th><th>Vantaggio</th><th class="n">Fibra al mese</th></tr></thead><tbody>
+<div>
 {''.join(bt)}
-</tbody></table></div>
+</div>
 <p class="src">Il prezzo della luce e del gas di questi fornitori lo trovi nella <a href="/">classifica luce e gas</a>.</p></section>
 <section class="card txt"><h2 class="h">Come leggere il confronto</h2>
 <p>Per luce e gas usiamo gli open data ufficiali di ARERA. Per internet non esiste una banca dati pubblica delle offerte: ogni mattina leggiamo i prezzi direttamente dalle pagine degli operatori. Prima di attivare, controlla comunque prezzo e condizioni sulla pagina dell'offerta.</p>
 <p>Oltre al canone guarda tre cose: quanto dura il prezzo promozionale, il costo di attivazione e quanto paghi se disdici prima del vincolo.</p></section>
 """
 NET_JS = r"""
-var T='tutte';function flt(){var n=0,rr=document.querySelectorAll('#nt tbody tr');rr.forEach(function(r){var ok=(T==='tutte'||r.dataset.cat===T)&&!($('noreg').checked&&r.dataset.reg==='1');r.hidden=!ok;if(ok)n++});$('ncnt').textContent=n+' offerte';document.querySelectorAll('.flt button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.t===T)})}
+var T='tutte';function flt(){var n=0,rr=document.querySelectorAll('#nt article');rr.forEach(function(r){var ok=(T==='tutte'||r.dataset.cat===T)&&!($('noreg').checked&&r.dataset.reg==='1');r.hidden=!ok;if(ok)n++});$('ncnt').textContent=n+' offerte';document.querySelectorAll('.flt button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.t===T)})}
 document.querySelectorAll('.flt button').forEach(function(b){b.addEventListener('click',function(){T=b.dataset.t;flt()})});$('noreg').addEventListener('change',flt);flt();
 var eur=function(n){return n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})+' € al mese'};
 fetch('/data/top.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){
