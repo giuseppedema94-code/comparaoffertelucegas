@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-59H22dhPqkt01yiM2TK4HDBPoO6e4vO5hKqHg98kx4E='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-Rcau0NlOA7IVMoKsnfEHkU1U+KGL/a+dfBIc2jd6T40='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Confronto offerte luce e gas, aggiornato ogni giorno</title>
@@ -415,7 +415,7 @@ function render(){
   $('bsub').innerHTML='<span>'+(S.c==='luce'?'Energia':'Gas')+' <strong>'+num(best.o.pd!=null?best.o.pd:best.o.p,4)+' €/'+cfg.u+'</strong></span><span>Quota fissa <strong>'+eur(best.o.fx/12,2)+'/mese</strong></span>'+(best.o.ds?'<span>Sconto <strong>'+eur(best.o.ds,0)+'/anno</strong>'+(best.o.dsT?' ('+esc(best.o.dsT)+')':'')+'</span>':'')+(best.o.sc?'<span>Offerta valida fino al <strong>'+fd(best.o.sc)+'</strong></span>':'');
   $('bsave').hidden=false;$('bsave').textContent="Risparmio medio di "+eur(med.m-best.m,2)+"/mese";$('bsave').title="Rispetto a un'offerta tipica tra quelle in elenco";
   var bu=safeUrl(best.o.u)||safeUrl(best.o.us);$('blink').hidden=!bu;if(bu){$('blink').href=bu;$('blink').textContent=safeUrl(best.o.u)?'Vai all\'offerta':'Sito del fornitore'}
-  var pl=valid.filter(function(x){return x.o.pl})[0];$('bplc').hidden=!pl;if(pl)$('bplc').textContent='PLACET più conveniente (condizioni standard ARERA): '+eur(pl.m,2)+' al mese, '+eur(Math.max(0,pl.m-best.m),2)+' in più di questa.';
+  var pl=valid.filter(function(x){return x.o.pl})[0];$('bplc').hidden=!pl;if(pl)$('bplc').textContent='Per confronto, la PLACET più economica (contratto con regole fissate da ARERA, uguali per tutti) costa '+eur(pl.m,2)+' al mese: '+eur(Math.max(0,pl.m-best.m),2)+' in più della n°1.';
   $('ovdw').hidden=S.c!=='luce';$('prio').hidden=S.k!=='pr';
   $('tcount').textContent=all.length.toLocaleString('it-IT')+' offerte di '+d.fornitori.toLocaleString('it-IT')+' fornitori';
   var s=S.s.trim().toLowerCase();
