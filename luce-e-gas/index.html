@@ -2,7 +2,7 @@
 <html lang="it" data-c="lg">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-z5wFdlEZWzlNaZMcRmO9rYrfKOcjszaWgyYcL0QjLtY='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-4MWFcghQGXAnwOMO+y4vKkq1Am+iX8cabEX0BKlQgoU='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Offerte luce e gas insieme: pacchetti a confronto</title>
@@ -163,6 +163,7 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 .logo .geco.dk{display:none!important}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]) .logo .geco{filter:none}:root:not([data-theme=light]) .logo .geco:not(.dk){display:none!important}:root:not([data-theme=light]) .logo .geco.dk{display:block!important}:root:not([data-theme=light]) .logo .geco.dk.ic-flame{display:none!important}:root[data-c=gas]:not([data-theme=light]) .logo .geco.dk.ic-flame{display:block!important}:root[data-c=gas]:not([data-theme=light]) .logo .geco.dk.ic-bolt{display:none!important}}
 :root[data-theme=dark] .logo .geco{filter:none}:root[data-theme=dark] .logo .geco:not(.dk){display:none!important}:root[data-theme=dark] .logo .geco.dk{display:block!important}:root[data-theme=dark] .logo .geco.dk.ic-flame{display:none!important}:root[data-c=gas][data-theme=dark] .logo .geco.dk.ic-flame{display:block!important}:root[data-c=gas][data-theme=dark] .logo .geco.dk.ic-bolt{display:none!important}
+html,button,a,input,select,label{touch-action:manipulation}
 .t-luce:hover:not([aria-pressed=true]):not([aria-current]){background:rgba(245,197,24,.25)!important;color:var(--ink)!important}
 .t-gas:hover:not([aria-pressed=true]):not([aria-current]){background:rgba(198,91,124,.22)!important;color:var(--ink)!important}
 .t-lg:hover:not([aria-current]){background:linear-gradient(90deg,rgba(245,197,24,.25),rgba(198,91,124,.22))!important;color:var(--ink)!important}
@@ -174,7 +175,9 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 :root[data-c=lg] .oc:not(.first):hover{border-color:transparent;background:linear-gradient(var(--card),var(--card)) padding-box,var(--grad) border-box}
 .lgh{display:grid;grid-template-columns:1fr 1.15fr;gap:16px;margin-bottom:16px}.lgh .card{margin:0}
 .lga h2{margin:0 0 14px;font-size:22px}.lgq{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 10px}.lgq label{font:700 17px 'Schibsted Grotesk',sans-serif}
-.lgv{display:flex;align-items:baseline;gap:8px;border:2px solid var(--bd);border-radius:14px;padding:6px 14px;background:var(--soft)}.lgv input{width:110px;border:0;background:transparent;font:800 30px 'Schibsted Grotesk',sans-serif;color:var(--ink);text-align:right}.lgv input:focus{outline:none}.lgv:focus-within{border-color:var(--ink)}.lgv span{color:var(--mut);font-weight:600}
+.lgst{display:flex;align-items:center;gap:8px}.pm{width:44px;height:44px;border-radius:12px;border:1px solid var(--bd);background:var(--card);color:var(--ink);font:600 22px 'Schibsted Grotesk',sans-serif;cursor:pointer;touch-action:manipulation}.pm:hover{border-color:var(--ink)}
+.lgv input::-webkit-outer-spin-button,.lgv input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}.lgv input[type=number]{-moz-appearance:textfield}
+.lgv{display:flex;align-items:baseline;gap:8px;border:2px solid var(--bd);border-radius:14px;padding:6px 14px;background:var(--soft)}.lgv input{width:96px;border:0;background:transparent;font:800 30px 'Schibsted Grotesk',sans-serif;color:var(--ink);text-align:right}.lgv input:focus{outline:none}.lgv:focus-within{border-color:var(--ink)}.lgv span{color:var(--mut);font-weight:600}
 .prof{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:13px;color:var(--mut);margin:12px 0 8px}.prof button{font:600 13px 'Schibsted Grotesk',sans-serif;padding:5px 10px;border-radius:8px;border:1px solid var(--bd);background:transparent;color:var(--ink2);cursor:pointer}.prof button:hover{border-color:var(--ink)}
 .lgr{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--ink2)}.lgr span{font-size:12.5px;color:var(--mut)}
 .lgb1{position:relative;background:#14161A;color:#fff;border-radius:20px;padding:24px;overflow:hidden}.lgb1::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#F5C518,#C65B7C)}
@@ -276,8 +279,8 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 <h1 class="h">Offerte luce e gas insieme</h1>
 <section class="lgh">
 <div class="card lga"><h2 class="h">I tuoi consumi al mese</h2>
-<div class="lgq"><label for="ql">Luce</label><div class="lgv"><input type="number" id="ql" value="225" min="0" step="10" inputmode="numeric"><span>kWh</span></div></div>
-<div class="lgq"><label for="qg">Gas</label><div class="lgv"><input type="number" id="qg" value="90" min="0" step="5" inputmode="numeric"><span>Smc</span></div></div>
+<div class="lgq"><label for="ql">Luce</label><div class="lgst"><button type="button" class="pm" data-t="ql" data-d="-10" aria-label="Diminuisci il consumo di luce">−</button><div class="lgv"><input type="number" id="ql" value="225" min="0" step="10" inputmode="numeric"><span>kWh</span></div><button type="button" class="pm" data-t="ql" data-d="10" aria-label="Aumenta il consumo di luce">+</button></div></div>
+<div class="lgq"><label for="qg">Gas</label><div class="lgst"><button type="button" class="pm" data-t="qg" data-d="-5" aria-label="Diminuisci il consumo di gas">−</button><div class="lgv"><input type="number" id="qg" value="90" min="0" step="5" inputmode="numeric"><span>Smc</span></div><button type="button" class="pm" data-t="qg" data-d="5" aria-label="Aumenta il consumo di gas">+</button></div></div>
 <div class="prof" role="group" aria-label="Consumo tipo"><span>Non hai la bolletta?</span><button type="button" data-pf="1">Single</button><button type="button" data-pf="2">Coppia</button><button type="button" data-pf="4">Famiglia di 4</button></div>
 <label class="lgr"><input type="checkbox" id="rai" checked> Canone RAI <span>(90 €/anno)</span></label>
 <p class="src">Cliente residente, contatore da 3 kW. Spesa con imposte, stimata come nella <a href="/">classifica principale</a>.</p></div>
@@ -340,6 +343,7 @@ function render(){
 }
 Promise.all(['dual','luce','gas'].map(function(k){return fetch('/data/'+k+'.json',{cache:'no-cache'}).then(function(r){return r.json()})})).then(function(a){D.dual=a[0];D.luce=a[1];D.gas=a[2];
   ['ql','qg','rai'].forEach(function(id){$(id).addEventListener('input',render)});
+  document.querySelectorAll('.pm').forEach(function(b){b.addEventListener('click',function(){var i=$(b.dataset.t);i.value=Math.max(0,(+i.value||0)+(+b.dataset.d));render()})});
   var PF={1:[125,40],2:[185,75],4:[270,115]};document.querySelectorAll('[data-pf]').forEach(function(b){b.addEventListener('click',function(){$('ql').value=PF[b.dataset.pf][0];$('qg').value=PF[b.dataset.pf][1];render()})});render();
   $('fsrc').textContent='Fonte: ARERA, Portale Offerte, open data del '+D.dual.data_open_data.split('-').reverse().join('/')+'.'});
 
