@@ -1,6 +1,6 @@
 /* Statistiche e consenso cookie. Inserire gli ID quando gli account sono pronti. */
 (function(){
-var CFG={gc:'comparaoffertelucegas',ga:'',clarity:''};
+var CFG={gc:'comparaoffertelucegas',ga:'G-707BNRZX3Z',clarity:''};
 var K='cc',SEI_MESI=182*864e5,d=document,w=window;
 function get(){try{var v=JSON.parse(localStorage.getItem(K)||'null');if(v&&Date.now()-v.t<SEI_MESI)return v.s}catch(e){}return null}
 function set(s){try{localStorage.setItem(K,JSON.stringify({s:s,t:Date.now()}))}catch(e){}}
@@ -17,7 +17,7 @@ function pulisci(){d.cookie.split(';').forEach(function(c){var n=c.split('=')[0]
 function banner(){if(d.getElementById('ckb'))return;
   var st=d.createElement('style');st.textContent='#ckb{position:fixed;left:16px;right:16px;bottom:16px;z-index:90;max-width:560px;margin:0 auto;background:var(--card,#fff);color:var(--ink,#14161A);border:1px solid var(--bd,#ddd);border-radius:16px;padding:16px 18px;box-shadow:0 10px 40px rgba(0,0,0,.22);font:15px/1.45 "Schibsted Grotesk",system-ui,sans-serif}#ckb p{margin:0 0 12px}#ckb a{color:inherit}#ckb .b{display:flex;gap:10px}#ckb button{flex:1;min-height:44px;border-radius:12px;font:700 15px "Schibsted Grotesk",system-ui,sans-serif;cursor:pointer;border:2px solid var(--ink,#14161A)}#ckb .n{background:transparent;color:var(--ink,#14161A)}#ckb .y{background:transparent;color:var(--ink,#14161A)}';
   d.head.appendChild(st);var b=d.createElement('div');b.id='ckb';b.setAttribute('role','dialog');b.setAttribute('aria-label','Cookie');
-  b.innerHTML='<p>Usiamo cookie di Google Analytics e Microsoft Clarity per capire quali pagine e funzioni del sito servono di più. Si attivano solo se accetti. Dettagli nella <a href="/privacy/">privacy</a>.</p><div class="b"><button type="button" class="n">Rifiuta</button><button type="button" class="y">Accetta</button></div>';
+  b.innerHTML='<p>Usiamo cookie di '+[CFG.ga&&'Google Analytics',CFG.clarity&&'Microsoft Clarity'].filter(Boolean).join(' e ')+' per capire quali pagine e funzioni del sito servono di più. Si attivano solo se accetti. Dettagli nella <a href="/privacy/">privacy</a>.</p><div class="b"><button type="button" class="n">Rifiuta</button><button type="button" class="y">Accetta</button></div>';
   d.body.appendChild(b);
   b.querySelector('.y').onclick=function(){set('si');b.remove();attiva()};
   b.querySelector('.n').onclick=function(){var era=get()==='si';set('no');b.remove();if(era){pulisci();location.reload()}}}
