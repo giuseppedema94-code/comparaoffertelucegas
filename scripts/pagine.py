@@ -299,3 +299,156 @@ fetch('/data/top.json',{cache:'no-cache'}).then(function(r){return r.json()}).th
 """
 scrivi("/internet/", corpo, NET_JS)
 print("pagine generate")
+
+
+# ---------- classifiche per ricerca (pagine statiche, rigenerate a ogni aggiornamento) ----------
+TIPO_Y = {"luce": 2700, "gas": 1080}
+U = {"luce": "kWh", "gas": "Smc"}
+CSS_CL = """.tg-g{background:#D1FAE5;color:#065F46}.tg-p{background:#E7E9E4;color:#3A3F47}
+.intro{font-size:16.5px;line-height:1.55;color:var(--ink2);max-width:72ch;margin:6px 0 0}.intro strong{color:var(--ink)}
+.cta1{display:inline-flex;margin-top:14px;background:var(--accbg);color:#14161A;font:800 15px 'Schibsted Grotesk',sans-serif;padding:13px 18px;border-radius:12px;text-decoration:none}
+html[data-c=gas] .cta1{color:#fff}.cta1{width:max-content;max-width:100%;align-self:flex-start}.cta1+.card{margin-top:16px}.cta1:hover{filter:brightness(.94)}
+.altre{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.altre a{border:1px solid var(--bd);border-radius:99px;padding:9px 14px;font-weight:600;font-size:14px;color:var(--ink);text-decoration:none}.altre a:hover{border-color:var(--ink)}
+"""
+
+
+def spesa(o, c, reg):
+    y = TIPO_Y[c]
+    if c == "luce":
+        m = y / 12
+        e = min(m, 150) if m <= 220 else max(0, 150 - (m - 220))
+        acc = (m - e) * 12 * reg["acc"]
+    else:
+        acc = 0 if y <= reg["accSoglia"] else reg["accRif"] * y
+    a = (1 + reg["iva"]) * (o["fx"] + o["p"] * y - (o.get("s") or 0) + reg["rf"] + reg["rv"] * y + acc)
+    return a / 12 + (90 / 12 if c == "luce" else 0)
+
+
+def stab(o):
+    if o["t"] != "f":
+        return "D"
+    d = o.get("d") or 0
+    return "A" if 36 <= d < 99 else "B" if 24 <= d < 99 else "C"
+
+
+def durata(o):
+    d = o.get("d") or 0
+    if o["t"] != "f":
+        return "Variabile"
+    if 12 <= d < 99:
+        return "Fisso · " + (f"{d} mesi" if d % 12 else f"{d // 12} anno" if d == 12 else f"{d // 12} anni")
+    return "Fisso"
+
+
+def link_ok(u):
+    u = (u or "").strip()
+    if u and not re.match(r"^https?://", u, re.I):
+        u = "https://" + u
+    return u if re.match(r"^https?://[^\s\"'<>]+$", u) else None
+
+
+def scheda_en(x, i, top, c):
+    o, m = x
+    e = lambda s: H.escape(str(s))
+    lg = o.get("lg") if re.match(r"^[a-z0-9.-]+$", o.get("lg") or "") else None
+    logo_ = f'<span class="lgb" aria-hidden="true">{e((o["v"] or "?").strip()[:1].upper())}' + (f'<img src="/img/loghi/{lg}.png" alt="" loading="lazy">' if lg else "") + "</span>"
+    s = stab(o)
+    tags = (f'<span class="tg {"tg-f" if o["t"] == "f" else "tg-v"}">{durata(o)}</span><span class="tg st-{s}">Stabilità {s}</span>'
+            + ('<span class="tg tg-g">Verde</span>' if o.get("vd") else "") + ('<span class="tg tg-p">PLACET</span>' if o.get("pl") else "")
+            + ('<span class="tg tg-w">Penale di uscita</span>' if o.get("pen") else ""))
+    pd = o["pd"] if o.get("pd") is not None else o["p"]
+    dd = (f'<div><dt>Energia</dt><dd>{n4(pd)} €/{U[c]}</dd></div><div><dt>Quota fissa</dt><dd>{n2(o["fx"] / 12)} al mese</dd></div>'
+          + (f'<div><dt>Offerta valida fino al</dt><dd>{"/".join(reversed(o["sc"][:10].split("-")))}</dd></div>' if o.get("sc") else ""))
+    u, us = link_ok(o.get("u")), link_ok(o.get("us"))
+    btn = (f'<a class="oc-btn" href="{e(u)}" target="_blank" rel="nofollow noopener">Vai all\'offerta</a>' if u else
+           f'<a class="oc-btn" href="{e(us)}" target="_blank" rel="nofollow noopener">Sito del fornitore</a>' if us else
+           '<a class="oc-btn" href="https://www.ilportaleofferte.it/portaleOfferte/" target="_blank" rel="noopener">Portale ARERA</a>')
+    diff = '<div class="oc-dd top1">La più conveniente</div>' if i == 0 else f'<div class="oc-dd">+{n2(m - top)} al mese</div>'
+    return (f'<article class="oc{" first" if i == 0 else ""}"><div class="oc-h"><span class="oc-n">{i + 1}</span>{logo_}'
+            f'<div class="oc-t"><div class="oc-v">{e(o["v"])}</div><div class="oc-o">{e(o["n"])}</div></div><div class="oc-tg">{tags}</div></div>'
+            f'<div class="oc-b"><dl class="oc-d">{dd}</dl><div class="oc-p"><div class="oc-m">{eur_big(m)}</div><div class="oc-y">{n0(m * 12)} l\'anno</div>{diff}</div>'
+            f'<div class="oc-a">{btn}</div></div></article>')
+
+
+def n2(v):
+    return f"{v:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".") + " €"
+
+
+def n0(v):
+    return f"{v:,.0f}".replace(",", ".") + " €"
+
+
+def n4(v):
+    return f"{v:.4f}".replace(".", ",")
+
+
+CLASSIFICHE = [
+    ("offerte-luce-prezzo-fisso", "luce", lambda o: o["t"] == "f", "f=f", "Offerte luce a prezzo fisso",
+     "a prezzo fisso",
+     ["Con un'offerta a prezzo fisso il costo dell'energia resta uguale per la durata scritta nel contratto, di solito 12, 24 o 36 mesi. Le altre voci della bolletta (trasporto, oneri di sistema e imposte) le decidono ARERA e lo Stato e possono cambiare.",
+      "Prima della scadenza il venditore deve mandarti le nuove condizioni con almeno tre mesi di anticipo. Se non scegli un'altra offerta, passi al nuovo prezzo: segna la data e confronta di nuovo."]),
+    ("offerte-gas-prezzo-fisso", "gas", lambda o: o["t"] == "f", "c=gas&f=f", "Offerte gas a prezzo fisso",
+     "a prezzo fisso",
+     ["Con un'offerta a prezzo fisso il costo del gas al metro cubo (Smc) resta uguale per la durata scritta nel contratto, di solito 12, 24 o 36 mesi. Trasporto, oneri e imposte li decidono ARERA e lo Stato e possono cambiare.",
+      "Il prezzo fisso conta di più d'inverno, quando con il riscaldamento si consuma gran parte del gas dell'anno."]),
+    ("offerte-luce-variabili", "luce", lambda o: o["t"] != "f", "f=v", "Offerte luce a prezzo variabile",
+     "a prezzo variabile",
+     ["Il prezzo segue ogni mese il PUN, il prezzo all'ingrosso dell'elettricità, più uno spread del venditore che resta fisso. Per stimare la spesa usiamo le quotazioni del PUN per i prossimi 12 mesi: se il mercato scende paghi meno, se sale paghi di più.",
+      'Il valore di oggi e l\'andamento degli ultimi mesi sono nella pagina <a href="/prezzo-energia-oggi/">PUN oggi</a>.']),
+    ("offerte-gas-variabili", "gas", lambda o: o["t"] != "f", "c=gas&f=v", "Offerte gas a prezzo variabile",
+     "a prezzo variabile",
+     ["Il prezzo segue ogni mese il PSV, il prezzo all'ingrosso del gas in Italia, più uno spread del venditore che resta fisso. Per stimare la spesa usiamo le quotazioni del PSV per i prossimi 12 mesi.",
+      'Il valore mensile e l\'andamento sono nella pagina <a href="/psv/">prezzo gas PSV</a>.']),
+    ("offerte-luce-senza-penale", "luce", lambda o: o.get("pen") is False, "np=1", "Offerte luce senza penale di uscita",
+     "senza penale di uscita",
+     ["Nel mercato libero puoi cambiare fornitore quando vuoi e il cambio è gratuito. Alcune offerte, di solito a prezzo fisso, chiedono però un costo se esci prima della scadenza.",
+      "Qui ci sono solo le offerte che nella scheda ARERA non prevedono questo costo. Prima di firmare controlla comunque le condizioni contrattuali."]),
+    ("offerte-gas-senza-penale", "gas", lambda o: o.get("pen") is False, "c=gas&np=1", "Offerte gas senza penale di uscita",
+     "senza penale di uscita",
+     ["Nel mercato libero puoi cambiare fornitore quando vuoi e il cambio è gratuito. Alcune offerte gas, di solito a prezzo fisso, chiedono però un costo se esci prima della scadenza.",
+      "Qui ci sono solo le offerte che nella scheda ARERA non prevedono questo costo. Prima di firmare controlla comunque le condizioni contrattuali."]),
+    ("offerte-luce-energia-verde", "luce", lambda o: o.get("vd"), "vd=1", "Offerte luce con energia verde",
+     "con energia verde",
+     ["Energia verde vuol dire che il venditore copre i tuoi consumi con Garanzie d'Origine, i certificati che attestano la produzione da fonti rinnovabili. Dalla presa esce la stessa corrente di prima: cambia quanta energia rinnovabile il venditore compra per te.",
+      "Spesso costa quanto un'offerta normale: confronta il prezzo prima di scegliere."]),
+    ("offerte-luce-placet", "luce", lambda o: o.get("pl"), "q=placet", "Offerte luce PLACET",
+     "PLACET",
+     ["Le offerte PLACET (Prezzo Libero A Condizioni Equiparate di Tutela) hanno le condizioni contrattuali fissate da ARERA, uguali per tutti i venditori. Ogni venditore sceglie solo il prezzo, fisso o variabile, che vale 12 mesi.",
+      "Sono utili come riferimento: se un'offerta costa più della PLACET dello stesso venditore, chiediti cosa paghi in più."]),
+    ("offerte-gas-placet", "gas", lambda o: o.get("pl"), "c=gas&q=placet", "Offerte gas PLACET",
+     "PLACET",
+     ["Le offerte PLACET (Prezzo Libero A Condizioni Equiparate di Tutela) hanno le condizioni contrattuali fissate da ARERA, uguali per tutti i venditori. Ogni venditore sceglie solo il prezzo, fisso o variabile, che vale 12 mesi.",
+      "Sono utili come riferimento: se un'offerta costa più della PLACET dello stesso venditore, chiediti cosa paghi in più."]),
+]
+
+DATI = {c: json.loads((R / "data" / f"{c}.json").read_text(encoding="utf-8")) for c in ("luce", "gas")}
+for slug, c, flt, qs, titolo, agg, testo in CLASSIFICHE:
+    d = DATI[c]
+    y = TIPO_Y[c]
+    ok = [o for o in d["offerte"] if o.get("ok", True) and o.get("s") is not None and flt(o)
+          and (o.get("min") is None or y >= o["min"]) and (o.get("max") is None or y <= o["max"])]
+    righe = sorted(((o, spesa(o, c, d["reg"])) for o in ok), key=lambda x: x[1])
+    if not righe:
+        continue
+    forn = len({o["v"] for o, _ in righe})
+    data = "/".join(reversed(d["data_open_data"].split("-")))
+    b, bm = righe[0]
+    cons = "225 kWh di luce al mese, contatore da 3 kW, imposte e canone RAI inclusi" if c == "luce" else "90 Smc di gas al mese, imposte incluse"
+    desc = f"{len(righe)} offerte {c} {agg} di {forn} fornitori, dagli open data ARERA del {data}, ordinate per spesa mensile stimata."
+    corpo = testata(f"/{slug}/", f"{titolo}: classifica di oggi", desc, c, f"/img/geco-{c}.svg").replace("</style>", CSS_CL + "</style>", 1)
+    ld = {"@context": "https://schema.org", "@type": "ItemList", "name": titolo, "numberOfItems": min(20, len(righe)),
+          "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": f'{o["v"]}, {o["n"]}'} for i, (o, _) in enumerate(righe[:20])]}
+    corpo = corpo.replace("</head>", '<script type="application/ld+json">' + json.dumps(ld, ensure_ascii=False) + "</script>\n</head>", 1)
+    altre = "".join(f'<a href="/{s2}/">{t2}</a>' for s2, _, _, _, t2, _, _ in CLASSIFICHE if s2 != slug)
+    corpo += f"""<main class="wrap pg">
+<h1 class="h">{titolo}</h1>
+<p class="intro">Oggi ci sono <strong>{len(righe)} offerte {agg}</strong> di {forn} fornitori. Con {cons}, la più conveniente è <strong>{H.escape(b["v"])}</strong> ({H.escape(b["n"])}) a <strong>{n2(bm)} al mese</strong>.</p>
+<a class="cta1" href="/?{qs}">Calcola sui tuoi consumi</a>
+<section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Le 20 più convenienti</h2>
+{''.join(scheda_en(x, i, bm, c) for i, x in enumerate(righe[:20]))}
+<p class="src">Open data del Portale Offerte di ARERA del {data}. Spesa stimata per {cons}. Le offerte variabili sono stimate con le quotazioni dei prossimi 12 mesi.</p></section>
+<section class="card txt"><h2 class="h">Come funzionano</h2>{''.join(f"<p>{p}</p>" for p in testo)}</section>
+<section class="card txt"><h2 class="h">Altre classifiche</h2><div class="altre"><a href="/">Tutte le offerte luce</a><a href="/#gas">Tutte le offerte gas</a>{altre}</div></section>
+"""
+    scrivi(f"/{slug}/", corpo, "")
+print("classifiche generate")

@@ -40,11 +40,13 @@ jobs:
           CONTROLLA_LINK: "1"
       - name: Loghi fornitori
         run: pip install -q pillow cairosvg && python scripts/loghi.py
+      - name: Pagine statiche
+        run: python scripts/pagine.py && python scripts/csp.py
       - name: Pubblica
         run: |
           git config user.name "aggiornamento-automatico"
           git config user.email "actions@users.noreply.github.com"
-          git add data/luce.json data/gas.json data/dual.json data/top.json data/storico img/loghi
+          git add data/luce.json data/gas.json data/dual.json data/top.json data/storico img/loghi offerte-*/ luce-e-gas/ internet/
           git diff --cached --quiet && exit 0
           git commit -m "Offerte aggiornate $(date -u +%Y-%m-%dT%H:%MZ)"
           git pull --rebase origin main

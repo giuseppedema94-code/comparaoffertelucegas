@@ -5,7 +5,8 @@
 ## Pagine
 - [Classifica offerte luce e gas](https://comparaoffertelucegas.it/): tutte le offerte del mercato libero, con consumo mensile o annuo, potenza del contatore e canone RAI.
 - [Pacchetti luce + gas](https://comparaoffertelucegas.it/luce-e-gas/): offerte dual a confronto con la migliore combinazione di offerte separate.
-- [Internet casa](https://comparaoffertelucegas.it/internet/): offerte fibra dei principali operatori e pacchetti energia più internet, verificate a mano.
+- [Internet casa](https://comparaoffertelucegas.it/internet/): offerte fibra dei principali operatori e pacchetti energia più internet, con prezzi letti ogni giorno dalle pagine degli operatori.
+- Classifiche per tipo di offerta: [luce a prezzo fisso](https://comparaoffertelucegas.it/offerte-luce-prezzo-fisso/), [luce variabile](https://comparaoffertelucegas.it/offerte-luce-variabili/), [luce senza penale](https://comparaoffertelucegas.it/offerte-luce-senza-penale/), [luce con energia verde](https://comparaoffertelucegas.it/offerte-luce-energia-verde/), [luce PLACET](https://comparaoffertelucegas.it/offerte-luce-placet/), [gas a prezzo fisso](https://comparaoffertelucegas.it/offerte-gas-prezzo-fisso/), [gas variabile](https://comparaoffertelucegas.it/offerte-gas-variabili/), [gas senza penale](https://comparaoffertelucegas.it/offerte-gas-senza-penale/), [gas PLACET](https://comparaoffertelucegas.it/offerte-gas-placet/).
 - [PUN oggi](https://comparaoffertelucegas.it/prezzo-energia-oggi/): prezzo dell'energia elettrica di oggi e domani, ora per ora.
 - [PSV](https://comparaoffertelucegas.it/psv/): prezzo mensile del gas all'ingrosso.
 
