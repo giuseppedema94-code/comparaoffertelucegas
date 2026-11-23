@@ -16,7 +16,19 @@ testa = tpl[: tpl.index('<main')]
 piede = tpl[tpl.index('</main>') + len('</main>'): tpl.index('<script>\n(function(){')]
 tema = re.search(r"\(function\(\)\{var modes=.*?show\(\)\}\)\(\);", tpl, re.S).group(0)
 
-CSS_NET = """.oc{border:1px solid var(--line);border-radius:16px;background:var(--card);margin:0 0 12px;overflow:hidden}.oc[hidden]{display:none}
+CSS_NET = """.lgh{display:grid;grid-template-columns:1fr 1.15fr;gap:16px;margin-bottom:16px}.lgh .card{margin:0}
+.lga h2{margin:0 0 14px;font-size:22px}.lgq{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 10px}.lgq label{font:700 17px 'Schibsted Grotesk',sans-serif}
+.lgv{display:flex;align-items:baseline;gap:8px;border:2px solid var(--bd);border-radius:14px;padding:6px 14px;background:var(--soft)}.lgv input{width:110px;border:0;background:transparent;font:800 30px 'Schibsted Grotesk',sans-serif;color:var(--ink);text-align:right}.lgv input:focus{outline:none}.lgv:focus-within{border-color:var(--ink)}.lgv span{color:var(--mut);font-weight:600}
+.prof{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:13px;color:var(--mut);margin:12px 0 8px}.prof button{font:600 13px 'Schibsted Grotesk',sans-serif;padding:5px 10px;border-radius:8px;border:1px solid var(--bd);background:transparent;color:var(--ink2);cursor:pointer}.prof button:hover{border-color:var(--ink)}
+.lgr{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--ink2)}.lgr span{font-size:12.5px;color:var(--mut)}
+.lgb1{position:relative;background:#14161A;color:#fff;border-radius:20px;padding:24px;overflow:hidden}.lgb1::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#F5C518,#C65B7C)}
+.lbk{font:800 12.5px 'Schibsted Grotesk',sans-serif;letter-spacing:.08em;text-transform:uppercase;background:linear-gradient(90deg,#F5C518,#E58CA8);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lbt{font:700 19px 'Schibsted Grotesk',sans-serif;margin-top:6px}.lbm{margin:6px 0 10px;white-space:nowrap}.lbm strong{font:800 54px/1 'Schibsted Grotesk',sans-serif;letter-spacing:-.03em}.lbm span{font:700 20px 'Schibsted Grotesk',sans-serif;color:#C9CCD1}
+.lgr1{display:grid;grid-template-columns:70px 1fr auto;align-items:center;gap:10px;padding:9px 0;border-top:1px solid rgba(255,255,255,.12)}.lgr1 .k{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#9AA0A8}.lgl{display:flex;align-items:center;gap:10px;font-size:13.5px;color:#C9CCD1}.lgl strong{color:#fff;font-size:15px}.lgl .lgb{width:38px;height:38px;font-size:16px}.lgp{font-weight:800;font-size:16px;white-space:nowrap}
+.lbs{color:#4ADE80;font-weight:700;font-size:14.5px;margin:10px 0 0}
+.lbb{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.lgbtn{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(90deg,#F5C518,#C65B7C);color:#14161A;font:800 14.5px 'Schibsted Grotesk',sans-serif;padding:11px 16px;border-radius:12px;text-decoration:none}.lgbtn:after{content:'›';font-size:19px;line-height:1}
+@media (max-width:860px){.lgh{grid-template-columns:1fr}.lbm strong{font-size:44px}.lgr1{grid-template-columns:56px 1fr auto}}
+.oc{border:1px solid var(--line);border-radius:16px;background:var(--card);margin:0 0 12px;overflow:hidden}.oc[hidden]{display:none}
 .oc.first{border:2px solid var(--accbar);box-shadow:0 6px 18px rgba(0,0,0,.06)}
 .oc-h{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line)}.oc.first .oc-h{background:var(--first)}
 .oc-n{font:800 15px 'Schibsted Grotesk',sans-serif;color:var(--mut);width:22px}
@@ -123,6 +135,7 @@ var num=function(n,d){return n.toLocaleString('it-IT',{minimumFractionDigits:d,m
 var eur=function(n){return num(n,2)+' €'};
 var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
 var safe=function(u){return /^https:\/\//.test(u||'')?u:null};
+var big=function(v){var c=Math.round(v*100);return '<strong>'+Math.floor(c/100)+'</strong><span>,'+String(c%100).padStart(2,'0')+' €/mese</span>'};
 var logoB=function(o){var d=o.lg&&/^[a-z0-9.-]+$/.test(o.lg)?o.lg:null;return '<span class="lgb" aria-hidden="true">'+esc((o.v||'?').charAt(0).toUpperCase())+(d?'<img src="/img/loghi/'+d+'.ico" alt="" loading="lazy">':'')+'</span>'};
 function accLuce(y,al){var m=y/12,e=m<=220?Math.min(m,150):Math.max(0,150-(m-220));return (m-e)*12*al}
 function costo(o,c,y,R){var r=R[c],acc=c==='luce'?accLuce(y,r.acc):0;return (1+r.iva)*(o.fx+o.p*y-(o.s||0)+r.rf+r.rv*y+acc)/12}
@@ -133,8 +146,13 @@ function render(){
   var rows=D.dual.offerte.map(function(o){var l=costo(o.l,'luce',yl,R)+rai,g=costo(o.g,'gas',yg,R);return {o:o,l:l,g:g,t:l+g}}).sort(function(a,b){return a.t-b.t});
   function migliore(d,c,y){var b=null;d.offerte.forEach(function(o){if(o.ok===false)return;if(o.min!=null&&y<o.min||o.max!=null&&y>o.max)return;var x=costo(o,c,y,R);if(!b||x<b.x)b={o:o,x:x}});return b}
   var bl=migliore(D.luce,'luce',yl),bg=migliore(D.gas,'gas',yg);
-  if(bl&&bg){var sep=bl.x+rai+bg.x;$('sep').innerHTML='<strong>'+eur(sep)+' al mese</strong><span>Luce: '+esc(bl.o.v)+', '+esc(bl.o.n)+' ('+eur(bl.x+rai)+')</span><span>Gas: '+esc(bg.o.v)+', '+esc(bg.o.n)+' ('+eur(bg.x)+')</span>'+(rows.length?'<span>'+(rows[0].t>sep?'Conviene più di un pacchetto unico: il più economico ('+esc(rows[0].o.v)+', '+eur(rows[0].t)+') costa '+eur(rows[0].t-sep)+' al mese in più.':'Il pacchetto unico più economico ('+esc(rows[0].o.v)+', '+eur(rows[0].t)+') costa '+eur(sep-rows[0].t)+' al mese in meno: conviene il pacchetto.')+'</span>':'')}
-  var big=function(v){var c=Math.round(v*100);return '<strong>'+Math.floor(c/100)+'</strong><span>,'+String(c%100).padStart(2,'0')+' €/mese</span>'};
+  if(bl&&bg){var sep=bl.x+rai+bg.x,pk=rows[0],vince=!pk||sep<=pk.t,lnk=function(o,t){var u=safe(o.u);return u?'<a class="lgbtn" href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+t+'</a>':''};
+    var riga=function(k,x,o){return '<div class="lgr1"><span class="k">'+k+'</span><span class="lgl">'+logoB(o)+'<span><strong>'+esc(o.v)+'</strong><br>'+esc(o.n)+'</span></span><span class="lgp">'+eur(x)+'</span></div>'};
+    $('best').innerHTML=vince
+      ?'<div class="lbk">La soluzione più conveniente oggi</div><div class="lbt">Luce e gas da due fornitori diversi</div><div class="lbm">'+big(sep)+'</div>'+riga('Luce',bl.x+rai,bl.o)+riga('Gas',bg.x,bg.o)
+        +(pk?'<div class="lbs">Risparmi '+eur(pk.t-sep)+' al mese rispetto al miglior pacchetto unico ('+esc(pk.o.v)+', '+eur(pk.t)+')</div>':'')+'<div class="lbb">'+lnk(bl.o,'Offerta luce')+lnk(bg.o,'Offerta gas')+'</div>'
+      :'<div class="lbk">La soluzione più conveniente oggi</div><div class="lbt">Pacchetto unico '+esc(pk.o.v)+'</div><div class="lbm">'+big(pk.t)+'</div>'+riga('Pacchetto',pk.t,pk.o)
+        +'<div class="lbs">Risparmi '+eur(sep-pk.t)+' al mese rispetto a luce e gas da fornitori diversi ('+eur(sep)+')</div><div class="lbb">'+lnk(pk.o,'Vai all\'offerta')+'</div>'}
   var stab=function(o){return o.t!=='f'?'D':(o.d>=36&&o.d<99?'A':o.d>=24&&o.d<99?'B':'C')};
   var h='',top=rows.length?rows[0].t:0;
   rows.forEach(function(x,i){var o=x.o,u=safe(o.u),tipo=o.t==='f'?'Fisso'+(o.d>=12&&o.d<99?' · '+(o.d%12?o.d+' mesi':o.d/12+(o.d===12?' anno':' anni')):''):'Variabile';
@@ -147,7 +165,8 @@ function render(){
   $('cnt').textContent=rows.length+' pacchetti di '+D.dual.fornitori+' fornitori';
 }
 Promise.all(['dual','luce','gas'].map(function(k){return fetch('/data/'+k+'.json',{cache:'no-cache'}).then(function(r){return r.json()})})).then(function(a){D.dual=a[0];D.luce=a[1];D.gas=a[2];
-  ['ql','qg','rai'].forEach(function(id){$(id).addEventListener('input',render)});render();
+  ['ql','qg','rai'].forEach(function(id){$(id).addEventListener('input',render)});
+  var PF={1:[125,40],2:[185,75],4:[270,115]};document.querySelectorAll('[data-pf]').forEach(function(b){b.addEventListener('click',function(){$('ql').value=PF[b.dataset.pf][0];$('qg').value=PF[b.dataset.pf][1];render()})});render();
   $('fsrc').textContent='Fonte: ARERA, Portale Offerte, open data del '+D.dual.data_open_data.split('-').reverse().join('/')+'.'});
 """
 
@@ -156,10 +175,15 @@ corpo = testata("/luce-e-gas/", "Offerte luce e gas insieme: pacchetti a confron
                 "lg", "/img/geco-lg.svg")
 corpo += """<main class="wrap pg">
 <h1 class="h">Offerte luce e gas insieme</h1>
-<section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">I tuoi consumi al mese</h2>
-<div class="inp"><label>Luce <input type="number" id="ql" value="225" min="0" step="10" inputmode="numeric"> kWh</label><label>Gas <input type="number" id="qg" value="90" min="0" step="5" inputmode="numeric"> Smc</label><label><input type="checkbox" id="rai" checked> Canone RAI</label></div>
-<p class="src">Cliente residente, contatore da 3 kW. Spesa con imposte, stimata come nella <a href="/">classifica principale</a>.</p></section>
-<section class="card"><h2 class="h" style="margin:0 0 4px;font-size:22px">Luce e gas da fornitori diversi</h2><div class="best2" id="sep">—</div></section>
+<section class="lgh">
+<div class="card lga"><h2 class="h">I tuoi consumi al mese</h2>
+<div class="lgq"><label for="ql">Luce</label><div class="lgv"><input type="number" id="ql" value="225" min="0" step="10" inputmode="numeric"><span>kWh</span></div></div>
+<div class="lgq"><label for="qg">Gas</label><div class="lgv"><input type="number" id="qg" value="90" min="0" step="5" inputmode="numeric"><span>Smc</span></div></div>
+<div class="prof" role="group" aria-label="Consumo tipo"><span>Non hai la bolletta?</span><button type="button" data-pf="1">Single</button><button type="button" data-pf="2">Coppia</button><button type="button" data-pf="4">Famiglia di 4</button></div>
+<label class="lgr"><input type="checkbox" id="rai" checked> Canone RAI <span>(90 €/anno)</span></label>
+<p class="src">Cliente residente, contatore da 3 kW. Spesa con imposte, stimata come nella <a href="/">classifica principale</a>.</p></div>
+<div class="lgb1" id="best" aria-live="polite">Caricamento offerte…</div>
+</section>
 <section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Pacchetti luce + gas <span class="src" id="cnt"></span></h2>
 <div id="tab"></div></section>
 <section class="card txt"><h2 class="h">Conviene il pacchetto unico?</h2>
