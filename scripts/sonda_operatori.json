@@ -1,0 +1,742 @@
+[
+ {
+  "k": "a2aenergia",
+  "nome": "A2A Energia",
+  "url": [
+   "https://www.a2a.eu/energia/fibra",
+   "https://www.a2aenergia.it/casa/offerte-fibra",
+   "https://www.a2a.eu/trasparenza",
+   "https://www.a2aenergia.it/trasparenza-tariffaria"
+  ],
+  "tipo": "energia",
+  "area": "Lombardia e tutta Italia"
+ },
+ {
+  "k": "acanthogruppoh",
+  "nome": "Acantho (Gruppo Hera)",
+  "url": [
+   "https://www.acantho.it/fibra",
+   "https://www.acantho.it/trasparenza"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "accendilucegas",
+  "nome": "Accendi Luce & Gas (Coop)",
+  "url": [
+   "https://www.accendilucegas.it/offerte-fibra",
+   "https://www.accendilucegas.it/trasparenza-tariffaria"
+  ],
+  "tipo": "energia",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "aceaenergia",
+  "nome": "Acea Energia",
+  "url": [
+   "https://www.acea.it/fibra",
+   "https://www.acea.it/trasparenza"
+  ],
+  "tipo": "energia",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "airfibra",
+  "nome": "Airfibra",
+  "url": [
+   "https://www.airfibra.it",
+   "https://www.airfibra.it/trasparenza"
+  ],
+  "tipo": "regionale",
+  "area": "Lombardia, Veneto, Emilia-Romagna (FWA)"
+ },
+ {
+  "k": "alperia",
+  "nome": "Alperia",
+  "url": [
+   "https://www.alperia.eu/fibra",
+   "https://www.alperia.eu/trasparenza"
+  ],
+  "tipo": "energia",
+  "area": "Trentino-Alto Adige, Tutta Italia"
+ },
+ {
+  "k": "aruba",
+  "nome": "Aruba",
+  "url": [
+   "https://www.aruba.it/fibra",
+   "https://www.aruba.it/trasparenza"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "arubafibra",
+  "nome": "Aruba Fibra",
+  "url": [
+   "https://fibra.aruba.it/",
+   "https://fibra.aruba.it/trasparenza-tariffaria.aspx"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "bbbell",
+  "nome": "BBBell",
+  "url": [
+   "https://www.bbbell.it/privati/offerte-internet/",
+   "https://www.bbbell.it/trasparenza-tariffaria/"
+  ],
+  "tipo": "regionale",
+  "area": "Piemonte e Liguria"
+ },
+ {
+  "k": "beactive",
+  "nome": "BeActive",
+  "url": [
+   "https://www.beactive.it/offerte-fibra-casa/",
+   "https://www.beactive.it/trasparenza-tariffaria/"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "cheapnet",
+  "nome": "Cheapnet",
+  "url": [
+   "https://www.cheapnet.it/offerte/casa/",
+   "https://www.cheapnet.it/trasparenza-tariffaria/"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "connectivia",
+  "nome": "Connectivia",
+  "url": [
+   "https://www.connectivia.it/privati/",
+   "https://www.connectivia.it/trasparenza-tariffaria/"
+  ],
+  "tipo": "regionale",
+  "area": "Campania"
+ },
+ {
+  "k": "convergenze",
+  "nome": "Convergenze",
+  "url": [
+   "https://convergenze.online/offerte/casa",
+   "https://convergenze.online/trasparenza-tariffaria"
+  ],
+  "tipo": "regionale",
+  "area": "Campania"
+ },
+ {
+  "k": "convergenzebea",
+  "nome": "Convergenze (Beactive)",
+  "url": [
+   "https://www.beactive.it/fibra",
+   "https://www.beactive.it/trasparenza"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "coopvoce",
+  "nome": "CoopVoce",
+  "url": [
+   "https://www.coopvoce.it/fibra",
+   "https://www.coopvoce.it/trasparenza"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "dimensione",
+  "nome": "Dimensione",
+  "url": [
+   "https://www.dimensione.com/portale/offerte-fibra-ottica.php",
+   "https://www.dimensione.com/portale/trasparenza-tariffaria.php"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "dolomitienergi",
+  "nome": "Dolomiti Energia",
+  "url": [
+   "https://www.dolomitienergia.it/casa/fibra.html",
+   "https://www.dolomitienergia.it/fibra",
+   "https://www.dolomitienergia.it/trasparenza",
+   "https://www.dolomitienergia.it/trasparenza-tariffaria.html"
+  ],
+  "tipo": "energia",
+  "area": "Trentino-Alto Adige e tutta Italia"
+ },
+ {
+  "k": "edisonenergia",
+  "nome": "Edison Energia",
+  "url": [
+   "https://www.edison.it/fibra",
+   "https://www.edisonenergia.it/edison/casa/offerte-fibra",
+   "https://www.edison.it/trasparenza",
+   "https://www.edisonenergia.it/edison/trasparenza-tariffaria"
+  ],
+  "tipo": "energia",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "enegan",
+  "nome": "Enegan",
+  "url": [
+   "https://www.enegan.it/offerte-fibra-casa/",
+   "https://www.enegan.it/trasparenza-tariffaria/"
+  ],
+  "tipo": "energia",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "enelenergia",
+  "nome": "Enel Energia",
+  "url": [
+   "https://www.enel.it/fibra",
+   "https://www.enel.it/it/luce-e-gas/fibra",
+   "https://www.enel.it/it/supporto/trasparenza-tariffaria",
+   "https://www.enel.it/trasparenza"
+  ],
+  "tipo": "energia",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "eolo",
+  "nome": "Eolo",
+  "url": [
+   "https://www.eolo.it/home/casa.html",
+   "https://www.eolo.it/offerta-casa",
+   "https://www.eolo.it/trasparenza",
+   "https://www.eolo.it/trasparenza-tariffaria.html"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "estra",
+  "nome": "Estra",
+  "url": [
+   "https://www.estra.it/fibra",
+   "https://www.estra.it/trasparenza"
+  ],
+  "tipo": "energia",
+  "area": "Toscana, Umbria, Marche, Tutta Italia"
+ },
+ {
+  "k": "fastnet",
+  "nome": "Fastnet",
+  "url": [
+   "https://www.fastnet.it/offerte-casa/",
+   "https://www.fastnet.it/trasparenza-tariffaria/"
+  ],
+  "tipo": "regionale",
+  "area": "Marche"
+ },
+ {
+  "k": "fastweb",
+  "nome": "Fastweb",
+  "url": [
+   "https://www.fastweb.it/adsl-fibra-ottica/",
+   "https://www.fastweb.it/internet-casa",
+   "https://www.fastweb.it/trasparenza",
+   "https://www.fastweb.it/trasparenza-tariffaria/"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "fibracity",
+  "nome": "FibraCity",
+  "url": [
+   "https://www.fibracity.it/offerte.html",
+   "https://www.fibracity.it/trasparenza.html"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "fidoka",
+  "nome": "Fidoka",
+  "url": [
+   "https://www.fidoka.it/offerte-privati/",
+   "https://www.fidoka.it/trasparenza-tariffaria/"
+  ],
+  "tipo": "regionale",
+  "area": "Marche e Umbria"
+ },
+ {
+  "k": "fvgreti",
+  "nome": "FVG Reti",
+  "url": [
+   "https://www.fvgreti.it/fibra",
+   "https://www.fvgreti.it/trasparenza"
+  ],
+  "tipo": "regionale",
+  "area": "Friuli-Venezia Giulia"
+ },
+ {
+  "k": "gointernet",
+  "nome": "Go Internet",
+  "url": [
+   "https://www.gointernet.it/offerte-privati/",
+   "https://www.gointernet.it/trasparenza-tariffaria/"
+  ],
+  "tipo": "regionale",
+  "area": "Marche e Umbria"
+ },
+ {
+  "k": "gonexa",
+  "nome": "Gonexa",
+  "url": [
+   "https://www.gonexa.it/fibra",
+   "https://www.gonexa.it/trasparenza"
+  ],
+  "tipo": "energia",
+  "area": "Toscana"
+ },
+ {
+  "k": "heracomm",
+  "nome": "Hera Comm",
+  "url": [
+   "https://heracomm.gruppohera.it/casa/offerte-fibra",
+   "https://www.heracomm.it/fibra",
+   "https://heracomm.gruppohera.it/trasparenza-tariffaria",
+   "https://www.heracomm.it/trasparenza"
+  ],
+  "tipo": "energia",
+  "area": "Emilia-Romagna e tutta Italia"
+ },
+ {
+  "k": "iliad",
+  "nome": "Iliad",
+  "url": [
+   "https://www.iliad.it/fibra",
+   "https://www.iliad.it/trasparenza"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "iliaditalia",
+  "nome": "Iliad Italia",
+  "url": [
+   "https://www.iliad.it/offerte-iliad-box.html",
+   "https://www.iliad.it/trasparenza-tariffaria.html"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "illumia",
+  "nome": "Illumia",
+  "url": [
+   "https://www.illumia.it/casa/fibra/",
+   "https://www.illumia.it/trasparenza-tariffaria/"
+  ],
+  "tipo": "energia",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "infranetbrenne",
+  "nome": "Infranet (Brennercom)",
+  "url": [
+   "https://www.infranet.bz.it/fibra",
+   "https://www.infranet.bz.it/trasparenza"
+  ],
+  "tipo": "regionale",
+  "area": "Alto Adige"
+ },
+ {
+  "k": "intred",
+  "nome": "Intred",
+  "url": [
+   "https://www.intred.it/it/offerte-casa",
+   "https://www.intred.it/it/trasparenza-tariffaria"
+  ],
+  "tipo": "regionale",
+  "area": "Lombardia"
+ },
+ {
+  "k": "irenlucegas",
+  "nome": "Iren Luce Gas",
+  "url": [
+   "https://www.irenlucegas.it/fibra",
+   "https://www.irenlucegas.it/trasparenza"
+  ],
+  "tipo": "energia",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "kliknetwork",
+  "nome": "Klik Network",
+  "url": [
+   "https://www.klik.it/privati/",
+   "https://www.klik.it/trasparenza-tariffaria/"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "konverto",
+  "nome": "Konverto",
+  "url": [
+   "https://www.konverto.eu/it/privati/internet.html",
+   "https://www.konverto.eu/it/trasparenza-tariffaria.html"
+  ],
+  "tipo": "regionale",
+  "area": "Trentino-Alto Adige"
+ },
+ {
+  "k": "linkem",
+  "nome": "Linkem",
+  "url": [
+   "https://www.linkem.com/offerte-casa",
+   "https://www.linkem.com/trasparenza-tariffaria"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "mandarin",
+  "nome": "Mandarin",
+  "url": [
+   "https://www.mandarin.it/casa/",
+   "https://www.mandarin.it/trasparenza-tariffaria/"
+  ],
+  "tipo": "regionale",
+  "area": "Sicilia"
+ },
+ {
+  "k": "micso",
+  "nome": "Micso",
+  "url": [
+   "https://www.micso.it/fibra",
+   "https://www.micso.it/offerte-casa",
+   "https://www.micso.it/trasparenza",
+   "https://www.micso.it/trasparenza-tariffaria"
+  ],
+  "tipo": "regionale",
+  "area": "Abruzzo, Molise, Marche"
+ },
+ {
+  "k": "mynet",
+  "nome": "MyNet",
+  "url": [
+   "https://www.mynet.it/fibra",
+   "https://www.mynet.it/it-it/offerte-casa.aspx",
+   "https://www.mynet.it/it-it/trasparenza-tariffaria.aspx",
+   "https://www.mynet.it/trasparenza"
+  ],
+  "tipo": "regionale",
+  "area": "Lombardia, Veneto, Emilia-Romagna"
+ },
+ {
+  "k": "navigabene",
+  "nome": "Navigabene",
+  "url": [
+   "https://www.navigabene.it/offerte-casa/",
+   "https://www.navigabene.it/trasparenza-tariffaria/"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "nen",
+  "nome": "NeN",
+  "url": [
+   "https://www.nen.it/fibra",
+   "https://www.nen.it/trasparenza"
+  ],
+  "tipo": "energia",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "nordcom",
+  "nome": "Nordcom",
+  "url": [
+   "https://www.nordcom.it/fibra",
+   "https://www.nordcom.it/trasparenza"
+  ],
+  "tipo": "regionale",
+  "area": "Lombardia"
+ },
+ {
+  "k": "nostra",
+  "nome": "Ènostra",
+  "url": [
+   "https://www.enostra.it/fibra",
+   "https://www.enostra.it/trasparenza"
+  ],
+  "tipo": "energia",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "octopusenergy",
+  "nome": "Octopus Energy",
+  "url": [
+   "https://www.octopusenergy.it/fibra",
+   "https://www.octopusenergy.it/trasparenza"
+  ],
+  "tipo": "energia",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "optimaitalia",
+  "nome": "Optima Italia",
+  "url": [
+   "https://www.optimaitalia.com/casa/internet-casa.html",
+   "https://www.optimaitalia.com/trasparenza-tariffaria.html"
+  ],
+  "tipo": "energia",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "pianetafibra",
+  "nome": "Pianeta Fibra",
+  "url": [
+   "https://www.pianetafibra.it/offerte/",
+   "https://www.pianetafibra.it/trasparenza-tariffaria/"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "plenitudeeni",
+  "nome": "Plenitude (Eni)",
+  "url": [
+   "https://www.eniplenitude.com/fibra",
+   "https://www.eniplenitude.com/trasparenza"
+  ],
+  "tipo": "energia",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "postemobilepos",
+  "nome": "PosteMobile (PosteCasa)",
+  "url": [
+   "https://www.postemobile.it/casa/fibra",
+   "https://www.postemobile.it/postecasa-ultraveloce",
+   "https://www.postemobile.it/trasparenza",
+   "https://www.postemobile.it/trasparenza-tariffaria"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "pulseeedison",
+  "nome": "Pulsee (Edison)",
+  "url": [
+   "https://www.pulsee.it/fibra",
+   "https://www.pulsee.it/trasparenza"
+  ],
+  "tipo": "energia",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "pulseeluceegas",
+  "nome": "Pulsee Luce e Gas",
+  "url": [
+   "https://pulsee.it/offerte-fibra",
+   "https://pulsee.it/trasparenza-tariffaria"
+  ],
+  "tipo": "energia",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "registerit",
+  "nome": "Register.it",
+  "url": [
+   "https://www.register.it/fibra",
+   "https://www.register.it/trasparenza"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "siportal",
+  "nome": "SiPortal",
+  "url": [
+   "https://www.siportal.it/privati/offerte-fibra",
+   "https://www.siportal.it/trasparenza-tariffaria"
+  ],
+  "tipo": "regionale",
+  "area": "Sicilia e Centro-Sud"
+ },
+ {
+  "k": "skywifi",
+  "nome": "Sky Wifi",
+  "url": [
+   "https://www.sky.it/skywifi",
+   "https://www.sky.it/assistenza/trasparenza-tariffaria"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "sorgenia",
+  "nome": "Sorgenia",
+  "url": [
+   "https://www.sorgenia.it/fibra",
+   "https://www.sorgenia.it/offerte-fibra",
+   "https://www.sorgenia.it/trasparenza",
+   "https://www.sorgenia.it/trasparenza-tariffaria"
+  ],
+  "tipo": "energia",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "spadnetwork",
+  "nome": "Spad Network",
+  "url": [
+   "https://www.spad.it/offerte-casa",
+   "https://www.spad.it/trasparenza-tariffaria"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "starlink",
+  "nome": "Starlink",
+  "url": [
+   "https://www.starlink.com/residential",
+   "https://www.starlink.com/legal/documents/DOC-1020-86367-62"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "tim",
+  "nome": "TIM",
+  "url": [
+   "https://www.tim.it/casa/offerte-internet",
+   "https://www.tim.it/fisso-e-mobile/fibra-e-copertura/offerte-fibra",
+   "https://www.tim.it/assistenza/per-i-consumatori/info-consumatori-fisso/trasparenza-tariffaria",
+   "https://www.tim.it/trasparenza"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "tiscali",
+  "nome": "Tiscali",
+  "url": [
+   "https://casa.tiscali.it/fibra-adsl/",
+   "https://www.tiscali.it/fibra",
+   "https://www.tiscali.it/trasparenza",
+   "https://www.tiscali.it/trasparenza-tariffaria/"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "topix",
+  "nome": "Topix",
+  "url": [
+   "https://www.topix.it/fibra",
+   "https://www.topix.it/trasparenza"
+  ],
+  "tipo": "regionale",
+  "area": "Piemonte"
+ },
+ {
+  "k": "trentinonetwor",
+  "nome": "Trentino Network",
+  "url": [
+   "https://www.trentinonetwork.it/fibra",
+   "https://www.trentinonetwork.it/trasparenza"
+  ],
+  "tipo": "regionale",
+  "area": "Trentino"
+ },
+ {
+  "k": "unidata",
+  "nome": "Unidata",
+  "url": [
+   "https://www.unidata.it/fibra-ftth",
+   "https://www.unidata.it/offerta-casa/",
+   "https://www.unidata.it/trasparenza",
+   "https://www.unidata.it/trasparenza-tariffaria/"
+  ],
+  "tipo": "regionale",
+  "area": "Lazio"
+ },
+ {
+  "k": "valcom",
+  "nome": "Valcom",
+  "url": [
+   "https://www.valcom.it/fibra",
+   "https://www.valcom.it/trasparenza"
+  ],
+  "tipo": "regionale",
+  "area": "Trentino (Val di Non/Sole)"
+ },
+ {
+  "k": "vdatel",
+  "nome": "VdA Tel",
+  "url": [
+   "https://www.vdatel.it/fibra",
+   "https://www.vdatel.it/trasparenza"
+  ],
+  "tipo": "regionale",
+  "area": "Valle d'Aosta"
+ },
+ {
+  "k": "virginfibra",
+  "nome": "Virgin Fibra",
+  "url": [
+   "https://www.virginfibra.it/",
+   "https://www.virginfibra.it/trasparenza-tariffaria"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "vodafone",
+  "nome": "Vodafone",
+  "url": [
+   "https://www.vodafone.it/casa/fibra",
+   "https://www.vodafone.it/trasparenza"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "vodafoneitalia",
+  "nome": "Vodafone Italia",
+  "url": [
+   "https://www.vodafone.it/offerte-int-casa/fibra.html",
+   "https://www.vodafone.it/area-utente/trasparenza-tariffaria.html"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "wekiwi",
+  "nome": "WeKiwi",
+  "url": [
+   "https://www.wekiwi.it/fibra",
+   "https://www.wekiwi.it/trasparenza"
+  ],
+  "tipo": "energia",
+  "area": "Tutta Italia"
+ },
+ {
+  "k": "windtre",
+  "nome": "WindTre",
+  "url": [
+   "https://www.windtre.it/fibra",
+   "https://www.windtre.it/offerte-fibra/",
+   "https://www.windtre.it/trasparenza",
+   "https://www.windtre.it/trasparenza-tariffaria/"
+  ],
+  "tipo": "nazionale",
+  "area": "Tutta Italia"
+ }
+]

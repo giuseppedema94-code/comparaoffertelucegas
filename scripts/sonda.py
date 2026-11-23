@@ -1,48 +1,59 @@
 #!/usr/bin/env python3
-"""Sonda manuale (workflow sonda-internet): scarica le pagine offerte degli operatori
-e salva l'HTML grezzo più un riepilogo, per capire da dove estrarre i prezzi."""
-import json, re, sys, urllib.request, pathlib, gzip
+"""Sonda manuale (workflow sonda-internet): per ogni operatore prova gli URL candidati e
+i link "fibra/internet/offerte" della home, e salva testo e prezzi trovati.
+Serve solo a scoprire le pagine da cui leggere i prezzi; non gira tutti i giorni."""
+import concurrent.futures as cf, gzip, html, json, re, sys, urllib.parse, urllib.request, pathlib
 OUT = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "sonde"); OUT.mkdir(parents=True, exist_ok=True)
-URLS = {
- "tim_offerta": "https://www.tim.it/fisso-e-mobile/fibra-e-adsl/fibra-internet-casa",
- "tim_trasparenza": "https://www.tim.it/assistenza/trasparenza-tariffaria/trasparenza-tariffaria-delle-offerte-di-linea-fissa",
- "fastweb_offerta": "https://www.fastweb.it/adsl-fibra-ottica/fastweb-casa-start/",
- "fastweb_lista": "https://www.fastweb.it/adsl-fibra-ottica/",
- "fastweb_trasparenza": "https://www.fastweb.it/trasparenza-tariffaria/",
- "vodafone_casa": "https://www.vodafone.it/privati/fibra-adsl-telefono.html",
- "vodafone_trasparenza": "https://www.vodafone.it/privati/area-legale/trasparenza-tariffaria.html",
- "windtre_offerta": "https://www.windtre.it/offerte-fibra/",
- "windtre_trasparenza": "https://www.windtre.it/trasparenza-tariffaria/",
- "iliad_fibra": "https://www.iliad.it/offerta-iliadbox-fibra-domotica.html",
- "iliad_prezzi": "https://www.iliad.it/brochure-prezzi-fibra.html",
- "sky_wifi": "https://www.sky.it/sky-wifi-fibra",
- "tiscali": "https://casa.tiscali.it/",
- "eolo": "https://www.eolo.it/offerte-internet-casa/eolo-fibra",
- "aruba": "https://fibra.aruba.it/offerte-fibra-casa.aspx",
- "poste": "https://www.poste.it/fibra/postecasa-ultraveloce-start",
- "enel_fibra": "https://www.enel.it/it-it/offerte-fibra",
-}
+OPS = json.loads((pathlib.Path(__file__).parent / "sonda_operatori.json").read_text())
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36"
-rep = {}
-for k, u in URLS.items():
-    r = {"url": u}
+P = re.compile(r"\d{1,3}[,.]\d{2}\s?(?:€|euro)", re.I)
+
+def get(u):
+    req = urllib.request.Request(u, headers={"User-Agent": UA, "Accept-Language": "it-IT,it;q=0.9", "Accept": "text/html,*/*"})
+    with urllib.request.urlopen(req, timeout=25) as r:
+        b = r.read(3_000_000)
+        if r.headers.get("Content-Encoding") == "gzip": b = gzip.decompress(b)
+        return r.status, r.geturl(), b.decode("utf-8", "replace")
+
+def testo(raw):
+    t = re.sub(r"<script.*?</script>|<style.*?</style>", " ", raw, flags=re.S)
+    return re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", t)))
+
+def prova(u):
     try:
-        req = urllib.request.Request(u, headers={"User-Agent": UA, "Accept-Language": "it-IT,it;q=0.9", "Accept": "text/html,*/*"})
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            b = resp.read()
-            if resp.headers.get("Content-Encoding") == "gzip": b = gzip.decompress(b)
-            r["status"] = resp.status; r["final"] = resp.geturl(); r["type"] = resp.headers.get("Content-Type")
-        t = b.decode("utf-8", "replace")
-        (OUT / f"{k}.html").write_text(t, encoding="utf-8")
-        r["bytes"] = len(b)
-        r["jsonld"] = len(re.findall(r"application/ld\+json", t))
-        r["next_data"] = "__NEXT_DATA__" in t
-        r["nuxt"] = "__NUXT__" in t
-        r["prezzi"] = sorted(set(re.findall(r"\d{1,2},\d{2}\s?(?:€|&euro;|euro)", t)))[:25]
-        r["pdf"] = sorted(set(re.findall(r'href="([^"]+\.pdf)"', t)))[:40]
-        r["api"] = sorted(set(re.findall(r'["\'](/[a-zA-Z0-9_\-/]*api[a-zA-Z0-9_\-/.?=&]*)["\']', t)))[:20]
+        st, fin, raw = get(u)
+        t = testo(raw)
+        return {"url": u, "status": st, "final": fin, "prezzi": len(P.findall(t)), "esempi": P.findall(t)[:12],
+                "fibra": len(re.findall(r"fibra|FTTH|Gbit|Gbps|Mbps", t, re.I)), "raw": raw, "testo": t}
     except Exception as e:
-        r["errore"] = repr(e)[:300]
-    rep[k] = r
+        return {"url": u, "errore": repr(e)[:160]}
+
+def operatore(o):
+    res = []
+    viste = set()
+    for u in o["url"]:
+        r = prova(u); viste.add(u); res.append(r)
+    # link interessanti dalla home del dominio
+    dom = urllib.parse.urlparse(o["url"][0]).netloc if o["url"] else None
+    if dom:
+        h = prova(f"https://{dom}/"); res.append(h)
+        if h.get("raw"):
+            base = h["final"]
+            links = re.findall(r'href="([^"#]+)"', h["raw"])
+            cand = []
+            for l in links:
+                a = urllib.parse.urljoin(base, html.unescape(l))
+                if re.search(r"fibra|internet|offert|casa|connettiv|ftth|wifi", a, re.I) and urllib.parse.urlparse(a).netloc.endswith(dom.split(".", 1)[-1]) and a not in viste and not a.endswith((".pdf", ".jpg", ".png")):
+                    cand.append(a); viste.add(a)
+            for a in cand[:6]:
+                res.append(prova(a))
+    best = sorted([r for r in res if r.get("testo")], key=lambda r: (r["prezzi"] > 0) * (r["fibra"] + r["prezzi"]), reverse=True)
+    for i, r in enumerate(best[:3]):
+        (OUT / f"{o['k']}_{i}.txt").write_text(r["final"] + "\n" + r["testo"][:200000], encoding="utf-8")
+    return {"k": o["k"], "nome": o["nome"], "tipo": o["tipo"], "area": o["area"],
+            "pagine": [{k: v for k, v in r.items() if k not in ("raw", "testo")} for r in res]}
+
+with cf.ThreadPoolExecutor(16) as ex:
+    rep = list(ex.map(operatore, OPS))
 (OUT / "riepilogo.json").write_text(json.dumps(rep, ensure_ascii=False, indent=1), encoding="utf-8")
-print(json.dumps({k: (v.get("status"), v.get("bytes"), v.get("errore", "")[:80]) for k, v in rep.items()}, indent=1))
+print(sum(1 for o in rep for p in o["pagine"] if p.get("prezzi")), "pagine con prezzi")
