@@ -163,6 +163,7 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]) .logo .geco{filter:none}:root:not([data-theme=light]) .logo .geco:not(.dk){display:none!important}:root:not([data-theme=light]) .logo .geco.dk{display:block!important}:root:not([data-theme=light]) .logo .geco.dk.ic-flame{display:none!important}:root[data-c=gas]:not([data-theme=light]) .logo .geco.dk.ic-flame{display:block!important}:root[data-c=gas]:not([data-theme=light]) .logo .geco.dk.ic-bolt{display:none!important}}
 :root[data-theme=dark] .logo .geco{filter:none}:root[data-theme=dark] .logo .geco:not(.dk){display:none!important}:root[data-theme=dark] .logo .geco.dk{display:block!important}:root[data-theme=dark] .logo .geco.dk.ic-flame{display:none!important}:root[data-c=gas][data-theme=dark] .logo .geco.dk.ic-flame{display:block!important}:root[data-c=gas][data-theme=dark] .logo .geco.dk.ic-bolt{display:none!important}
 html,button,a,input,select,label{touch-action:manipulation}
+.legal .tb{width:100%;border-collapse:collapse;font-size:14.5px;margin:10px 0 14px;display:block;overflow-x:auto}.legal .tb th,.legal .tb td{border-bottom:1px solid var(--line);padding:8px 10px 8px 0;text-align:left;vertical-align:top}.legal .tb th{color:var(--mut);font-weight:600;white-space:nowrap}
 </style>
 <style>
 .pg{padding:28px 0 64px;display:flex;flex-direction:column;gap:18px}
@@ -185,19 +186,31 @@ html,button,a,input,select,label{touch-action:manipulation}
 <main class="wrap pg legal">
 <h1>Privacy e note legali</h1>
 <p class="sub">Ultimo aggiornamento: 23 novembre 2026.</p>
-<h2>Chi gestisce il sito</h2>
-<p>comparaoffertelucegas.it è un progetto personale e gratuito. Non è collegato a fornitori di energia, ad ARERA o al Portale Offerte.</p>
-<h2>Dati personali</h2>
-<p>Il sito non ha registrazione, moduli o newsletter. Il consumo che inserisci resta nel tuo browser e non viene inviato a nessuno.</p>
-<p>Il sito è ospitato da GitHub Pages (GitHub, Inc.), che per sicurezza registra gli indirizzi IP di chi visita. Loghi, caratteri e dati sono ospitati sul dominio del sito.</p>
-<h2>Statistiche</h2>
-<p>Contiamo le visite con GoatCounter, un servizio che non usa cookie e non salva l'indirizzo IP. Registra la pagina vista, il sito da cui arrivi, il tipo di dispositivo, il browser e il paese. Conta anche i clic verso i siti dei fornitori, senza sapere chi li fa. I dati sono solo aggregati e non servono a riconoscerti.</p>
+<h2>Titolare del trattamento</h2>
+<p>comparaoffertelucegas.it è un progetto personale e gratuito, non collegato a fornitori di energia, ad ARERA o al Portale Offerte. Per qualsiasi richiesta sui tuoi dati scrivi a <a href="mailto:info@comparaoffertelucegas.it">info@comparaoffertelucegas.it</a>.</p>
+<h2>Quali dati trattiamo e perché</h2>
+<table class="tb">
+<tr><th>Servizio</th><th>Dati</th><th>Scopo</th><th>Base giuridica</th><th>Conservazione</th></tr>
+<tr><td>GitHub Pages (GitHub, Inc.), hosting</td><td>indirizzo IP, browser</td><td>far funzionare il sito e proteggerlo</td><td>legittimo interesse</td><td>secondo le regole di GitHub</td></tr>
+<tr><td>GoatCounter, statistiche senza cookie</td><td>pagina vista, sito di provenienza, dispositivo, browser, paese, clic verso i fornitori; niente IP né cookie</td><td>contare le visite in forma aggregata</td><td>legittimo interesse</td><td>finché il servizio è attivo</td></tr>
+<tr><td>Google Analytics 4 (Google Ireland Ltd)</td><td>identificativo nei cookie, pagine viste, durata della visita, dispositivo, area geografica</td><td>capire come viene usato il sito</td><td>consenso</td><td>14 mesi</td></tr>
+<tr><td>Microsoft Clarity (Microsoft Ireland Operations Ltd)</td><td>identificativo nei cookie, movimenti del mouse, scorrimento e clic; i campi in cui scrivi sono nascosti</td><td>trovare le parti della pagina poco chiare</td><td>consenso</td><td>fino a 13 mesi</td></tr>
+</table>
+<p>Il consumo che inserisci resta nel tuo browser e non viene inviato a nessuno. Il sito non ha registrazione, moduli o newsletter.</p>
+<p>Google e Microsoft possono trasferire i dati negli Stati Uniti. Il trasferimento si basa sull'EU-U.S. Data Privacy Framework, a cui entrambe le società aderiscono.</p>
 <p>I link verso i fornitori contengono parametri (utm) che dicono al fornitore che la visita arriva da questo sito. Non contengono dati su di te.</p>
 <h2>Cookie</h2>
-<p>Se accetti dal banner, il sito usa Google Analytics 4 (Google Ireland Ltd), che salva cookie (_ga) per contare le visite di ritorno, la durata delle visite e le pagine più usate. Google non riceve il consumo che inserisci. Se rifiuti, Google Analytics non viene caricato. I dati di Google Analytics restano 14 mesi e possono essere trasferiti negli Stati Uniti in base all'EU-U.S. Data Privacy Framework.</p>
-<p>Sempre solo se accetti, il sito usa Microsoft Clarity (Microsoft Ireland Operations Ltd), che salva cookie (_clck, _clsk, e sui domini clarity.ms e bing.com anche CLID, MUID e altri cookie tecnici di Microsoft) e registra in forma anonima come scorri e dove clicchi, per capire quali parti della pagina sono poco chiare. Clarity nasconde i campi in cui scrivi. I dati restano fino a 13 mesi e possono essere trasferiti negli Stati Uniti in base all'EU-U.S. Data Privacy Framework.</p>
-<p>Puoi cambiare scelta in ogni momento dal link "Preferenze cookie" in fondo a ogni pagina. Se ritiri il consenso, cancelliamo i cookie di Google Analytics e Clarity dal tuo browser. Ti richiediamo la scelta dopo 6 mesi.</p>
-<p>Il sito salva nel browser (localStorage) anche la scelta del tema chiaro o scuro e la tua scelta sui cookie: sono dati tecnici che puoi cancellare dalle impostazioni del browser.</p>
+<table class="tb">
+<tr><th>Cookie</th><th>Di chi</th><th>A cosa serve</th><th>Durata</th></tr>
+<tr><td>cc_cookie</td><td>questo sito</td><td>ricorda la tua scelta sui cookie</td><td>6 mesi</td></tr>
+<tr><td>_ga, _ga_*</td><td>Google Analytics</td><td>distingue i visitatori e le visite</td><td>fino a 2 anni</td></tr>
+<tr><td>_clck, _clsk</td><td>Microsoft Clarity</td><td>collega le pagine della stessa visita</td><td>da 1 giorno a 1 anno</td></tr>
+<tr><td>CLID, MUID e altri cookie tecnici Microsoft</td><td>Microsoft (domini clarity.ms e bing.com)</td><td>funzionamento di Clarity</td><td>fino a 1 anno</td></tr>
+</table>
+<p>I cookie di Google e Microsoft si attivano solo se li accetti dal banner, anche uno alla volta con "Scegli". Puoi cambiare idea quando vuoi dal link "Preferenze cookie" in fondo a ogni pagina: se ritiri il consenso, cancelliamo i loro cookie dal tuo browser. Dopo 6 mesi ti chiediamo di nuovo la scelta. Il banner usa la libreria open source cookieconsent di Orest Bida (licenza MIT).</p>
+<p>Il sito salva nel browser (localStorage) anche la scelta del tema chiaro o scuro: è un dato tecnico che puoi cancellare dalle impostazioni del browser.</p>
+<h2>I tuoi diritti</h2>
+<p>Puoi chiedere di accedere ai tuoi dati, correggerli, cancellarli, limitarne l'uso, opporti al trattamento basato sul legittimo interesse e ricevere i dati in un formato leggibile. Scrivi a <a href="mailto:info@comparaoffertelucegas.it">info@comparaoffertelucegas.it</a>. Puoi anche presentare reclamo al <a href="https://www.garanteprivacy.it" target="_blank" rel="noopener">Garante per la protezione dei dati personali</a>.</p>
 <h2>Fonti dei dati</h2>
 <ul>
 <li><strong>Offerte:</strong> open data del Portale Offerte di ARERA, aggiornati due volte al giorno.</li>
