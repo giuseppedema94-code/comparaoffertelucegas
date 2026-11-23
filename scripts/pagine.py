@@ -39,6 +39,8 @@ CSS_NET = """.oc{border:1px solid var(--line);border-radius:16px;background:var(
 @media (max-width:760px){.oc-h{flex-wrap:wrap;padding:12px 14px}.oc-tg{width:100%;justify-content:flex-start}.oc-b{grid-template-columns:minmax(0,1fr) auto}.oc-d{grid-column:1/-1;border-right:0;border-bottom:1px solid var(--line);padding:12px 14px}.oc-p{text-align:left;border-right:0;padding:12px 14px}.oc-a{padding:12px 14px 12px 0}.oc-m strong{font-size:34px}.oc-m span{font-size:16px}.oc-btn{padding:12px 14px;font-size:14px}.lgb{width:46px;height:46px}}
 :root[data-c=lg]{--grad:linear-gradient(90deg,#F5C518,#C65B7C);--first:#FDF1E4}
 :root[data-c=lg] header.top::before{background:var(--grad)}
+:root[data-c=lg] .w-luce{background:linear-gradient(90deg,#F5C518,#DD904A);-webkit-background-clip:text;background-clip:text;color:transparent!important}
+:root[data-c=lg] .w-gas{background:linear-gradient(90deg,#DD904A,#C65B7C);-webkit-background-clip:text;background-clip:text;color:transparent!important}
 :root[data-c=lg] .segn a[aria-current=page]{background:var(--grad);color:#14161A}
 :root[data-c=lg] .oc.first{border:2px solid transparent;background:linear-gradient(var(--card),var(--card)) padding-box,var(--grad) border-box}
 :root[data-c=lg] .oc.first .oc-h{background:linear-gradient(90deg,#FEF6D8,#F9E5EC)}
@@ -102,9 +104,9 @@ def testata(path, title, desc, c, icon):
     s = re.sub(r'(<meta property="og:url" content=")[^"]*', lambda m: m.group(1) + BASE + path, s)
     s = re.sub(r'(<link rel="icon" href=")[^"]*', lambda m: m.group(1) + icon, s)
     s = s.replace("\n</style>", "\n" + CSS_NET + "</style>", 1)
-    if c == "net":
-        s = re.sub(r'<img class="geco ic-bolt"[^>]*><img class="geco ic-flame"[^>]*>',
-                   '<img class="geco" src="/img/geco-net.svg" width="40" height="40" alt="">', s)
+    if c in ("net", "lg"):
+        s = re.sub(r'(<img class="geco [^>]*>)+',
+                   f'<img class="geco ic-bolt" src="/img/geco-{c}.svg" width="40" height="40" alt=""><img class="geco ic-bolt dk" src="/img/geco-{c}-dark.svg" width="40" height="40" alt="">', s, count=1)
     return s
 
 
@@ -151,7 +153,7 @@ Promise.all(['dual','luce','gas'].map(function(k){return fetch('/data/'+k+'.json
 
 corpo = testata("/luce-e-gas/", "Offerte luce e gas insieme: pacchetti a confronto",
                 "Le offerte luce e gas in un unico contratto dagli open data ARERA, con la spesa sui tuoi consumi e il confronto con le migliori offerte separate.",
-                "lg", "/img/geco-luce.svg")
+                "lg", "/img/geco-lg.svg")
 corpo += """<main class="wrap pg">
 <h1 class="h">Offerte luce e gas insieme</h1>
 <section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">I tuoi consumi al mese</h2>

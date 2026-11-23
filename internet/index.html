@@ -156,6 +156,9 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 .logo .geco{width:40px;height:40px;display:block}.logo .geco.ic-flame{display:none}:root[data-c=gas] .logo .geco.ic-flame{display:block}:root[data-c=gas] .logo .geco.ic-bolt{display:none}.logo .wm{color:var(--ink)}.logo span.dom{color:var(--ink)}.logo .w-luce{color:#F5C518}.logo .w-gas{color:var(--ink)}:root[data-c=gas] .logo .w-luce{color:var(--ink)}:root[data-c=gas] .logo .w-gas{color:#C65B7C}
 :where(a,button,input,select,[tabindex]):focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:4px}.sort{min-height:24px}@media (pointer:coarse){.chip,.theme-btn,.seg button,.more,.stepper button{min-height:44px}}.who .o a,.best a{text-decoration:underline;text-underline-offset:2px}.chip,.tag,.pill{border-radius:8px!important}.search,.msort select{font-size:16px!important}:root[data-theme=dark] .logo .geco{filter:drop-shadow(0 0 .6px #E9E7E1) drop-shadow(0 0 .6px #E9E7E1)}@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .logo .geco{filter:drop-shadow(0 0 .6px #E9E7E1) drop-shadow(0 0 .6px #E9E7E1)}}
 .txt{margin-top:16px}.txt h2{margin:0 0 8px;font-size:22px}.txt p{margin:10px 0 0;line-height:1.55;max-width:72ch}
+.logo .geco.dk{display:none!important}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .logo .geco{filter:none}:root:not([data-theme=light]) .logo .geco:not(.dk){display:none!important}:root:not([data-theme=light]) .logo .geco.dk{display:block!important}:root:not([data-theme=light]) .logo .geco.dk.ic-flame{display:none!important}:root[data-c=gas]:not([data-theme=light]) .logo .geco.dk.ic-flame{display:block!important}:root[data-c=gas]:not([data-theme=light]) .logo .geco.dk.ic-bolt{display:none!important}}
+:root[data-theme=dark] .logo .geco{filter:none}:root[data-theme=dark] .logo .geco:not(.dk){display:none!important}:root[data-theme=dark] .logo .geco.dk{display:block!important}:root[data-theme=dark] .logo .geco.dk.ic-flame{display:none!important}:root[data-c=gas][data-theme=dark] .logo .geco.dk.ic-flame{display:block!important}:root[data-c=gas][data-theme=dark] .logo .geco.dk.ic-bolt{display:none!important}
 .oc{border:1px solid var(--line);border-radius:16px;background:var(--card);margin:0 0 12px;overflow:hidden}.oc[hidden]{display:none}
 .oc.first{border:2px solid var(--accbar);box-shadow:0 6px 18px rgba(0,0,0,.06)}
 .oc-h{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line)}.oc.first .oc-h{background:var(--first)}
@@ -179,6 +182,8 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 @media (max-width:760px){.oc-h{flex-wrap:wrap;padding:12px 14px}.oc-tg{width:100%;justify-content:flex-start}.oc-b{grid-template-columns:minmax(0,1fr) auto}.oc-d{grid-column:1/-1;border-right:0;border-bottom:1px solid var(--line);padding:12px 14px}.oc-p{text-align:left;border-right:0;padding:12px 14px}.oc-a{padding:12px 14px 12px 0}.oc-m strong{font-size:34px}.oc-m span{font-size:16px}.oc-btn{padding:12px 14px;font-size:14px}.lgb{width:46px;height:46px}}
 :root[data-c=lg]{--grad:linear-gradient(90deg,#F5C518,#C65B7C);--first:#FDF1E4}
 :root[data-c=lg] header.top::before{background:var(--grad)}
+:root[data-c=lg] .w-luce{background:linear-gradient(90deg,#F5C518,#DD904A);-webkit-background-clip:text;background-clip:text;color:transparent!important}
+:root[data-c=lg] .w-gas{background:linear-gradient(90deg,#DD904A,#C65B7C);-webkit-background-clip:text;background-clip:text;color:transparent!important}
 :root[data-c=lg] .segn a[aria-current=page]{background:var(--grad);color:#14161A}
 :root[data-c=lg] .oc.first{border:2px solid transparent;background:linear-gradient(var(--card),var(--card)) padding-box,var(--grad) border-box}
 :root[data-c=lg] .oc.first .oc-h{background:linear-gradient(90deg,#FEF6D8,#F9E5EC)}
@@ -238,7 +243,7 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap"><a class="logo h" href="/"><img class="geco" src="/img/geco-net.svg" width="40" height="40" alt=""><span class="wm">comparaofferte<span class="w-luce">luce</span><span class="w-gas">gas</span><span class="dom">.it</span></span></a>
+<header class="top"><div class="wrap"><a class="logo h" href="/"><img class="geco ic-bolt" src="/img/geco-net.svg" width="40" height="40" alt=""><img class="geco ic-bolt dk" src="/img/geco-net-dark.svg" width="40" height="40" alt=""><span class="wm">comparaofferte<span class="w-luce">luce</span><span class="w-gas">gas</span><span class="dom">.it</span></span></a>
 <div class="hdr-r"><nav class="seg segn" aria-label="Confronti"><a href="/">Luce</a><a href="/#gas">Gas</a><a href="/luce-e-gas/">Luce + gas</a><a href="/internet/" aria-current="page">Internet</a></nav><button class="theme-btn" id="theme-toggle" type="button">Tema: auto</button></div>
 </div></header>
 <main class="wrap pg">
