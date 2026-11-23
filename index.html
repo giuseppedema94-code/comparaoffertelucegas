@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-WXOc/d3rEZKbQTzy1sHfbMiYqyMDtvY3Is5nQuwWgQo='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-s8pnMchkn2LhSRIbFIl7MnFjnjGuuxcaj2YwSjhBA60='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Confronto offerte luce e gas, aggiornato ogni giorno</title>
@@ -181,7 +181,7 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 :root:not([data-c=gas]) .ix-gas,:root[data-c=gas] .ix-luce{display:none}
 .logo .geco{width:40px;height:40px;display:block}.logo .geco.ic-flame{display:none}:root[data-c=gas] .logo .geco.ic-flame{display:block}:root[data-c=gas] .logo .geco.ic-bolt{display:none}.logo .wm{color:var(--ink)}.logo span.dom{color:var(--ink)}.logo .w-luce{color:#F5C518}.logo .w-gas{color:var(--ink)}:root[data-c=gas] .logo .w-luce{color:var(--ink)}:root[data-c=gas] .logo .w-gas{color:#C65B7C}
 :where(a,button,input,select,[tabindex]):focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:4px}.sort{min-height:24px}@media (pointer:coarse){.chip,.theme-btn,.seg button,.more,.stepper button{min-height:44px}}.who .o a,.best a{text-decoration:underline;text-underline-offset:2px}.chip,.tag,.pill{border-radius:8px!important}.search,.msort select{font-size:16px!important}:root[data-theme=dark] .logo .geco{filter:drop-shadow(0 0 .6px #E9E7E1) drop-shadow(0 0 .6px #E9E7E1)}@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .logo .geco{filter:drop-shadow(0 0 .6px #E9E7E1) drop-shadow(0 0 .6px #E9E7E1)}}
-.ask #q{text-align:center}.trust2{margin:2px 4px;font-size:15px;color:var(--ink2)}.trust2 strong{color:var(--ink)}.save{background:none!important;color:#4ADE80!important;padding:0!important;border-radius:0!important;font-weight:700}
+.ask #q{text-align:center}.trust2{margin:2px 4px;font-size:15px;color:var(--ink2);display:flex;flex-wrap:wrap;align-items:center;gap:4px 0}.trust2>span:not(:first-child):before{content:'·';margin:0 10px;color:var(--mut2)}#upd:empty{display:none}@media (max-width:520px){.trust2{gap:2px 14px;font-size:14px}.trust2>span:first-child{flex-basis:100%}.trust2>span:not(:first-child):before{content:none}}.trust2 strong{color:var(--ink)}.save{background:none!important;color:#4ADE80!important;padding:0!important;border-radius:0!important;font-weight:700}
 .per{display:flex;justify-content:center;gap:6px;margin:-4px 0 0}.per button{font:600 14px 'Schibsted Grotesk',sans-serif;padding:6px 14px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--ink2);cursor:pointer}.per button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}.opz{display:flex;justify-content:center;align-items:center;gap:8px 18px;flex-wrap:wrap;font-size:14px;color:var(--ink2)}.opz[hidden]{display:none}.rai,.kw{display:flex;align-items:center;gap:6px;cursor:pointer}.kw select{font:600 14px 'Schibsted Grotesk',sans-serif;padding:4px 6px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}.rai input{width:18px;height:18px;accent-color:var(--ink);margin:0}.rai span{font-size:12.5px;opacity:.8}
 .faq{margin-top:24px}.faq h2{margin:0 0 8px}.faq details{border-top:1px solid var(--line);padding:14px 0}.faq summary{cursor:pointer;font-weight:700;font-size:16.5px;list-style-position:outside}.faq p{margin:8px 0 0;color:var(--ink2);line-height:1.55;max-width:72ch}
 .altri{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}.altri a{font:600 14px 'Schibsted Grotesk',sans-serif;padding:7px 12px;border:1px solid var(--bd);border-radius:8px;color:var(--ink);text-decoration:none;background:var(--card)}.altri a:hover{border-color:var(--ink)}.altri a.net{border-color:#2E9BE6}
@@ -287,7 +287,7 @@ html,button,a,input,select,label{touch-action:manipulation}
 </div>
 </section>
 
-<p class="trust2"><strong id="tcount">Tutte le offerte</strong> dagli open data ARERA, ordinate per prezzo. Niente registrazione. <span id="upd"></span></p>
+<p class="trust2"><span><strong id="tcount">Tutte le offerte</strong></span><span>Dati ufficiali ARERA</span><span id="upd"></span></p>
 
 <section class="card list" aria-labelledby="clh">
 <div class="tools">
@@ -416,7 +416,7 @@ function render(){
   var bu=safeUrl(best.o.u)||safeUrl(best.o.us);$('blink').hidden=!bu;if(bu){$('blink').href=bu;$('blink').textContent=safeUrl(best.o.u)?'Vai all\'offerta':'Sito del fornitore'}
   $('bplc').hidden=true;
   $('ovdw').hidden=S.c!=='luce';$('prio').hidden=S.k!=='pr';
-  $('tcount').textContent=all.length.toLocaleString('it-IT')+' offerte di '+d.fornitori.toLocaleString('it-IT')+' fornitori';
+  var mg=function(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.')};$('tcount').textContent=mg(all.length)+' offerte di '+mg(d.fornitori)+' fornitori';
   var s=S.s.trim().toLowerCase();
   var list=all.filter(function(x){
     if(S.f==='b'){if(x.o.t!=='f'||!(x.o.d>=36&&x.o.d<99))return false}else if(S.f!=='tutte'&&x.o.t!==S.f)return false;
@@ -454,7 +454,7 @@ function render(){
   var dd=fd(d.data_open_data||d.rilevazione);
   $('note').textContent='Spesa stimata con imposte, cliente residente'+(S.c==='luce'?' '+String(S.kw).replace('.',',')+' kW'+(S.rai?', canone RAI incluso':''):'')+'. Variabili con previsione '+(S.c==='luce'?'PUN':'PSV')+' a 12 mesi. €/'+cfg.u+' senza dispacciamento.';
   $('fdate').textContent='Prezzi del '+dd+'.';
-  if(d.generato){var gd=new Date(d.generato),opt={timeZone:'Europe/Rome'},gday=gd.toLocaleDateString('it-IT',opt),hh=gd.toLocaleTimeString('it-IT',{timeZone:'Europe/Rome',hour:'2-digit',minute:'2-digit'});$('upd').textContent='Dati aggiornati '+(gday===new Date().toLocaleDateString('it-IT',opt)?'oggi':'il '+gday)+' alle '+hh+'.'}
+  if(d.generato){var gd=new Date(d.generato),opt={timeZone:'Europe/Rome'},gday=gd.toLocaleDateString('it-IT',opt),hh=gd.toLocaleTimeString('it-IT',{timeZone:'Europe/Rome',hour:'2-digit',minute:'2-digit'});$('upd').textContent='Aggiornati '+(gday===new Date().toLocaleDateString('it-IT',opt)?'oggi':'il '+gday)+' alle '+hh}
   var wk=S.w.join('');document.querySelectorAll('[data-pre]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.pre===wk)});$('prev').hidden=S.c!=='luce';
   document.querySelectorAll('#prio input').forEach(function(r){r.value=S.w[+r.dataset.w]});
   cbar();urlSync();
