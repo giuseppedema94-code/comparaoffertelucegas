@@ -216,7 +216,7 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 .mia-in{display:flex;align-items:center;gap:6px;border:1px solid var(--bd);border-radius:10px;padding:0 10px;background:var(--soft)}.mia-in:focus-within{border-color:var(--ink)}
 .mia-in input{flex:1;min-width:0;width:0;border:0;background:transparent;font:700 18px 'Schibsted Grotesk',sans-serif;color:var(--ink);padding:9px 0;outline:0}.mia-in span{font-size:13px;color:var(--mut);white-space:nowrap}
 .mia-h{margin:0;font-size:12px;color:var(--mut);text-align:center}
-.mia-row{margin:6px 0;padding:10px 14px;border:2px dashed var(--accbar);border-radius:14px;font-size:14px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.mia-row strong{font-size:16px}
+.mia-row{margin:6px 0;padding:10px 14px;border:2px dashed var(--accbar);border-radius:14px;font-size:14px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.mia-row strong{font-size:16px}.mia-v{display:inline-flex;align-items:center;gap:10px}.mia-x{border:0;background:none;color:var(--ink2);font-size:22px;line-height:1;cursor:pointer;padding:4px 6px;min-width:32px;min-height:32px}.mia-x:hover{color:var(--ink)}
 @media(max-width:420px){.mia-i{grid-template-columns:1fr}}
 .plc{font-size:13px;color:#C9CCD1;margin-top:8px}
 .opts{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;font-size:14px;color:var(--ink2);margin:0 0 14px}.opts label{display:flex;align-items:center;gap:6px;cursor:pointer}.opts label[hidden]{display:none}.opts select{font:600 14px 'Schibsted Grotesk',sans-serif;padding:4px 6px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--ink)}
@@ -484,7 +484,7 @@ function render(){
   var th=function(k,label){var on=S.k===k,ar=on?(S.dir===1?'▲':'▼'):'↕';return '<button type="button" class="sort'+(on?' on':'')+'" data-k="'+k+'" aria-sort="'+(on?(S.dir===1?'ascending':'descending'):'none')+'" title="Ordina">'+label+' <span aria-hidden="true">'+ar+'</span></button>'};
   var h=['<div class="row head" role="row"><span>#</span><span>Fornitore e offerta</span><span class="num">'+th('p',(S.c==='luce'?'Energia':'Gas')+' €/'+cfg.u)+'</span><span class="num">'+th('fx','Quota fissa €/mese')+'</span><span class="num">Sconto</span><span class="num">Scadenza offerta</span><span class="num">'+th('m','Spesa al mese')+'</span></div>'];
   S.cur=list;
-  var mk=S.mia!=null&&S.k==='m'&&S.dir===1,mrow=function(){mk=false;return '<div class="mia-row" role="row"><span>Il tuo contratto</span><strong>'+eur(S.mia,2)+' al mese</strong></div>'};
+  var mk=S.mia!=null&&S.k==='m'&&S.dir===1,mrow=function(){mk=false;return '<div class="mia-row" role="row"><span>Il tuo contratto</span><span class="mia-v"><strong>'+eur(S.mia,2)+' al mese</strong><button type="button" class="mia-x" aria-label="Togli il tuo contratto dal confronto">×</button></span></div>'};
   list.slice(0,S.lim).forEach(function(x,i){
     if(mk&&S.mia<x.m)h.push(mrow());
     var o=x.o,u=safeUrl(o.u),first=x.m===top;
@@ -547,7 +547,7 @@ var m=Math.max(0,modes.indexOf(r.getAttribute('data-theme')||'auto'));
 var show=function(){b.textContent='Tema: '+nomi[modes[m]];b.title=b.textContent;b.setAttribute('aria-label','Cambia tema, ora: '+nomi[modes[m]]);b.title=modes[m]==='auto'?'Segue il tema del dispositivo':''};
 b.addEventListener('click',function(){m=(m+1)%3;if(modes[m]==='auto')r.removeAttribute('data-theme');else r.setAttribute('data-theme',modes[m]);try{modes[m]==='auto'?localStorage.removeItem('tema'):localStorage.setItem('tema',modes[m])}catch(e){}show()});show()})();
 $('more').addEventListener('click',function(){S.lim+=50;render()});
-$('tbl').addEventListener('click',function(e){var sh=e.target.closest('.oc-sh');if(sh){var x=S.cur&&S.cur[+sh.dataset.s];if(!x)return;
+$('tbl').addEventListener('click',function(e){if(e.target.closest('.mia-x')){MIA[S.c].p='';MIA[S.c].q='';miaSave();return}var sh=e.target.closest('.oc-sh');if(sh){var x=S.cur&&S.cur[+sh.dataset.s];if(!x)return;
   var p=new URLSearchParams(location.search);p.set('q',x.o.n);var ou=safeUrl(x.o.u)||safeUrl(x.o.us),u=ou?utm(ou,'condividi'):location.origin+'/?'+p.toString(),cu=CFG[S.c].u,
   t=x.o.v+', '+x.o.n+': '+eur(x.m,2)+' al mese con un consumo di '+Math.round(S.q[S.c])+' '+cu+' al mese.';
   if(navigator.share){navigator.share({title:x.o.n,text:t,url:u}).catch(function(){})}
