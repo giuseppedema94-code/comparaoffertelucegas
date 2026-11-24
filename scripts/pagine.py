@@ -82,6 +82,13 @@ CSS_NET = """.t-luce:hover:not([aria-pressed=true]):not([aria-current]){backgrou
 .segn a[aria-current=page]{background:var(--accbg);color:#fff}
 @media (max-width:520px){.segn a{padding:10px 11px;font-size:14px}}
 :root[data-c=lg]{--acc:#F5C518;--accbg:#F5C518;--accbar:#F5C518}
+.mia{margin:4px 0 12px;border:1px solid var(--line);border-radius:14px;padding:10px 14px}
+.mia summary{cursor:pointer;font-weight:600;font-size:15px;list-style:none}.mia summary::-webkit-details-marker{display:none}.mia summary::after{content:' +';color:var(--mut)}.mia[open] summary::after{content:' −'}
+.mia-f{margin-top:10px;display:grid;gap:10px;max-width:420px}.mia-f label{display:grid;gap:4px;font-size:13px;color:var(--mut)}
+.mia-in{display:flex;align-items:center;gap:6px;border:1px solid var(--bd);border-radius:10px;padding:0 10px;background:var(--soft)}.mia-in:focus-within{border-color:var(--ink)}
+.mia-in input{flex:1;min-width:0;width:0;border:0;background:transparent;font:700 18px 'Schibsted Grotesk',sans-serif;color:var(--ink);padding:9px 0;outline:0}.mia-in span{font-size:13px;color:var(--mut);white-space:nowrap}
+.mia-r{margin:0;padding:10px 12px;border-radius:10px;background:var(--first);font-size:14px;line-height:1.45}
+.mia-row{margin:6px 0;padding:10px 14px;border:2px dashed var(--accbar);border-radius:14px;font-size:14px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.mia-row strong{font-size:16px}
 .flt{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0 10px}.flt button{font:600 14px 'Schibsted Grotesk',sans-serif;padding:7px 12px;border-radius:8px;border:1px solid var(--bd);background:transparent;color:var(--ink);cursor:pointer}.flt button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}.flt label{font-size:14px;display:flex;gap:6px;align-items:center;margin-left:4px}
 .ar{display:inline-block;font-size:11.5px;font-weight:700;background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:0 6px;margin-right:4px;color:var(--ink2)}.pk tr[hidden]{display:none}
 .xs{border:2px solid var(--acc)}.xs .rw{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
@@ -267,7 +274,7 @@ def scheda(x, i, top, bundle=False):
     btn = f'<a class="oc-btn" href="{e(x["url"])}" target="_blank" rel="nofollow noopener">Vai all\'offerta</a>' if x.get("url") else ""
     num = "" if bundle else f'<span class="oc-n">{i + 1}</span>'
     first = " first" if (i == 0 and not bundle) else ""
-    return (f'<article class="oc{first}" data-cat="{cat}" data-reg="{1 if x.get("area") else 0}"><div class="oc-h">{num}{logo(op, x.get("url"), "lgb")}'
+    return (f'<article class="oc{first}" data-pm="{pm:.2f}" data-cat="{cat}" data-reg="{1 if x.get("area") else 0}"><div class="oc-h">{num}{logo(op, x.get("url"), "lgb")}'
             f'<div class="oc-t"><div class="oc-v">{e(op)}</div><div class="oc-o">{nome}</div></div><div class="oc-tg">{tags}</div></div>'
             f'<div class="oc-b"><dl class="oc-d">{dd}</dl><div class="oc-p"><div class="oc-m">{eur_big(pm)}</div>'
             f'{f"<div class=oc-y>{dopo}</div>" if dopo else ""}{diff}</div><div class="oc-a">{btn}</div></div></article>')
@@ -284,6 +291,9 @@ corpo += f"""<main class="wrap pg">
 <h1 class="h">Offerte fibra e internet casa</h1>
 <section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Internet casa, dalla più conveniente <span class="src" id="ncnt"></span></h2>
 <div class="flt" role="group" aria-label="Filtra"><button type="button" data-t="tutte" aria-pressed="true">Tutte</button><button type="button" data-t="ftth" aria-pressed="false">Fibra FTTH</button><button type="button" data-t="fwa" aria-pressed="false">FWA senza linea</button><label><input type="checkbox" id="noreg"> Nascondi offerte regionali</label></div>
+<details class="mia" id="mia"><summary>Hai già internet? Confronta il tuo canone</summary>
+<div class="mia-f"><label><span>Quanto paghi oggi</span><span class="mia-in"><input id="mq" inputmode="decimal" autocomplete="off" placeholder="29,90"><span>€/mese</span></span></label>
+<p class="mia-r" id="mres" aria-live="polite" hidden></p></div></details>
 <div id="nt">
 {''.join(tr)}
 </div>
@@ -302,8 +312,16 @@ corpo += f"""<main class="wrap pg">
 <p>Oltre al canone guarda tre cose: quanto dura il prezzo promozionale, il costo di attivazione e quanto paghi se disdici prima del vincolo.</p></section>
 """
 NET_JS = r"""
-var T='tutte';function flt(){var n=0,rr=document.querySelectorAll('#nt article');rr.forEach(function(r){var ok=(T==='tutte'||r.dataset.cat===T)&&!($('noreg').checked&&r.dataset.reg==='1');r.hidden=!ok;if(ok)n++});$('ncnt').textContent=n+' offerte';document.querySelectorAll('.flt button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.t===T)})}
-document.querySelectorAll('.flt button').forEach(function(b){b.addEventListener('click',function(){T=b.dataset.t;flt()})});$('noreg').addEventListener('change',flt);flt();
+var MQ='';try{MQ=localStorage.getItem('mia-net')||''}catch(e){}
+var fe=function(n){return n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'};
+function mia(){var o=document.querySelector('.mia-row');if(o)o.remove();var r=$('mres'),v=parseFloat(String(MQ).replace(/\s|€/g,'').replace(',','.'));
+  if(!(v>0&&v<300)){r.hidden=true;return}
+  var vis=[].slice.call(document.querySelectorAll('#nt article')).filter(function(a){return !a.hidden}),ch=vis.filter(function(a){return +a.dataset.pm<v-0.005}),b=vis[0];
+  r.hidden=false;r.innerHTML='Paghi <strong>'+fe(v)+' al mese</strong>. '+(ch.length?ch.length+(ch.length===1?' offerta costa':' offerte costano')+' meno. Con la più conveniente risparmi <strong>'+fe(v-(+b.dataset.pm))+' al mese</strong>, '+Math.round((v-(+b.dataset.pm))*12)+' € all\'anno.':'Oggi nessuna offerta in elenco costa meno.');
+  var d=document.createElement('div');d.className='mia-row';d.innerHTML='<span>Il tuo abbonamento</span><strong>'+fe(v)+' al mese</strong>';
+  var nx=vis.filter(function(a){return +a.dataset.pm>=v-0.005})[0];if(nx)nx.parentNode.insertBefore(d,nx);else if(vis.length)vis[vis.length-1].after(d)}
+var T='tutte';function flt(){var n=0,rr=document.querySelectorAll('#nt article');rr.forEach(function(r){var ok=(T==='tutte'||r.dataset.cat===T)&&!($('noreg').checked&&r.dataset.reg==='1');r.hidden=!ok;if(ok)n++});mia();$('ncnt').textContent=n+' offerte';document.querySelectorAll('.flt button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.t===T)})}
+document.querySelectorAll('.flt button').forEach(function(b){b.addEventListener('click',function(){T=b.dataset.t;flt()})});$('noreg').addEventListener('change',flt);$('mq').value=MQ;if(MQ)$('mia').open=true;$('mq').addEventListener('input',function(e){MQ=e.target.value.slice(0,8);try{localStorage.setItem('mia-net',MQ)}catch(_){}mia()});flt();
 var eur=function(n){return n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})+' € al mese'};
 fetch('/data/top.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){
   var l=d.luce[0],g=d.gas[0];$('xl').textContent=eur(l.m);$('xln').textContent=l.v+', '+l.n;$('xg').textContent=eur(g.m);$('xgn').textContent=g.v+', '+g.n;});
