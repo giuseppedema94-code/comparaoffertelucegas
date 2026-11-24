@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at https://www.googletagmanager.com https://*.clarity.ms 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-e59StAz0VUlVi53VcKG3cW5dVsvjI651s95GbbkFObQ='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; connect-src 'self' https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at https://www.googletagmanager.com https://*.clarity.ms 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-wAPqhOTzYYCcOqMBNSEfPSagqYv7qKVR/zM6fIfYUJY='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; connect-src 'self' https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Confronto offerte luce e gas, aggiornato ogni giorno</title>
@@ -558,7 +558,7 @@ $('tbl').addEventListener('click',function(e){var sh=e.target.closest('.oc-sh');
   else if(navigator.clipboard){navigator.clipboard.writeText(t+' '+u).then(function(){var h=sh.innerHTML;sh.textContent='Link copiato';setTimeout(function(){sh.innerHTML=h},2000)})}
   return}
   var b=e.target.closest('.oc-cmp');if(!b)return;var id=b.dataset.id,k=S.cmp.indexOf(id);if(k>=0)S.cmp.splice(k,1);else{if(S.cmp.length>=2)S.cmp.shift();S.cmp.push(id)}render();if(S.cmp.length===2)cmpShow()});
-$('cgo').addEventListener('click',function(){S.cmp.length===1?cmpMine():cmpShow()});
+$('cgo').addEventListener('click',function(){S.cmp.length===1?cmpMine():cmpShow()});$('cx').addEventListener('click',function(){S.cmp=[];render()});
 function miaSave(){try{localStorage.setItem('mia',JSON.stringify(MIA))}catch(e){}miaTab();render()}
 $('cbody').addEventListener('click',function(e){var b=e.target.closest('[data-mt]');if(!b)return;if(MIA[S.c].t!==b.dataset.mt){MIA[S.c].t=b.dataset.mt;MIA[S.c].p=''}$('cbody').innerHTML=miaForm();miaSave()});
 $('cbody').addEventListener('input',function(e){var k={mp:'p',mq:'q'}[e.target.id];if(!k)return;MIA[S.c][k]=e.target.value.slice(0,8);miaSave()});
