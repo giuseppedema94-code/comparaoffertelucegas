@@ -41,7 +41,7 @@ REG = {
 
 
 RISERVATE_FILE = DATI / "riservate.json"
-RISERVATE_RE = re.compile(r"\bresti\b|fedel|retention|win.?back|rinnov[oi](?![a-z])|convenzion|dipendent", re.I)
+RISERVATE_RE = re.compile(r"\bresti\b|fedel|retention|win.?back|rinnov[oi](?![a-z])|convenzion|dipendent|\bsoci(o)?\b|soci(o)?$", re.I)
 
 
 def riservata(o: dict) -> bool:
