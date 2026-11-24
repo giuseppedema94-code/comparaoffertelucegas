@@ -133,7 +133,7 @@ def testata(path, title, desc, c, icon):
     on = lambda k: ' aria-current="page"' if k == c else ""
     nav = (f'<nav class="seg segn" aria-label="Confronti"><a class="t-luce" href="/"{on("luce")}>Luce</a><a class="t-gas" href="/#gas"{on("gas")}>Gas</a>'
            f'<a class="t-lg" href="/luce-e-gas/"{on("lg")}>Luce + gas</a><a class="t-net" href="/internet/"{on("net")}>Internet</a></nav>')
-    s = s.replace('<a class="theme-btn" href="/" style="text-decoration:none">Confronta offerte</a>', nav)
+    s = s.replace('<a class="cmp-link" href="/">Confronta offerte</a>', nav)
     s = re.sub(r'<html lang="it" data-c="[^"]*">', f'<html lang="it" data-c="{c}">', s)
     s = re.sub(r"<title>.*?</title>", f"<title>{H.escape(title, quote=False)}</title>", s)
     for k in ('name="description"', 'property="og:description"'):
