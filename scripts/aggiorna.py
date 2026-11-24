@@ -39,6 +39,22 @@ REG = {
 
 
 
+
+RISERVATE_FILE = DATI / "riservate.json"
+RISERVATE_RE = re.compile(r"\bresti\b|fedel|retention|win.?back|rinnov[oi](?![a-z])", re.I)
+
+
+def riservata(o: dict) -> bool:
+    """Offerte solo per clienti già attivi (fedeltà, rinnovi, win-back): non le mostriamo."""
+    nome = (o.get("nome") or "").strip()
+    if RISERVATE_RE.search(nome.replace("_", " ")):
+        return True
+    try:
+        lista = json.loads(RISERVATE_FILE.read_text(encoding="utf-8"))["nomi"]
+    except Exception:
+        lista = []
+    return nome.lower() in {x.lower() for x in lista}
+
 NUM_ANNI = {"due": 2, "tre": 3, "quattro": 4, "cinque": 5, "sei": 6, "sette": 7, "otto": 8, "nove": 9, "dieci": 10}
 
 
@@ -175,7 +191,7 @@ def genera(archivio: Archivio, commodity: str, cambio: dict) -> dict:
     oggi = dt.date.today().isoformat()
     pmax = 1.0 if commodity == "luce" else 3.0
     for o in offerte:
-        if o.get("sottoscrivibile_singolarmente") is False:
+        if o.get("sottoscrivibile_singolarmente") is False or riservata(o):
             continue
         o = senza_doppioni(o)
         sa = costi.stima(o, a, parametri, valori, riferimento)
@@ -307,7 +323,7 @@ def genera_dual(archivio: Archivio) -> dict:
         if len(parti) < 2:
             continue
         chiave = (d["piva"], d["codice"])
-        if chiave in visti:
+        if chiave in visti or riservata(d):
             continue
         visti.add(chiave)
         pen, pen_testo = penale(d)
