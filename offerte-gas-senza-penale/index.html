@@ -231,6 +231,11 @@ html,button,a,input,select,label{touch-action:manipulation}
 .segn a[aria-current=page]{background:var(--accbg);color:#fff}
 @media (max-width:520px){.segn a{padding:10px 11px;font-size:14px}}
 :root[data-c=lg]{--acc:#F5C518;--accbg:#F5C518;--accbar:#F5C518}
+.claim{display:block;padding:0 4px 20px}
+.claim .cl-h{font-size:clamp(34px,5.4vw,60px);line-height:1.04;letter-spacing:-.02em;margin:0 0 10px;font-weight:900}
+.claim .cl-s{font-size:18px;line-height:1.45;color:var(--ink2);margin:0 0 16px}.cl-s strong{color:var(--ink)}
+.cl-n{font-size:13.5px;line-height:1.45;color:var(--mut);margin:18px 0 0;max-width:70ch}.cl-h sup{font-size:.45em;vertical-align:.9em;margin-left:2px}
+@media (max-width:700px){.claim{padding:14px 18px 8px}.cl-s{font-size:16px;margin-bottom:8px}.cl-n{padding:0 18px}}
 .oc-cmp{font:600 14px 'Schibsted Grotesk',sans-serif;padding:10px 12px;border-radius:10px;border:1px solid var(--bd);background:transparent;color:var(--ink2);cursor:pointer}.oc-cmp:hover{border-color:var(--ink);color:var(--ink)}
 .chip{border:1px solid var(--bd);cursor:pointer;font:600 13px 'Schibsted Grotesk',sans-serif;padding:10px 14px;border-radius:99px;background:var(--card);color:var(--ink)}
 #cdlg{border:0;border-radius:16px;padding:20px;max-width:560px;width:calc(100% - 24px);background:var(--card);color:var(--ink)}#cdlg::backdrop{background:rgba(0,0,0,.5)}

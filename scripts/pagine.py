@@ -82,6 +82,11 @@ CSS_NET = """.t-luce:hover:not([aria-pressed=true]):not([aria-current]){backgrou
 .segn a[aria-current=page]{background:var(--accbg);color:#fff}
 @media (max-width:520px){.segn a{padding:10px 11px;font-size:14px}}
 :root[data-c=lg]{--acc:#F5C518;--accbg:#F5C518;--accbar:#F5C518}
+.claim{display:block;padding:0 4px 20px}
+.claim .cl-h{font-size:clamp(34px,5.4vw,60px);line-height:1.04;letter-spacing:-.02em;margin:0 0 10px;font-weight:900}
+.claim .cl-s{font-size:18px;line-height:1.45;color:var(--ink2);margin:0 0 16px}.cl-s strong{color:var(--ink)}
+.cl-n{font-size:13.5px;line-height:1.45;color:var(--mut);margin:18px 0 0;max-width:70ch}.cl-h sup{font-size:.45em;vertical-align:.9em;margin-left:2px}
+@media (max-width:700px){.claim{padding:14px 18px 8px}.cl-s{font-size:16px;margin-bottom:8px}.cl-n{padding:0 18px}}
 .oc-cmp{font:600 14px 'Schibsted Grotesk',sans-serif;padding:10px 12px;border-radius:10px;border:1px solid var(--bd);background:transparent;color:var(--ink2);cursor:pointer}.oc-cmp:hover{border-color:var(--ink);color:var(--ink)}
 .chip{border:1px solid var(--bd);cursor:pointer;font:600 13px 'Schibsted Grotesk',sans-serif;padding:10px 14px;border-radius:99px;background:var(--card);color:var(--ink)}
 #cdlg{border:0;border-radius:16px;padding:20px;max-width:560px;width:calc(100% - 24px);background:var(--card);color:var(--ink)}#cdlg::backdrop{background:rgba(0,0,0,.5)}
@@ -200,6 +205,11 @@ function render(){
      +'<div class="oc-p"><div class="oc-m">'+big(x.t)+'</div><div class="oc-y">luce + gas</div>'+(i===0?'<div class="oc-dd top1">La più conveniente</div>':'<div class="oc-dd">+'+eur(x.t-top)+' al mese</div>')+'</div>'
      +'<div class="oc-a">'+(x.k==='s'?bt(o.L,'Offerta luce','luce')+bt(o.G,'Offerta gas','gas'):bt(o,'Vai all\'offerta','luce'))+'</div></div></article>'});
   $('tab').innerHTML=h;
+  var mg=function(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.')},bst=Math.min(bl&&bg?bl.x+rai+bg.x:Infinity,rows.length?rows[0].t:Infinity);
+  if(isFinite(bst))$('clp').textContent=Math.floor(bst)+'\u00a0€';
+  $('clc').textContent=mg(['luce','gas','dual'].reduce(function(a,k){return a+D[k].offerte.filter(function(o){return o.ok!==false}).length},0));
+  var ql=Math.round(yl/12),qg=Math.round(yg/12),sg=ql===125&&qg===40,hh=D.dual.generato?new Date(D.dual.generato).toLocaleTimeString('it-IT',{timeZone:'Europe/Rome',hour:'2-digit',minute:'2-digit'}):'';
+  $('cln').textContent='*La soluzione più economica'+(hh?' alle '+hh:'')+' per '+(sg?'una persona sola (':'')+mg(ql)+' kWh di luce e '+mg(qg)+' Smc di gas al mese'+(sg?')':'')+', con imposte, oneri'+(rai?' e canone RAI':'')+'. Cambia con il tuo consumo.';
   var nc=rows.filter(function(x){return x.k==='c'}).length;$('cnt').textContent=(rows.length-nc)+' fornitori con luce e gas, '+nc+' offerte congiunte';
 }
 Promise.all(['dual','luce','gas'].map(function(k){return fetch('/data/'+k+'.json',{cache:'no-cache'}).then(function(r){return r.json()})})).then(function(a){D.dual=a[0];D.luce=a[1];D.gas=a[2];
@@ -214,7 +224,8 @@ corpo = testata("/luce-e-gas/", "Offerte luce e gas insieme: pacchetti a confron
                 "Le offerte luce e gas in un unico contratto dagli open data ARERA, con la spesa sui tuoi consumi e il confronto con le migliori offerte separate.",
                 "lg", "/img/geco-lg.svg")
 corpo += """<main class="wrap pg">
-<h1 class="h">Offerte luce e gas insieme</h1>
+<section class="claim" aria-label="In breve"><h1 class="cl-h h">Offerte luce e gas da <span id="clp">…</span><sup>*</sup> al mese.</h1>
+<p class="cl-s">Tutte le <strong id="clc">…</strong> offerte luce e gas del Portale ARERA, anche congiunte, sempre aggiornate.</p></section>
 <section class="lgh">
 <div class="card lga"><h2 class="h">I tuoi consumi</h2>
 <div class="per" role="group" aria-label="Periodo del consumo"><button type="button" data-p="m" aria-pressed="true">Mensile</button><button type="button" data-p="a" aria-pressed="false">Annuo</button></div>
@@ -231,6 +242,7 @@ corpo += """<main class="wrap pg">
 <section class="card txt"><h2 class="h">Conviene il pacchetto unico?</h2>
 <p>Un'offerta dual lega luce e gas allo stesso venditore: una sola bolletta e, a volte, uno sconto. Non è detto che costi meno di due offerte separate scelte ciascuna al prezzo più basso, per questo le mettiamo a confronto qui sopra.</p>
 <p>Se un domani vuoi cambiare solo la luce o solo il gas, controlla nella scheda dell'offerta se lo sconto del pacchetto si perde.</p></section>
+<p class="cl-n" id="cln"></p>
 """
 scrivi("/luce-e-gas/", corpo, LG_JS)
 
@@ -293,7 +305,8 @@ corpo = testata("/internet/", "Offerte fibra e internet casa a confronto",
                 "Le offerte fibra per la casa dei principali operatori, ordinate per canone mensile, e i pacchetti energia più internet dei fornitori di luce e gas.",
                 "net", "/img/geco-net.svg")
 corpo += f"""<main class="wrap pg">
-<h1 class="h">Offerte fibra e internet casa</h1>
+<section class="claim" aria-label="In breve"><h1 class="cl-h h">Offerte internet da {int(top)}&nbsp;€<sup>*</sup> al mese.</h1>
+<p class="cl-s">Tutte le <strong>{len(righe)}</strong> offerte fibra e FWA dei principali operatori, sempre aggiornate.</p></section>
 <section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Internet casa, risparmia fino all'ultimo centesimo <span class="src" id="ncnt"></span></h2>
 <div class="flt" role="group" aria-label="Filtra"><button type="button" data-t="tutte" aria-pressed="true">Tutte</button><button type="button" data-t="ftth" aria-pressed="false">Fibra FTTH</button><button type="button" data-t="fwa" aria-pressed="false">FWA senza linea</button><label><input type="checkbox" id="noreg"> Nascondi offerte regionali</label></div>
 <div id="nt">
@@ -311,6 +324,7 @@ corpo += f"""<main class="wrap pg">
 {''.join(bt)}
 </div>
 <p class="src">Il prezzo della luce e del gas di questi fornitori lo trovi nella <a href="/">classifica luce e gas</a>.</p></section>
+<p class="cl-n">*Il canone al mese più basso tra le offerte in elenco.</p>
 <section class="card txt"><h2 class="h">Come leggere il confronto</h2>
 <p>Per luce e gas usiamo gli open data ufficiali di ARERA. Per internet non esiste una banca dati pubblica delle offerte: ogni mattina leggiamo i prezzi direttamente dalle pagine degli operatori. Prima di attivare, controlla comunque prezzo e condizioni sulla pagina dell'offerta.</p>
 <p>Oltre al canone guarda tre cose: quanto dura il prezzo promozionale, il costo di attivazione e quanto paghi se disdici prima del vincolo.</p></section>
