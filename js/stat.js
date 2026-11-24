@@ -24,12 +24,18 @@ function avvia(){
         analytics:{autoClear:{cookies:[{name:/^_ga/},{name:/^_cl(ck|sk)$/},{name:'CLID'}],reloadPage:false},
           services:{ga:{label:'Google Analytics'},clarity:{label:'Microsoft Clarity'}}}},
       language:{default:'it',translations:{it:{
-        consentModal:{title:'Cookie',description:'Usiamo cookie di Google Analytics e Microsoft Clarity per capire quali pagine e funzioni del sito servono di più. Si attivano solo se accetti. Dettagli nella <a href="/privacy/">privacy</a>.',
-          acceptAllBtn:'Accetta',acceptNecessaryBtn:'Rifiuta',showPreferencesBtn:'Scegli'},
-        preferencesModal:{title:'Preferenze cookie',acceptAllBtn:'Accetta tutti',acceptNecessaryBtn:'Rifiuta tutti',savePreferencesBtn:'Salva le scelte',closeIconLabel:'Chiudi',
-          sections:[{title:'Necessari',description:'Ricordano il tema chiaro o scuro e la tua scelta sui cookie. Restano sempre attivi.',linkedCategory:'necessary'},
-            {title:'Statistiche',description:'Google Analytics conta visite e visitatori di ritorno. Microsoft Clarity registra in forma anonima come scorri e dove clicchi. Puoi attivarli uno per uno.',linkedCategory:'analytics'},
-            {title:'Più informazioni',description:'Tutti i dettagli sono nella <a href="/privacy/">pagina privacy</a>.'}]}}}}
+        consentModal:{label:'Consenso sui cookie',title:'Consenso sui cookie',
+          description:'Utilizziamo i cookie per far funzionare questo sito e capire come viene utilizzato. I cookie analitici si attivano solo con il tuo consenso.',
+          acceptAllBtn:'Accetta tutto',acceptNecessaryBtn:'Rifiuta tutto',showPreferencesBtn:'Gestisci preferenze',
+          footer:'<a href="/privacy/">Informativa sulla privacy</a>'},
+        preferencesModal:{title:'Centro preferenze per il consenso',acceptAllBtn:'Accetta tutto',acceptNecessaryBtn:'Rifiuta tutto',savePreferencesBtn:'Salva le preferenze',closeIconLabel:'Chiudi la finestra',serviceCounterLabel:'Servizi',
+          sections:[{title:'Utilizzo dei cookie',description:'Utilizziamo i cookie per far funzionare questo sito e migliorare la tua esperienza. Qui sotto puoi scegliere quali categorie consentire e modificare la tua scelta in qualsiasi momento. Per maggiori dettagli, leggi la nostra <a href="/privacy/" class="cc__link">Informativa sulla privacy</a>.'},
+            {title:'Cookie strettamente necessari <span class="pm__badge">Sempre attivi</span>',description:'Questi cookie sono indispensabili per il corretto funzionamento del sito, ad esempio per ricordare il tema scelto e le tue preferenze sui cookie. Non possono essere disattivati.',linkedCategory:'necessary'},
+            {title:'Cookie analitici',description:'Questi cookie raccolgono informazioni su come i visitatori utilizzano il sito, come le pagine visitate e il tempo trascorso su di esse, per aiutarci a migliorarlo.',linkedCategory:'analytics',
+              cookieTable:{headers:{name:'Nome',service:'Servizio',description:'Descrizione',exp:'Durata'},body:[
+                {name:'_ga, _ga_*',service:'Google Analytics',description:'Distingue i visitatori e le visite',exp:'fino a 2 anni'},
+                {name:'_clck, _clsk',service:'Microsoft Clarity',description:'Collega le pagine della stessa visita',exp:'da 1 giorno a 1 anno'}]}},
+            {title:'Ulteriori informazioni',description:'Per qualsiasi domanda sulla nostra politica sui cookie o sulle tue scelte, <a class="cc__link" href="mailto:info@comparaoffertelucegas.it">contattaci</a>.'}]}}}}
     });
     var f=d.querySelector('footer');if(f&&!d.getElementById('ckl')){var p=d.createElement('p');p.style.margin='8px 0 0';p.innerHTML='<a href="#" id="ckl" data-cc="show-preferencesModal">Preferenze cookie</a>';f.appendChild(p);
       d.getElementById('ckl').addEventListener('click',function(e){e.preventDefault();w.CookieConsent.showPreferences()})}
