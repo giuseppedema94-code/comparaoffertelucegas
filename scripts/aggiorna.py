@@ -38,6 +38,31 @@ REG = {
 }
 
 
+
+NUM_ANNI = {"due": 2, "tre": 3, "quattro": 4, "cinque": 5, "sei": 6, "sette": 7, "otto": 8, "nove": 9, "dieci": 10}
+
+
+def durata(o):
+    """Mesi di prezzo bloccato. ARERA usa -1 per 'non indicata': in quel caso la ricaviamo dal nome, se c'è."""
+    d = o.get("durata_mesi")
+    if d not in (None, -1, 0):
+        return d
+    n = (o.get("nome") or "").lower()
+    m = re.search(r"\b(\d{1,2}|" + "|".join(NUM_ANNI) + r")\s*anni\b", n)
+    if m:
+        a = m.group(1)
+        return (int(a) if a.isdigit() else NUM_ANNI[a]) * 12
+    for k, a in NUM_ANNI.items():
+        if re.search(r"\b" + k + r"\b", n):
+            return a * 12
+    m = re.search(r"(?<![a-z\d])(\d{1,2})\s*y\b", n)
+    if m:
+        return int(m.group(1)) * 12
+    m = re.search(r"(?<![\d.,])(12|18|24|30|36|48|60)(?![\d.,%])\s*(mesi)?", n)
+    if m and o.get("tipo_prezzo") == "fisso":
+        return int(m.group(1))
+    return d
+
 def penale(offerta: dict) -> tuple[bool, str | None]:
     for c in offerta.get("condizioni") or []:
         tip = c.get("tipologia") or ""
@@ -203,7 +228,7 @@ def genera(archivio: Archivio, commodity: str, cambio: dict) -> dict:
             "ds": sconto if sconto > 0.5 else 0,
             "dsT": durata_sconto,
             "sc": str(fine)[:10] if fine else None,
-            "d": o.get("durata_mesi"),
+            "d": durata(o),
             "nt": None,
             "pen": pen,
             "penT": pen_testo,
@@ -291,7 +316,7 @@ def genera_dual(archivio: Archivio) -> dict:
             "v": marchio(d, marchi),
             "n": bello(d.get("nome") or ""),
             "t": "f" if d.get("tipo_prezzo") == "fisso" else "v",
-            "d": d.get("durata_mesi"),
+            "d": durata(d),
             "sc": str(fine)[:10] if fine else None,
             "pen": pen,
             "u": link(contatti.get("pagina_offerta") or contatti.get("sito")),

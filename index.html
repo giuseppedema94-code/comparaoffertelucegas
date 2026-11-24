@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at https://www.googletagmanager.com https://*.clarity.ms 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-U2GMQEYj4XdIvriG2ereUyd/oXmkE8uqWCoSH9FFuZc='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; connect-src 'self' https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at https://www.googletagmanager.com https://*.clarity.ms 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-L6d0M+rNg5BQUaOwd7FKsnM1qZKalt3pwHUzfmAnO6Y='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; connect-src 'self' https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Confronto offerte luce e gas, aggiornato ogni giorno</title>
@@ -377,7 +377,7 @@ function load(c){
 // Accisa luce, residente 1,5-3 kW: 150 kWh/mese esenti, recupero sopra 220 (art. 52 D.Lgs. 504/95)
 function accLuce(y,al,kw){var m=y/12,g=kw<=1.5?150:220,e=kw>3?0:(m<=g?Math.min(m,150):Math.max(0,150-(m-g)));return (m-e)*12*al}
 var STT={A:'Prezzo fisso per almeno 3 anni',B:'Prezzo fisso per 2 anni o poco più',C:'Prezzo fisso per meno di 2 anni',D:'Prezzo variabile: segue il mercato ogni mese'};
-function stab(o){return o.t!=='f'?'D':(o.d>=36&&o.d<99?'A':o.d>=24&&o.d<99?'B':'C')}
+function stab(o){return o.t!=='f'?'D':(o.d>=36&&o.d<=240?'A':o.d>=24&&o.d<=240?'B':'C')}
 function ics(o){var t=new Date(),e=new Date(t.getFullYear(),t.getMonth()+o.d,t.getDate());e.setDate(e.getDate()-30);
   var f=function(x){return x.getFullYear()+String(x.getMonth()+1).padStart(2,'0')+String(x.getDate()).padStart(2,'0')},n=new Date(e);n.setDate(n.getDate()+1);
   var cl=function(x){return String(x).replace(/[\\;,]/g,' ').replace(/\n/g,' ')};
@@ -422,7 +422,7 @@ function render(){
   var mg=function(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.')};$('tcount').textContent=mg(all.length)+' offerte di '+mg(d.fornitori)+' fornitori';
   var s=S.s.trim().toLowerCase();
   var list=all.filter(function(x){
-    if(S.f==='b'){if(x.o.t!=='f'||!(x.o.d>=36&&x.o.d<99))return false}else if(S.f!=='tutte'&&x.o.t!==S.f)return false;
+    if(S.f==='b'){if(x.o.t!=='f'||!(x.o.d>=36&&x.o.d<=240))return false}else if(S.f!=='tutte'&&x.o.t!==S.f)return false;
     if(S.np&&x.o.pen)return false;
     if(S.vd&&!x.o.vd)return false;
     if(s&&(x.o.v+' '+x.o.n).toLowerCase().indexOf(s)<0)return false;
@@ -437,19 +437,19 @@ function render(){
   S.cur=list;
   list.slice(0,S.lim).forEach(function(x,i){
     var o=x.o,u=safeUrl(o.u),first=x.m===top;
-    var tags='<span class="tag '+(o.t==='f'?'tf':'tv')+'">'+(o.t==='f'?'fisso'+(o.d>=12&&o.d<99?' '+(o.d%12?o.d+' mesi':(o.d/12)+(o.d===12?' anno':' anni')):''):'variabile')+'</span>'+(o.pl?'<span class="tag tf">PLACET</span>':'')+(o.z?'<span class="tag tz" title="'+esc(o.z)+'">solo alcune zone</span>':'');
+    var tags='<span class="tag '+(o.t==='f'?'tf':'tv')+'">'+(o.t==='f'?'fisso'+(o.d>=12&&o.d<=240?' '+(o.d%12?o.d+' mesi':(o.d/12)+(o.d===12?' anno':' anni')):''):'variabile')+'</span>'+(o.pl?'<span class="tag tf">PLACET</span>':'')+(o.z?'<span class="tag tz" title="'+esc(o.z)+'">solo alcune zone</span>':'');
     var pen=o.pen===true?'<span class="yes" title="'+esc(o.penT||'Oneri di recesso anticipato')+'">Sì</span>':(o.pen===false?'<span class="no">No</span>':'<span class="unk" title="In verifica">—</span>');
     var cl=o.cl==='si'?'<span class="no" title="'+esc(o.clT||'')+'">Sì</span>':(o.cl==='no'?'<span class="yes" title="'+esc(o.clT||'')+'">No</span>':'<span class="unk" title="Non ancora verificato">—</span>');
     var w=Math.max(4,Math.min(100,x.m/max*100));
     var dd=o.sc?Math.ceil((new Date(o.sc)-new Date())/864e5):null;
-    var tipo=o.t==='f'?'Fisso'+(o.d>=12&&o.d<99?' · '+(o.d%12?o.d+' mesi':(o.d/12)+(o.d===12?' anno':' anni')):''):'Variabile';
+    var tipo=o.t==='f'?'Fisso'+(o.d>=12&&o.d<=240?' · '+(o.d%12?o.d+' mesi':(o.d/12)+(o.d===12?' anno':' anni')):''):'Variabile';
     var bl=logoB(o);
     h.push('<article class="oc'+(first?' first':'')+'" role="row">'
      +'<div class="oc-h"><span class="oc-n">'+(i+1)+'</span>'+bl+'<div class="oc-t"><div class="oc-v">'+esc(o.v)+'</div><div class="oc-o">'+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+'</div></div>'
      +'<div class="oc-tg"><span class="tg '+(o.t==='f'?'tg-f':'tg-v')+'">'+tipo+'</span>'+'<span class="tg st-'+stab(o)+'" title="'+STT[stab(o)]+'">Stabilità '+stab(o)+'</span>'+(o.vd?'<span class="tg tg-g">Verde</span>':'')+(o.tr?'<span class="tg tg-tr '+(o.tr<0?'dn':'up')+'" title="Variazione della spesa per un consumo tipo rispetto a una settimana fa">'+(o.tr<0?'▼ ':'▲ ')+eur(Math.abs(o.tr),2)+' in 7 giorni</span>':'')+(o.pl?'<span class="tg tg-p">PLACET</span>':'')+(o.pen?'<span class="tg tg-w" title="'+esc(o.penT||'')+'">Penale di uscita</span>':'')+(dd!=null&&dd>=0&&dd<=30?'<span class="tg tg-s">Scade tra '+dd+(dd===1?' giorno':' giorni')+'</span>':'')+'</div></div>'
      +'<div class="oc-b"><dl class="oc-d"><div><dt>Energia</dt><dd>'+num(o.pd!=null?o.pd:o.p,4)+' €/'+cfg.u+'</dd></div><div><dt>Quota fissa</dt><dd>'+num(o.fx/12,2)+' €/mese</dd></div>'+(o.ds?'<div><dt>Sconto</dt><dd class="ok">−'+eur(o.ds,0)+'/anno</dd></div>':'')+(o.sc?'<div><dt>Offerta valida fino al</dt><dd>'+fd(o.sc)+'</dd></div>':'')+'</dl>'
      +'<div class="oc-p"><div class="oc-m"><strong>'+num(Math.floor(Math.round(x.m*100)/100),0)+'</strong><span>,'+String(Math.round(x.m*100)%100).padStart(2,'0')+' €/mese</span></div><div class="oc-y">'+eur(x.m*12,0)+' l\'anno</div><div class="oc-dd'+(first?' top1':'')+'">'+(first?'La più conveniente':'+'+eur(x.m-top,2)+' al mese')+'</div></div>'
-     +'<div class="oc-a">'+(u?'<a class="oc-btn" href="'+esc(u)+'" target="_blank" rel="nofollow noopener">Vai all\'offerta</a>':(safeUrl(o.us)?'<a class="oc-btn" href="'+esc(safeUrl(o.us))+'" target="_blank" rel="nofollow noopener" title="Questa offerta non ha un link diretto nei dati ARERA">Sito del fornitore</a>':'<a class="oc-btn" href="https://www.ilportaleofferte.it/portaleOfferte/" target="_blank" rel="noopener" title="Cerca l\'offerta sul Portale Offerte di ARERA">Portale ARERA</a>'))+(o.t==='f'&&o.d>=6&&o.d<99?'<button type="button" class="oc-rem" data-i="'+i+'" title="Scarica un promemoria per il calendario un mese prima che finisca il prezzo bloccato">Ricordami la scadenza</button>':'')+'<button type="button" class="oc-cmp" data-id="'+esc(o.id)+'" aria-pressed="'+(S.cmp.indexOf(o.id)>=0)+'">Confronta</button><button type="button" class="oc-cmp oc-sh" data-s="'+i+'" aria-label="Condividi questa offerta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>Condividi</button></div></div></article>');
+     +'<div class="oc-a">'+(u?'<a class="oc-btn" href="'+esc(u)+'" target="_blank" rel="nofollow noopener">Vai all\'offerta</a>':(safeUrl(o.us)?'<a class="oc-btn" href="'+esc(safeUrl(o.us))+'" target="_blank" rel="nofollow noopener" title="Questa offerta non ha un link diretto nei dati ARERA">Sito del fornitore</a>':'<a class="oc-btn" href="https://www.ilportaleofferte.it/portaleOfferte/" target="_blank" rel="noopener" title="Cerca l\'offerta sul Portale Offerte di ARERA">Portale ARERA</a>'))+(o.t==='f'&&o.d>=6&&o.d<=240?'<button type="button" class="oc-rem" data-i="'+i+'" title="Scarica un promemoria per il calendario un mese prima che finisca il prezzo bloccato">Ricordami la scadenza</button>':'')+'<button type="button" class="oc-cmp" data-id="'+esc(o.id)+'" aria-pressed="'+(S.cmp.indexOf(o.id)>=0)+'">Confronta</button><button type="button" class="oc-cmp oc-sh" data-s="'+i+'" aria-label="Condividi questa offerta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>Condividi</button></div></div></article>');
   });
   if(!list.length)h.push('<p class="note">Nessuna offerta con questi filtri. <button class="chip" type="button" id="reset">Azzera filtri</button></p>');
   $('tbl').innerHTML=h.join('');
@@ -470,7 +470,7 @@ function findX(id){var a=compute()||[];for(var i=0;i<a.length;i++)if(a[i].o.id==
 function cbar(){S.cmp=S.cmp.filter(function(id){return findX(id)});var n=S.cmp.length;$('cbar').hidden=!n;$('ctxt').textContent=n===1?'1 offerta scelta, scegline un\'altra':'2 offerte scelte';$('cgo').disabled=n<2}
 function cmpShow(){var a=findX(S.cmp[0]),b=findX(S.cmp[1]);if(!a||!b)return;var u=CFG[S.c].u,X=[a,b];
   var yn=function(v){return v===true?'Sì':v===false?'No':'—'};
-  var dur=function(o){return o.t==='f'?'Fisso'+(o.d>=12&&o.d<99?', '+(o.d%12?o.d+' mesi':(o.d/12)+(o.d===12?' anno':' anni')):''):'Variabile'};
+  var dur=function(o){return o.t==='f'?'Fisso'+(o.d>=12&&o.d<=240?', '+(o.d%12?o.d+' mesi':(o.d/12)+(o.d===12?' anno':' anni')):''):'Variabile'};
   var R=[['Spesa al mese',function(x){return x.m},function(x){return eur(x.m,2)},1],['Spesa l\'anno',function(x){return x.m},function(x){return eur(x.m*12,0)},1],
    [(S.c==='luce'?'Energia':'Gas')+' €/'+u,function(x){return x.o.pd!=null?x.o.pd:x.o.p},function(x){return num(x.o.pd!=null?x.o.pd:x.o.p,4)+' €'},1],
    ['Quota fissa',function(x){return x.o.fx},function(x){return eur(x.o.fx/12,2)+' al mese'},1],

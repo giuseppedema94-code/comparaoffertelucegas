@@ -179,10 +179,10 @@ function render(){
         +(pk?'<div class="lbs">Risparmi '+eur(pk.t-sep)+' al mese rispetto al miglior fornitore unico per luce e gas ('+esc(pk.o.v)+', '+eur(pk.t)+')</div>':'')+'<div class="lbb">'+lnk(bl.o,'Offerta luce','luce')+lnk(bg.o,'Offerta gas','gas')+'</div>'
       :'<div class="lbk">La soluzione più conveniente oggi</div><div class="lbt">Luce e gas con '+esc(pk.o.v)+'</div><div class="lbm">'+big(pk.t)+'</div>'+riga('Pacchetto',pk.t,pk.o)
         +'<div class="lbs">Risparmi '+eur(sep-pk.t)+' al mese rispetto a luce e gas da fornitori diversi ('+eur(sep)+')</div><div class="lbb">'+(pk.k==='s'?lnk(pk.o.L,'Offerta luce','luce')+lnk(pk.o.G,'Offerta gas','gas'):lnk(pk.o,'Vai all\'offerta'))+'</div>'}
-  var stab=function(o){return o.t!=='f'?'D':(o.d>=36&&o.d<99?'A':o.d>=24&&o.d<99?'B':'C')};
+  var stab=function(o){return o.t!=='f'?'D':(o.d>=36&&o.d<=240?'A':o.d>=24&&o.d<=240?'B':'C')};
   var bt=function(o,t,c){var u=safe(o.u)||safe(o.us),k=/luce$/.test(t)?' bl':/gas$/.test(t)?' bg':'';return '<a class="oc-btn'+k+'" href="'+(u?esc(u)+'" target="_blank" rel="nofollow noopener':'/?q='+encodeURIComponent(o.v)+'#'+c)+'">'+t+'</a>'};
   var h='',top=rows.length?rows[0].t:0;
-  rows.forEach(function(x,i){var o=x.o,u=safe(o.u),tipo=o.t==='f'?'Fisso'+(o.d>=12&&o.d<99?' · '+(o.d%12?o.d+' mesi':o.d/12+(o.d===12?' anno':' anni')):''):'Variabile';
+  rows.forEach(function(x,i){var o=x.o,u=safe(o.u),tipo=o.t==='f'?'Fisso'+(o.d>=12&&o.d<=240?' · '+(o.d%12?o.d+' mesi':o.d/12+(o.d===12?' anno':' anni')):''):'Variabile';
     h+='<article class="oc'+(i===0?' first':'')+'"><div class="oc-h"><span class="oc-n">'+(i+1)+'</span>'+logoB(o)+'<div class="oc-t"><div class="oc-v">'+esc(o.v)+'</div><div class="oc-o">'+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+'</div></div>'
      +'<div class="oc-tg"><span class="tg '+(o.t==='f'?'tg-f':'tg-v')+'">'+tipo+'</span><span class="tg st-'+stab(o)+'">Stabilità '+stab(o)+'</span>'+(x.k==='c'?'<span class="tg tg-s" title="Un unico contratto per luce e gas">Offerta congiunta</span>':'<span class="tg tg-s" title="Due contratti separati con lo stesso fornitore">Due contratti</span>')+(o.pen?'<span class="tg tg-w">Penale di uscita</span>':'')+'</div></div>'
      +'<div class="oc-b"><dl class="oc-d"><div><dt>Luce</dt><dd>'+eur(x.l)+' al mese</dd></div><div><dt>Gas</dt><dd>'+eur(x.g)+' al mese</dd></div><div><dt>Energia luce</dt><dd>'+num(o.l.pd,4)+' €/kWh</dd></div><div><dt>Energia gas</dt><dd>'+num(o.g.pd,4)+' €/Smc</dd></div><div><dt>Quota fissa luce</dt><dd>'+eur(o.l.fx/12)+' al mese</dd></div><div><dt>Quota fissa gas</dt><dd>'+eur(o.g.fx/12)+' al mese</dd></div></dl>'
@@ -338,14 +338,14 @@ def stab(o):
     if o["t"] != "f":
         return "D"
     d = o.get("d") or 0
-    return "A" if 36 <= d < 99 else "B" if 24 <= d < 99 else "C"
+    return "A" if 36 <= d <= 240 else "B" if 24 <= d <= 240 else "C"
 
 
 def durata(o):
     d = o.get("d") or 0
     if o["t"] != "f":
         return "Variabile"
-    if 12 <= d < 99:
+    if 12 <= d <= 240:
         return "Fisso · " + (f"{d} mesi" if d % 12 else f"{d // 12} anno" if d == 12 else f"{d // 12} anni")
     return "Fisso"
 
