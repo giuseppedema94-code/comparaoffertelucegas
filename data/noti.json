@@ -1,5 +1,5 @@
 {
- "nota": "Fornitori noti per il filtro 'Solo fornitori noti'. Nome come appare sul sito (campo v).",
+ "nota": "Fornitori noti per il filtro 'Solo fornitori certificati'. Nome come appare sul sito (campo v).",
  "nomi": [
   "A2A Energia",
   "Acea Energia",
@@ -10,7 +10,6 @@
   "Pulsee (Axpo)",
   "Bluenergy Group",
   "CVA Energie",
-  "Duferco Energia",
   "E.ON",
   "Edison Energia",
   "Enel",
