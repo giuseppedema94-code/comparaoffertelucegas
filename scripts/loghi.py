@@ -220,3 +220,31 @@ for p in file_offerte:
         p.write_text(json.dumps(d, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 buoni = sum(1 for d in ci if stato.get(d, {}).get("px", 0) >= BUONO)
 print(f"loghi: {len(ci)} su {len(domini)} domini, {buoni} in buona qualità (>= {BUONO} px)")
+
+
+# Loghi a tutto sfondo: se il logo è un quadrato di colore pieno (tipo icona di app),
+# il riquadro prende lo stesso colore e il logo lo riempie, senza bordo bianco intorno.
+def colore_pieno(f):
+    im = Image.open(f).convert("RGBA")
+    w, h = im.size
+    k = int(w * 0.12)
+    pts = ([(x, k) for x in range(k, w - k, 2)] + [(x, h - k - 1) for x in range(k, w - k, 2)]
+           + [(k, y) for y in range(k, h - k, 2)] + [(w - k - 1, y) for y in range(k, h - k, 2)])
+    px = [im.getpixel(p) for p in pts]
+    if sum(p[3] > 240 for p in px) < 0.97 * len(px):
+        return None
+    med = [sorted(p[i] for p in px)[len(px) // 2] for i in range(3)]
+    if min(med) > 225:
+        return None
+    vicini = sum(all(abs(p[i] - med[i]) < 40 for i in range(3)) for p in px)
+    return "#%02X%02X%02X" % tuple(med) if vicini >= 0.95 * len(px) else None
+
+
+regole = []
+for f in sorted(DIR.glob("*.png")):
+    c = colore_pieno(f)
+    if c:
+        s = f'img[src$="/{f.name}"]'
+        regole.append(f'.lgb:has(>{s}){{background:{c};border-color:{c}}}.lgb>{s}{{inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.2);background:{c}}}')
+(DIR / "pieni.css").write_text("\n".join(regole) + "\n", encoding="utf-8")
+print(f"loghi a tutto sfondo: {len(regole)}")
