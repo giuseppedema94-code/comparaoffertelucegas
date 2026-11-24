@@ -1,5 +1,5 @@
 {
- "verificato": "2026-11-23",
+ "verificato": "2026-11-24",
  "internet": [
   {
    "operatore": "WindTre",
@@ -13,7 +13,7 @@
    "modem": "Wi-Fi 7 incluso",
    "url": "https://www.windtre.it/offerte-fibra/",
    "nota": "Prezzo con una linea mobile WindTre.",
-   "letto": "2026-11-23"
+   "letto": "2026-11-24"
   },
   {
    "operatore": "Sky",
@@ -27,7 +27,7 @@
    "modem": "Sky Wifi Hub in comodato",
    "url": "https://www.sky.it/sky-wifi-fibra",
    "nota": "Solo con un abbonamento Sky TV. Prezzo per 18 mesi.",
-   "letto": "2026-11-23"
+   "letto": "2026-11-24"
   },
   {
    "operatore": "Eolo",
@@ -41,7 +41,7 @@
    "modem": "Wi-Fi 7 incluso",
    "url": "https://www.eolo.it/offerte-internet-casa/eolo-fibra",
    "nota": "Vincolo 24 mesi, 24,90 € se disdici prima.",
-   "letto": "2026-11-23"
+   "letto": "2026-11-24"
   },
   {
    "operatore": "Aruba",
@@ -55,7 +55,7 @@
    "modem": "Non incluso",
    "url": "https://fibra.aruba.it/offerte-fibra-casa.aspx",
    "nota": "Nelle aree bianche il canone sale di 2 €/mese.",
-   "letto": "2026-11-23"
+   "letto": "2026-11-24"
   },
   {
    "operatore": "Poste",
@@ -69,7 +69,7 @@
    "modem": "In comodato d'uso",
    "url": "https://www.poste.it/fibra/postecasa-ultraveloce-start",
    "nota": "Installazione con tecnico inclusa.",
-   "letto": "2026-11-23"
+   "letto": "2026-11-24"
   },
   {
    "operatore": "TIM",
@@ -83,7 +83,7 @@
    "modem": "TIM HUB Pro",
    "url": "https://www.tim.it/fisso-e-mobile/fibra-e-adsl/fibra-internet-casa",
    "nota": "27,90 € con addebito su conto, altrimenti 31,90 €. Vincolo 24 mesi.",
-   "letto": "2026-11-23"
+   "letto": "2026-11-24"
   },
   {
    "operatore": "Fastweb",
@@ -97,7 +97,7 @@
    "modem": "In comodato d'uso",
    "url": "https://www.fastweb.it/adsl-fibra-ottica/fastweb-casa-start/",
    "nota": "23,95 € con una SIM Fastweb Mobile.",
-   "letto": "2026-11-23"
+   "letto": "2026-11-24"
   }
  ],
  "bundle": [
@@ -108,7 +108,7 @@
    "prezzo_fibra_mese": 17.9,
    "url": "https://www.enel.it/it-it/offerte-fibra",
    "nota": "Prezzo pieno 24,90 €. Lo sconto si perde se chiudi il contratto luce o gas.",
-   "letto": "2026-11-23"
+   "letto": "2026-11-24"
   },
   {
    "fornitore": "WindTre",
@@ -117,7 +117,7 @@
    "prezzo_fibra_mese": 19.99,
    "url": "https://www.windtre.it/offerte-fibra/",
    "nota": "Poi 24,99 € dopo 24 mesi. Serve una linea mobile WindTre.",
-   "letto": "2026-11-23"
+   "letto": "2026-11-24"
   }
  ]
 }
