@@ -5,6 +5,11 @@ UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.3
 def get(u):
     with urllib.request.urlopen(urllib.request.Request(u, headers=UA), timeout=20) as r: return r.read(3_000_000), r.geturl()
 for site in sys.argv[2:]:
+    if re.search(r"\.(png|svg|ico|webp|jpg)(\?|$)", site, re.I):
+        try:
+            d, _ = get(site); n = out / re.sub(r"[^a-z0-9.]+", "_", site.lower())[-80:]; n.write_bytes(d); print(n.name, len(d), site)
+        except Exception as e: print("x", site, e)
+        continue
     try:
         b, base = get(site); t = b.decode("utf-8", "ignore")
     except Exception as e:
