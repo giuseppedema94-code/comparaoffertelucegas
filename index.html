@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at https://www.googletagmanager.com https://*.clarity.ms 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-Fq8jifFhcO/W3kIvceMB2BEUjzE2OHkRlKo0LkRFLoU='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; connect-src 'self' https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at https://www.googletagmanager.com https://*.clarity.ms 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-HbvWRJhBnSXzrjvZAqpw6cRDiY/f4oJVjafQb6fU748='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; connect-src 'self' https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Confronto offerte luce e gas, aggiornato ogni giorno</title>
@@ -302,7 +302,7 @@ html,button,a,input,select,label{touch-action:manipulation}
 <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center"><span class="k" id="bk">N°1 oggi</span><span class="pill" id="bt"></span></div>
 <div class="sup" id="bs">Caricamento offerte…</div>
 <div class="nm h" id="bn"></div>
-<div style="display:flex;align-items:baseline;gap:8px"><span class="big h" id="bm"></span><span style="color:#C9CCD1">al mese</span></div>
+<div style="display:flex;align-items:baseline;gap:8px"><span class="big h" id="bm"></span><span style="color:#C9CCD1" id="bmu">al mese</span></div>
 <div class="sub" id="bsub"></div>
 <div class="save" id="bsave" hidden></div>
 <div class="plc" id="bplc" hidden></div>
@@ -408,6 +408,8 @@ function ics(o){var t=new Date(),e=new Date(t.getFullYear(),t.getMonth()+o.d,t.g
    'SUMMARY:'+cl('Tra un mese finisce il prezzo bloccato di '+o.n+' ('+o.v+')'),'DESCRIPTION:'+cl('Il prezzo stimato è calcolato da comparaoffertelucegas.it. Confronta le offerte di oggi prima che il prezzo cambi: https://comparaoffertelucegas.it/'),
    'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:Promemoria offerta','TRIGGER:PT9H','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
   var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'text/calendar'}));a.download='promemoria-'+o.v.replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'.ics';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500)}
+function PMf(){return S.per==='b'?2:1}
+function PL(){return S.per==='b'?' a bimestre':' al mese'}
 function costo(o,d,annuo){var r=d.reg,pp=o.p+(o.t==='v'&&S.st&&d.idx?d.idx*S.st:0);
   if(r&&o.s!=null){var acc=r.acc!=null?accLuce(annuo,r.acc,S.kw):(annuo<=r.accSoglia?0:r.accRif*annuo);return (1+r.iva)*(o.fx+pp*annuo-o.s+r.rf+(r.qp?r.qp*(S.kw-3):0)+r.rv*annuo+acc)}
   return o.A!=null?o.A+o.B*annuo:o.fx+pp*annuo}
@@ -425,10 +427,10 @@ function miaTab(){var x=findX(S.cmp[0]),mm=miaM(),el=$('cmine');S.mia=mm;if(!el|
   var m=MIA[S.c],l=S.c==='luce',u=CFG[S.c].u,ix=IDX.serie[IDX.serie.length-1][l?'pun':'psv'],pp=pn(m.p)+(m.t==='v'?ix:0),fx=pn(m.q),xp=x.o.pd!=null?x.o.pd:x.o.p;
   var row=function(t,a,b,va,vb){var w=va==null?-1:(Math.abs(va-vb)<1e-9?-1:(va<vb?0:1));return '<tr><th>'+t+'</th><td'+(w===0?' class="w"':'')+'>'+a+'</td><td'+(w===1?' class="w"':'')+'>'+b+'</td></tr>'};
   var uu=safeUrl(x.o.u)||safeUrl(x.o.us),h='<table class="ctab"><thead><tr><th></th><td>'+esc(x.o.v)+'<br><span style="font-weight:500;color:var(--ink2)">'+esc(x.o.n)+'</span></td><td>Il tuo contratto</td></tr></thead><tbody>'
-   +row('Spesa al mese',eur(x.m,2),eur(mm,2),x.m,mm)+row('Spesa l\'anno',eur(x.m*12,0),eur(mm*12,0),x.m,mm)
+   +row(S.per==='b'?'Spesa a bimestre':'Spesa al mese',eur(x.m*PMf(),2),eur(mm*PMf(),2),x.m,mm)+row('Spesa l\'anno',eur(x.m*12,0),eur(mm*12,0),x.m,mm)
    +row((l?'Energia':'Gas')+' €/'+u,num(xp,4)+' €',num(pp,4)+' €',xp,pp)+row('Quota fissa',eur(x.o.fx/12,2)+' al mese',eur(fx,2)+' al mese',x.o.fx/12,fx)
    +'<tr><th></th><td>'+(uu?'<a class="oc-btn" href="'+esc(uu)+'" target="_blank" rel="nofollow noopener">'+(safeUrl(x.o.u)?'Vai all\'offerta':'Sito del fornitore')+'</a>':'')+'</td><td></td></tr></tbody></table>';
-  var df=mm-x.m;h+='<p class="note">'+(Math.abs(df)<0.01?'Con i tuoi consumi costano uguale.':df>0?'Con i tuoi consumi '+esc(x.o.v)+' ti fa risparmiare '+eur(df,2)+' al mese ('+eur(df*12,0)+' l\'anno).':'Con i tuoi consumi il tuo contratto costa '+eur(-df,2)+' in meno al mese ('+eur(-df*12,0)+' l\'anno).')+' In verde il valore migliore.</p>';
+  var df=mm-x.m;h+='<p class="note">'+(Math.abs(df)<0.01?'Con i tuoi consumi costano uguale.':df>0?'Con i tuoi consumi '+esc(x.o.v)+' ti fa risparmiare '+eur(df*PMf(),2)+PL()+' ('+eur(df*12,0)+' l\'anno).':'Con i tuoi consumi il tuo contratto costa '+eur(-df*PMf(),2)+' in meno'+PL()+' ('+eur(-df*12,0)+' l\'anno).')+' In verde il valore migliore.</p>';
   el.innerHTML=h}
 function cmpMine(){if(!findX(S.cmp[0]))return;$('cdh').textContent='La tua offerta a confronto';$('cbody').innerHTML=miaForm();miaTab();var dl=$('cdlg');if(dl.showModal)dl.showModal();else dl.setAttribute('open','')}
 function compute(){
@@ -459,9 +461,9 @@ function render(){
   var best=valid[0]||all[0],med=valid[Math.floor(valid.length/2)]||best;
   $('bk').textContent='N°1 oggi su '+all.length.toLocaleString('it-IT')+' offerte';
   $('bt').textContent=best.o.t==='f'?'Prezzo fisso':'Prezzo variabile';
-  $('bs').innerHTML=logo(best.o)+'<span>'+esc(best.o.v)+'</span>';$('bn').textContent=best.o.n;$('bm').textContent=eur(best.m,2);
+  $('bs').innerHTML=logo(best.o)+'<span>'+esc(best.o.v)+'</span>';$('bn').textContent=best.o.n;$('bm').textContent=eur(best.m*PMf(),2);var mo=$('msort').querySelector('option[value=m]');if(mo)mo.textContent=S.per==='b'?'Spesa a bimestre':'Spesa al mese';$('bmu').textContent=PL().trim();
   $('bsub').innerHTML='<span>'+(S.c==='luce'?'Energia':'Gas')+' <strong>'+num(best.o.pd!=null?best.o.pd:best.o.p,4)+' €/'+cfg.u+'</strong></span><span>Quota fissa <strong>'+eur(best.o.fx/12,2)+'/mese</strong></span>'+(best.o.ds?'<span>Sconto <strong>'+eur(best.o.ds,0)+'/anno</strong>'+(best.o.dsT?' ('+esc(best.o.dsT)+')':'')+'</span>':'')+(best.o.sc?'<span>Offerta valida fino al <strong>'+fd(best.o.sc)+'</strong></span>':'');
-  $('bsave').hidden=false;$('bsave').textContent="Risparmio medio di "+eur(med.m-best.m,2)+"/mese";$('bsave').title="Rispetto a un'offerta tipica tra quelle in elenco";
+  $('bsave').hidden=false;$('bsave').textContent="Risparmio medio di "+eur((med.m-best.m)*PMf(),2)+(S.per==='b'?"/bimestre":"/mese");$('bsave').title="Rispetto a un'offerta tipica tra quelle in elenco";
   var bu=safeUrl(best.o.u)||safeUrl(best.o.us);$('blink').hidden=!bu;if(bu){$('blink').href=bu;$('blink').textContent=safeUrl(best.o.u)?'Vai all\'offerta':'Sito del fornitore'}
   $('bplc').hidden=true;
   $('ovdw').hidden=S.c!=='luce';$('prio').hidden=S.k!=='pr';
@@ -483,9 +485,9 @@ function render(){
   var key={pr:function(x){return -sc(x)},m:function(x){return x.m},p:function(x){return x.o.pd!=null?x.o.pd:x.o.p},fx:function(x){return x.o.fx}}[S.k];
   if(S.k!=='m'||S.dir!==1)list=list.slice().sort(function(a,b){return (key(a)-key(b))*S.dir||a.m-b.m});
   var th=function(k,label){var on=S.k===k,ar=on?(S.dir===1?'▲':'▼'):'↕';return '<button type="button" class="sort'+(on?' on':'')+'" data-k="'+k+'" aria-sort="'+(on?(S.dir===1?'ascending':'descending'):'none')+'" title="Ordina">'+label+' <span aria-hidden="true">'+ar+'</span></button>'};
-  var h=['<div class="row head" role="row"><span>#</span><span>Fornitore e offerta</span><span class="num">'+th('p',(S.c==='luce'?'Energia':'Gas')+' €/'+cfg.u)+'</span><span class="num">'+th('fx','Quota fissa €/mese')+'</span><span class="num">Sconto</span><span class="num">Scadenza offerta</span><span class="num">'+th('m','Spesa al mese')+'</span></div>'];
+  var h=['<div class="row head" role="row"><span>#</span><span>Fornitore e offerta</span><span class="num">'+th('p',(S.c==='luce'?'Energia':'Gas')+' €/'+cfg.u)+'</span><span class="num">'+th('fx','Quota fissa €/mese')+'</span><span class="num">Sconto</span><span class="num">Scadenza offerta</span><span class="num">'+th('m',S.per==='b'?'Spesa a bimestre':'Spesa al mese')+'</span></div>'];
   S.cur=list;
-  var mk=S.mia!=null&&S.k==='m'&&S.dir===1,mrow=function(){mk=false;return '<div class="mia-row" role="row"><span>Il tuo contratto</span><span class="mia-v"><strong>'+eur(S.mia,2)+' al mese</strong><button type="button" class="mia-x" aria-label="Togli il tuo contratto dal confronto">×</button></span></div>'};
+  var mk=S.mia!=null&&S.k==='m'&&S.dir===1,mrow=function(){mk=false;return '<div class="mia-row" role="row"><span>Il tuo contratto</span><span class="mia-v"><strong>'+eur(S.mia*PMf(),2)+PL()+'</strong><button type="button" class="mia-x" aria-label="Togli il tuo contratto dal confronto">×</button></span></div>'};
   list.slice(0,S.lim).forEach(function(x,i){
     if(mk&&S.mia<x.m)h.push(mrow());
     var o=x.o,u=safeUrl(o.u),first=x.m===top;
@@ -500,7 +502,7 @@ function render(){
      +'<div class="oc-h"><span class="oc-n">'+(i+1)+'</span>'+bl+'<div class="oc-t"><div class="oc-v">'+esc(o.v)+'</div><div class="oc-o">'+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+'</div></div>'
      +'<div class="oc-tg"><span class="tg '+(o.t==='f'?'tg-f':'tg-v')+'">'+tipo+'</span>'+'<span class="tg st-'+stab(o)+'" title="'+STT[stab(o)]+'">Stabilità '+stab(o)+'</span>'+(o.vd?'<span class="tg tg-g">Verde</span>':'')+(o.tr?'<span class="tg tg-tr '+(o.tr<0?'dn':'up')+'" title="Variazione della spesa per un consumo tipo rispetto a una settimana fa">'+(o.tr<0?'▼ ':'▲ ')+eur(Math.abs(o.tr),2)+' in 7 giorni</span>':'')+(o.pl?'<span class="tg tg-p">PLACET</span>':'')+(o.pen?'<span class="tg tg-w" title="'+esc(o.penT||'')+'">Penale di uscita</span>':'')+(dd!=null&&dd>=0&&dd<=30?'<span class="tg tg-s">Scade tra '+dd+(dd===1?' giorno':' giorni')+'</span>':'')+'</div></div>'
      +'<div class="oc-b"><dl class="oc-d"><div><dt>Energia</dt><dd>'+num(o.pd!=null?o.pd:o.p,4)+' €/'+cfg.u+'</dd></div><div><dt>Quota fissa</dt><dd>'+num(o.fx/12,2)+' €/mese</dd></div>'+(o.ds?'<div><dt>Sconto</dt><dd class="ok">−'+eur(o.ds,0)+'/anno</dd></div>':'')+(o.sc?'<div><dt>Offerta valida fino al</dt><dd>'+fd(o.sc)+'</dd></div>':'')+'</dl>'
-     +'<div class="oc-p"><div class="oc-m"><strong>'+num(Math.floor(Math.round(x.m*100)/100),0)+'</strong><span>,'+String(Math.round(x.m*100)%100).padStart(2,'0')+' €/mese</span></div><div class="oc-y">'+eur(x.m*12,0)+' l\'anno</div><div class="oc-dd'+(first?' top1':'')+'">'+(first?'La più conveniente':'+'+eur(x.m-top,2)+' al mese')+'</div></div>'
+     +'<div class="oc-p"><div class="oc-m"><strong>'+num(Math.floor(Math.round(x.m*PMf()*100)/100),0)+'</strong><span>,'+String(Math.round(x.m*PMf()*100)%100).padStart(2,'0')+(S.per==='b'?' €/bimestre':' €/mese')+'</span></div><div class="oc-y">'+eur(x.m*12,0)+' l\'anno</div><div class="oc-dd'+(first?' top1':'')+'">'+(first?'La più conveniente':'+'+eur((x.m-top)*PMf(),2)+PL())+'</div></div>'
      +'<div class="oc-a">'+(u?'<a class="oc-btn" href="'+esc(u)+'" target="_blank" rel="nofollow noopener">Vai all\'offerta</a>':(safeUrl(o.us)?'<a class="oc-btn" href="'+esc(safeUrl(o.us))+'" target="_blank" rel="nofollow noopener" title="Questa offerta non ha un link diretto nei dati ARERA">Sito del fornitore</a>':'<a class="oc-btn" href="https://www.ilportaleofferte.it/portaleOfferte/" target="_blank" rel="noopener" title="Cerca l\'offerta sul Portale Offerte di ARERA">Portale ARERA</a>'))+(o.t==='f'&&o.d>=6&&o.d<=240?'<button type="button" class="oc-rem" data-i="'+i+'" title="Scarica un promemoria per il calendario un mese prima che finisca il prezzo bloccato">Promemoria scadenza</button>':'')+'<button type="button" class="oc-cmp" data-id="'+esc(o.id)+'" aria-pressed="'+(S.cmp.indexOf(o.id)>=0)+'">Confronta</button><button type="button" class="oc-cmp oc-sh" data-s="'+i+'" aria-label="Condividi questa offerta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>Condividi</button></div></div></article>');
   });
   if(mk&&list.length&&list.length<=S.lim)h.push(mrow());
@@ -524,7 +526,7 @@ function cbar(){S.cmp=S.cmp.filter(function(id){return findX(id)});var n=S.cmp.l
 function cmpShow(){var a=findX(S.cmp[0]),b=findX(S.cmp[1]);if(!a||!b)return;var u=CFG[S.c].u,X=[a,b];
   var yn=function(v){return v===true?'Sì':v===false?'No':'—'};
   var dur=function(o){return o.t==='f'?'Fisso'+(o.d>=12&&o.d<=240?', '+(o.d%12?o.d+' mesi':(o.d/12)+(o.d===12?' anno':' anni')):''):'Variabile'};
-  var R=[['Spesa al mese',function(x){return x.m},function(x){return eur(x.m,2)},1],['Spesa l\'anno',function(x){return x.m},function(x){return eur(x.m*12,0)},1],
+  var R=[[S.per==='b'?'Spesa a bimestre':'Spesa al mese',function(x){return x.m},function(x){return eur(x.m*PMf(),2)},1],['Spesa l\'anno',function(x){return x.m},function(x){return eur(x.m*12,0)},1],
    [(S.c==='luce'?'Energia':'Gas')+' €/'+u,function(x){return x.o.pd!=null?x.o.pd:x.o.p},function(x){return num(x.o.pd!=null?x.o.pd:x.o.p,4)+' €'},1],
    ['Quota fissa',function(x){return x.o.fx},function(x){return eur(x.o.fx/12,2)+' al mese'},1],
    ['Tipo di prezzo',null,function(x){return dur(x.o)}],['Stabilità',function(x){return 'ABCD'.indexOf(stab(x.o))},function(x){return stab(x.o)+': '+STT[stab(x.o)].toLowerCase()},1],
@@ -534,7 +536,7 @@ function cmpShow(){var a=findX(S.cmp[0]),b=findX(S.cmp[1]);if(!a||!b)return;var 
   var h='<table class="ctab"><thead><tr><th></th>'+X.map(function(x){return '<td>'+esc(x.o.v)+'<br><span style="font-weight:500;color:var(--ink2)">'+esc(x.o.n)+'</span></td>'}).join('')+'</tr></thead><tbody>';
   R.forEach(function(r){var v=r[1]?X.map(r[1]):null,w=v&&v[0]!==v[1]?(v[0]<v[1]?0:1):-1;h+='<tr><th>'+r[0]+'</th>'+X.map(function(x,i){return '<td'+(i===w?' class="w"':'')+'>'+r[2](x)+'</td>'}).join('')+'</tr>'});
   h+='<tr><th></th>'+X.map(function(x){var uu=safeUrl(x.o.u)||safeUrl(x.o.us);return '<td>'+(uu?'<a class="oc-btn" href="'+esc(uu)+'" target="_blank" rel="nofollow noopener">'+(safeUrl(x.o.u)?'Vai all\'offerta':'Sito del fornitore')+'</a>':'')+'</td>'}).join('')+'</tr></tbody></table>';
-  var df=Math.abs(a.m-b.m);h+='<p class="note">'+(df>=0.01?'Con i tuoi consumi '+esc((a.m<b.m?a:b).o.v)+' costa '+eur(df,2)+' in meno al mese ('+eur(df*12,0)+' l\'anno).':'Con i tuoi consumi le due offerte costano uguale.')+' In verde il valore migliore.</p>';
+  var df=Math.abs(a.m-b.m);h+='<p class="note">'+(df>=0.01?'Con i tuoi consumi '+esc((a.m<b.m?a:b).o.v)+' costa '+eur(df*PMf(),2)+' in meno'+PL()+' ('+eur(df*12,0)+' l\'anno).':'Con i tuoi consumi le due offerte costano uguale.')+' In verde il valore migliore.</p>';
   $('cdh').textContent='Confronto tra due offerte';$('cbody').innerHTML=h;var dl=$('cdlg');if(dl.showModal)dl.showModal();else dl.setAttribute('open','')}
 
 function setC(c){if(S.c!==c)S.cmp=[];S.c=c;setTimeout(renderIdx,0);document.documentElement.setAttribute('data-c',c);var fi=document.querySelector('link[rel=icon]');if(fi)fi.href=c==='gas'?'/img/geco-gas.svg':'/img/geco-luce.svg';S.lim=50;load(c).then(render).catch(function(){$('bs').textContent='Dati non disponibili, riprova tra poco.'});render()}
