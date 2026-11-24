@@ -37,7 +37,7 @@ function avvia(){
                 {name:'_clck, _clsk',service:'Microsoft Clarity',description:'Collega le pagine della stessa visita',exp:'da 1 giorno a 1 anno'}]}},
             {title:'Ulteriori informazioni',description:'Per qualsiasi domanda sulla nostra politica sui cookie o sulle tue scelte, <a class="cc__link" href="mailto:info@comparaoffertelucegas.it">contattaci</a>.'}]}}}}
     });
-    var f=d.querySelector('footer');if(f&&!d.getElementById('ckl')){var p=d.createElement('p');p.style.margin='8px 0 0';p.innerHTML='<a href="#" id="ckl" data-cc="show-preferencesModal">Preferenze cookie</a>';f.appendChild(p);
+    var f=d.querySelector('footer .wrap')||d.querySelector('footer');if(f&&!d.getElementById('ckl')){var p=d.createElement('p');p.style.margin='8px 0 0';p.innerHTML='<a href="#" id="ckl" data-cc="show-preferencesModal">Preferenze cookie</a>';f.appendChild(p);
       d.getElementById('ckl').addEventListener('click',function(e){e.preventDefault();w.CookieConsent.showPreferences()})}
   })}
 if(CFG.ga||CFG.clarity){if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',avvia);else avvia()}
