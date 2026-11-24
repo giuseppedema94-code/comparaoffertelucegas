@@ -1,9 +1,10 @@
 {
- "nota": "Offerte riservate a chi è già cliente: escluse dalla classifica. Nome esatto come in ARERA.",
+ "nota": "Offerte non aperte a tutti (già clienti, convenzioni, soci): escluse dalla classifica. Nome esatto come in ARERA.",
  "nomi": [
   "Trend Casa Luce Plus",
   "Trend Casa Gas Plus",
   "Resti e Risparmi Luce",
-  "Resti e Risparmi Gas"
+  "Resti e Risparmi Gas",
+  "Gaspremiumsoci"
  ]
 }

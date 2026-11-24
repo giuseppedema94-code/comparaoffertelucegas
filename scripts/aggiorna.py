@@ -41,11 +41,11 @@ REG = {
 
 
 RISERVATE_FILE = DATI / "riservate.json"
-RISERVATE_RE = re.compile(r"\bresti\b|fedel|retention|win.?back|rinnov[oi](?![a-z])", re.I)
+RISERVATE_RE = re.compile(r"\bresti\b|fedel|retention|win.?back|rinnov[oi](?![a-z])|convenzion|dipendent", re.I)
 
 
 def riservata(o: dict) -> bool:
-    """Offerte solo per clienti già attivi (fedeltà, rinnovi, win-back): non le mostriamo."""
+    """Offerte non aperte a tutti (clienti già attivi, convenzioni, dipendenti, soci): non le mostriamo."""
     nome = (o.get("nome") or "").strip()
     if RISERVATE_RE.search(nome.replace("_", " ")):
         return True
