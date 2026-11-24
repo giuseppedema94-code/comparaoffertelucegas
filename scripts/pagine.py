@@ -82,9 +82,13 @@ CSS_NET = """.t-luce:hover:not([aria-pressed=true]):not([aria-current]){backgrou
 .segn a[aria-current=page]{background:var(--accbg);color:#fff}
 @media (max-width:520px){.segn a{padding:10px 11px;font-size:14px}}
 :root[data-c=lg]{--acc:#F5C518;--accbg:#F5C518;--accbar:#F5C518}
-.mia{margin:4px 0 12px;border:1px solid var(--line);border-radius:14px;padding:10px 14px}
-.mia summary{cursor:pointer;font-weight:600;font-size:15px;list-style:none}.mia summary::-webkit-details-marker{display:none}.mia summary::after{content:' +';color:var(--mut)}.mia[open] summary::after{content:' −'}
-.mia-f{margin-top:10px;display:grid;gap:10px;max-width:420px}.mia-f label{display:grid;gap:4px;font-size:13px;color:var(--mut)}
+.oc-cmp{font:600 14px 'Schibsted Grotesk',sans-serif;padding:10px 12px;border-radius:10px;border:1px solid var(--bd);background:transparent;color:var(--ink2);cursor:pointer}.oc-cmp:hover{border-color:var(--ink);color:var(--ink)}
+.chip{border:1px solid var(--bd);cursor:pointer;font:600 13px 'Schibsted Grotesk',sans-serif;padding:10px 14px;border-radius:99px;background:var(--card);color:var(--ink)}
+#cdlg{border:0;border-radius:16px;padding:20px;max-width:560px;width:calc(100% - 24px);background:var(--card);color:var(--ink)}#cdlg::backdrop{background:rgba(0,0,0,.5)}
+.cdh{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}.cdh h2{margin:0;font-size:22px}
+.ctab{width:100%;border-collapse:collapse;font-size:14.5px;table-layout:fixed;margin-top:12px}.ctab th,.ctab td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;overflow-wrap:anywhere}.ctab th{color:var(--mut);font-weight:600;width:32%}.ctab td.w{color:var(--ok);font-weight:700}.ctab thead td{font-weight:800;font-size:15px}
+#cmine .note{font-size:14px;color:var(--ink2);line-height:1.45}
+.mia-f{display:grid;gap:10px}.mia-f label{display:grid;gap:4px;font-size:13px;color:var(--mut)}
 .mia-in{display:flex;align-items:center;gap:6px;border:1px solid var(--bd);border-radius:10px;padding:0 10px;background:var(--soft)}.mia-in:focus-within{border-color:var(--ink)}
 .mia-in input{flex:1;min-width:0;width:0;border:0;background:transparent;font:700 18px 'Schibsted Grotesk',sans-serif;color:var(--ink);padding:9px 0;outline:0}.mia-in span{font-size:13px;color:var(--mut);white-space:nowrap}
 .mia-r{margin:0;padding:10px 12px;border-radius:10px;background:var(--first);font-size:14px;line-height:1.45}
@@ -272,6 +276,7 @@ def scheda(x, i, top, bundle=False):
     dopo = (f'poi {n2(x["prezzo_dopo"])}' + (f' dopo {x["mesi_promo"]} mesi' if x.get("mesi_promo") else "")) if x.get("prezzo_dopo") and x["prezzo_dopo"] != pm else ""
     diff = "" if bundle else ('<div class="oc-dd top1">La più conveniente</div>' if i == 0 else f'<div class="oc-dd">+{n2(pm - top)} al mese</div>')
     btn = f'<a class="oc-btn" href="{e(x["url"])}" target="_blank" rel="nofollow noopener">Vai all\'offerta</a>' if x.get("url") else ""
+    if not bundle: btn += '<button type="button" class="oc-cmp">Confronta con il tuo</button>'
     num = "" if bundle else f'<span class="oc-n">{i + 1}</span>'
     first = " first" if (i == 0 and not bundle) else ""
     return (f'<article class="oc{first}" data-pm="{pm:.2f}" data-cat="{cat}" data-reg="{1 if x.get("area") else 0}"><div class="oc-h">{num}{logo(op, x.get("url"), "lgb")}'
@@ -291,12 +296,11 @@ corpo += f"""<main class="wrap pg">
 <h1 class="h">Offerte fibra e internet casa</h1>
 <section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Internet casa, dalla più conveniente <span class="src" id="ncnt"></span></h2>
 <div class="flt" role="group" aria-label="Filtra"><button type="button" data-t="tutte" aria-pressed="true">Tutte</button><button type="button" data-t="ftth" aria-pressed="false">Fibra FTTH</button><button type="button" data-t="fwa" aria-pressed="false">FWA senza linea</button><label><input type="checkbox" id="noreg"> Nascondi offerte regionali</label></div>
-<details class="mia" id="mia"><summary>Hai già internet? Confronta il tuo canone</summary>
-<div class="mia-f"><label><span>Quanto paghi oggi</span><span class="mia-in"><input id="mq" inputmode="decimal" autocomplete="off" placeholder="29,90"><span>€/mese</span></span></label>
-<p class="mia-r" id="mres" aria-live="polite" hidden></p></div></details>
 <div id="nt">
 {''.join(tr)}
 </div>
+<dialog id="cdlg" aria-labelledby="cdh"><div class="cdh"><h2 class="h" id="cdh">Il tuo abbonamento a confronto</h2><button type="button" class="chip" id="cclose">Chiudi</button></div>
+<div class="mia-f"><label><span>Quanto paghi oggi</span><span class="mia-in"><input id="mq" inputmode="decimal" autocomplete="off" placeholder="29,90"><span>€/mese</span></span></label></div><div id="cmine"></div></dialog>
 <p class="src">Prezzi letti ogni giorno in automatico dalle pagine ufficiali degli operatori, ultimo controllo il {ver}. Velocità e tecnologia dipendono dalla copertura del tuo indirizzo: verificala sul sito dell'operatore prima di attivare.</p></section>
 <section class="card xs"><h2 class="h" style="margin:0 0 4px;font-size:22px">Quanto spenderesti oggi per luce e gas</h2>
 <p class="src" style="margin:0">Le offerte più convenienti di oggi per una casa con 225 kWh di luce e 90 Smc di gas al mese, imposte e canone RAI inclusi.</p>
@@ -312,16 +316,22 @@ corpo += f"""<main class="wrap pg">
 <p>Oltre al canone guarda tre cose: quanto dura il prezzo promozionale, il costo di attivazione e quanto paghi se disdici prima del vincolo.</p></section>
 """
 NET_JS = r"""
-var MQ='';try{MQ=localStorage.getItem('mia-net')||''}catch(e){}
+var MQ='',CUR=null;try{MQ=localStorage.getItem('mia-net')||''}catch(e){}
 var fe=function(n){return n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'};
-function mia(){var o=document.querySelector('.mia-row');if(o)o.remove();var r=$('mres'),v=parseFloat(String(MQ).replace(/\s|€/g,'').replace(',','.'));
-  if(!(v>0&&v<300)){r.hidden=true;return}
-  var vis=[].slice.call(document.querySelectorAll('#nt article')).filter(function(a){return !a.hidden}),ch=vis.filter(function(a){return +a.dataset.pm<v-0.005}),b=vis[0];
-  r.hidden=false;r.innerHTML='Paghi <strong>'+fe(v)+' al mese</strong>. '+(ch.length?ch.length+(ch.length===1?' offerta costa':' offerte costano')+' meno. Con la più conveniente risparmi <strong>'+fe(v-(+b.dataset.pm))+' al mese</strong>, '+Math.round((v-(+b.dataset.pm))*12)+' € all\'anno.':'Oggi nessuna offerta in elenco costa meno.');
+var mv=function(){var v=parseFloat(String(MQ).replace(/\s|€/g,'').replace(',','.'));return v>0&&v<300?v:null};
+function mia(){var o=document.querySelector('.mia-row');if(o)o.remove();var v=mv();if(v==null)return;
+  var vis=[].slice.call(document.querySelectorAll('#nt article')).filter(function(a){return !a.hidden});
   var d=document.createElement('div');d.className='mia-row';d.innerHTML='<span>Il tuo abbonamento</span><strong>'+fe(v)+' al mese</strong>';
   var nx=vis.filter(function(a){return +a.dataset.pm>=v-0.005})[0];if(nx)nx.parentNode.insertBefore(d,nx);else if(vis.length)vis[vis.length-1].after(d)}
+function tab(){var el=$('cmine'),v=mv(),a=CUR;if(!a)return;if(v==null){el.innerHTML='';return}var pm=+a.dataset.pm,w=Math.abs(pm-v)<0.005?-1:pm<v?0:1;
+  var c=function(i,t){return '<td'+(w===i?' class="w"':'')+'>'+t+'</td>'},nm=a.querySelector('.oc-v').textContent,of=a.querySelector('.oc-o').textContent;
+  var vis=[].slice.call(document.querySelectorAll('#nt article')).filter(function(x){return !x.hidden}),n=vis.filter(function(x){return +x.dataset.pm<v-0.005}).length,df=v-pm;
+  el.innerHTML='<table class="ctab"><thead><tr><th></th><td>'+nm+'<br><span style="font-weight:500;color:var(--ink2)">'+of+'</span></td><td>Il tuo</td></tr></thead><tbody><tr><th>Canone al mese</th>'+c(0,fe(pm))+c(1,fe(v))+'</tr><tr><th>All\'anno</th>'+c(0,fe(pm*12))+c(1,fe(v*12))+'</tr></tbody></table>'
+   +'<p class="note">'+(Math.abs(df)<0.005?'Costano uguale.':df>0?'Con '+nm+' risparmi '+fe(df)+' al mese, '+Math.round(df*12)+' € all\'anno.':'Il tuo abbonamento costa '+fe(-df)+' in meno al mese.')+' '+(n?n+(n===1?' offerta in elenco costa':' offerte in elenco costano')+' meno del tuo.':'Nessuna offerta in elenco costa meno del tuo.')+'</p>'}
+document.addEventListener('click',function(e){var b=e.target.closest('.oc-cmp');if(!b)return;CUR=b.closest('article');$('mq').value=MQ;tab();var dl=$('cdlg');if(dl.showModal)dl.showModal();else dl.setAttribute('open','');if(!MQ)$('mq').focus()});
+$('cclose').addEventListener('click',function(){$('cdlg').close()});$('cdlg').addEventListener('click',function(e){if(e.target===$('cdlg'))$('cdlg').close()});
 var T='tutte';function flt(){var n=0,rr=document.querySelectorAll('#nt article');rr.forEach(function(r){var ok=(T==='tutte'||r.dataset.cat===T)&&!($('noreg').checked&&r.dataset.reg==='1');r.hidden=!ok;if(ok)n++});mia();$('ncnt').textContent=n+' offerte';document.querySelectorAll('.flt button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.t===T)})}
-document.querySelectorAll('.flt button').forEach(function(b){b.addEventListener('click',function(){T=b.dataset.t;flt()})});$('noreg').addEventListener('change',flt);$('mq').value=MQ;if(MQ)$('mia').open=true;$('mq').addEventListener('input',function(e){MQ=e.target.value.slice(0,8);try{localStorage.setItem('mia-net',MQ)}catch(_){}mia()});flt();
+document.querySelectorAll('.flt button').forEach(function(b){b.addEventListener('click',function(){T=b.dataset.t;flt()})});$('noreg').addEventListener('change',flt);$('mq').addEventListener('input',function(e){MQ=e.target.value.slice(0,8);try{localStorage.setItem('mia-net',MQ)}catch(_){}mia();tab()});flt();
 var eur=function(n){return n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})+' € al mese'};
 fetch('/data/top.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){
   var l=d.luce[0],g=d.gas[0];$('xl').textContent=eur(l.m);$('xln').textContent=l.v+', '+l.n;$('xg').textContent=eur(g.m);$('xgn').textContent=g.v+', '+g.n;});

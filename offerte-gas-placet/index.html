@@ -230,9 +230,13 @@ html,button,a,input,select,label{touch-action:manipulation}
 .segn a[aria-current=page]{background:var(--accbg);color:#fff}
 @media (max-width:520px){.segn a{padding:10px 11px;font-size:14px}}
 :root[data-c=lg]{--acc:#F5C518;--accbg:#F5C518;--accbar:#F5C518}
-.mia{margin:4px 0 12px;border:1px solid var(--line);border-radius:14px;padding:10px 14px}
-.mia summary{cursor:pointer;font-weight:600;font-size:15px;list-style:none}.mia summary::-webkit-details-marker{display:none}.mia summary::after{content:' +';color:var(--mut)}.mia[open] summary::after{content:' −'}
-.mia-f{margin-top:10px;display:grid;gap:10px;max-width:420px}.mia-f label{display:grid;gap:4px;font-size:13px;color:var(--mut)}
+.oc-cmp{font:600 14px 'Schibsted Grotesk',sans-serif;padding:10px 12px;border-radius:10px;border:1px solid var(--bd);background:transparent;color:var(--ink2);cursor:pointer}.oc-cmp:hover{border-color:var(--ink);color:var(--ink)}
+.chip{border:1px solid var(--bd);cursor:pointer;font:600 13px 'Schibsted Grotesk',sans-serif;padding:10px 14px;border-radius:99px;background:var(--card);color:var(--ink)}
+#cdlg{border:0;border-radius:16px;padding:20px;max-width:560px;width:calc(100% - 24px);background:var(--card);color:var(--ink)}#cdlg::backdrop{background:rgba(0,0,0,.5)}
+.cdh{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}.cdh h2{margin:0;font-size:22px}
+.ctab{width:100%;border-collapse:collapse;font-size:14.5px;table-layout:fixed;margin-top:12px}.ctab th,.ctab td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;overflow-wrap:anywhere}.ctab th{color:var(--mut);font-weight:600;width:32%}.ctab td.w{color:var(--ok);font-weight:700}.ctab thead td{font-weight:800;font-size:15px}
+#cmine .note{font-size:14px;color:var(--ink2);line-height:1.45}
+.mia-f{display:grid;gap:10px}.mia-f label{display:grid;gap:4px;font-size:13px;color:var(--mut)}
 .mia-in{display:flex;align-items:center;gap:6px;border:1px solid var(--bd);border-radius:10px;padding:0 10px;background:var(--soft)}.mia-in:focus-within{border-color:var(--ink)}
 .mia-in input{flex:1;min-width:0;width:0;border:0;background:transparent;font:700 18px 'Schibsted Grotesk',sans-serif;color:var(--ink);padding:9px 0;outline:0}.mia-in span{font-size:13px;color:var(--mut);white-space:nowrap}
 .mia-r{margin:0;padding:10px 12px;border-radius:10px;background:var(--first);font-size:14px;line-height:1.45}
