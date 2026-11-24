@@ -463,3 +463,11 @@ for slug, c, flt, qs, titolo, agg, testo in CLASSIFICHE:
 """
     scrivi(f"/{slug}/", corpo, "")
 print("classifiche generate")
+
+
+# ---------- sitemap con data di aggiornamento ----------
+_oggi = _dt.date.today().isoformat()
+_sm = (R / "sitemap.xml").read_text(encoding="utf-8")
+_sm = re.sub(r"\s*<lastmod>[^<]*</lastmod>", "", _sm)
+_sm = re.sub(r"(<loc>[^<]*</loc>)", r"\1<lastmod>" + _oggi + "</lastmod>", _sm)
+(R / "sitemap.xml").write_text(_sm, encoding="utf-8")

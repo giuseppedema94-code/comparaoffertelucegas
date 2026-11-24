@@ -46,7 +46,7 @@ jobs:
         run: |
           git config user.name "aggiornamento-automatico"
           git config user.email "actions@users.noreply.github.com"
-          git add data/luce.json data/gas.json data/dual.json data/top.json data/storico img/loghi -- '*.html'
+          git add data/luce.json data/gas.json data/dual.json data/top.json data/storico img/loghi sitemap.xml -- '*.html'
           git diff --cached --quiet && exit 0
           git commit -m "Offerte aggiornate $(date -u +%Y-%m-%dT%H:%MZ)"
           git pull --rebase origin main
