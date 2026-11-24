@@ -294,7 +294,7 @@ corpo = testata("/internet/", "Offerte fibra e internet casa a confronto",
                 "net", "/img/geco-net.svg")
 corpo += f"""<main class="wrap pg">
 <h1 class="h">Offerte fibra e internet casa</h1>
-<section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Internet casa, dalla più conveniente <span class="src" id="ncnt"></span></h2>
+<section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Internet casa, risparmia fino all'ultimo centesimo <span class="src" id="ncnt"></span></h2>
 <div class="flt" role="group" aria-label="Filtra"><button type="button" data-t="tutte" aria-pressed="true">Tutte</button><button type="button" data-t="ftth" aria-pressed="false">Fibra FTTH</button><button type="button" data-t="fwa" aria-pressed="false">FWA senza linea</button><label><input type="checkbox" id="noreg"> Nascondi offerte regionali</label></div>
 <div id="nt">
 {''.join(tr)}
