@@ -253,13 +253,10 @@ html,button,a,input,select,label{touch-action:manipulation}
 .claim{display:block;gap:24px;align-items:center;padding:26px 4px 20px}
 .cl-h{font-size:clamp(34px,5.4vw,60px);line-height:1.04;letter-spacing:-.02em;margin:0 0 10px;font-weight:900}
 .cl-s{font-size:18px;line-height:1.45;color:var(--ink2);margin:0 0 16px}.cl-s strong{color:var(--ink)}
-.cl-a{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px}
-.cl-btn{background:var(--accbg);color:#14161A;font:800 16px 'Schibsted Grotesk',sans-serif;padding:14px 20px;border-radius:12px;text-decoration:none;min-height:48px;display:inline-flex;align-items:center}
-html[data-c=gas] .cl-btn{color:#fff}.cl-btn:hover{filter:brightness(.94)}
 .cl-n{font-size:13.5px;line-height:1.45;color:var(--mut);margin:12px 0 0;max-width:70ch}.cl-h sup{font-size:.45em;vertical-align:.9em;margin-left:2px}
 .cl-g{width:180px;height:180px;border-radius:50%;background:var(--accbg);display:flex;align-items:center;justify-content:center}
 .cl-g img{width:118px;height:118px}
-@media (max-width:700px){.claim{grid-template-columns:1fr;padding:16px 2px 12px}.cl-g{display:none}.cl-s{font-size:16px;margin-bottom:12px}.cl-btn{width:100%;justify-content:center}}
+@media (max-width:700px){.claim{grid-template-columns:1fr;padding:16px 2px 12px}.cl-g{display:none}.cl-s{font-size:16px;margin-bottom:12px}}
 @media (max-width:760px){.oc-b{grid-template-columns:1fr!important}.oc-p{padding:14px 14px 10px!important}.oc-a{padding:0 14px 14px!important;flex-direction:row!important;flex-wrap:wrap;gap:8px}.oc-a .oc-btn{flex:1 1 100%;justify-content:center;padding:13px 14px;font-size:15px}.oc-a .oc-rem,.oc-a .oc-cmp{flex:1 1 0;min-width:0;white-space:normal;line-height:1.2;min-height:42px;padding:8px 6px;font-size:12.5px}}
 </style>
 <script src="/js/stat.js" defer></script>
@@ -282,8 +279,7 @@ html[data-c=gas] .cl-btn{color:#fff}.cl-btn:hover{filter:brightness(.94)}
 <main class="wrap">
 <section class="claim" aria-label="In breve">
 <div class="cl-t"><p class="cl-h h">Offerte <span id="clw">luce</span> da <span id="clp">…</span><sup>*</sup> al mese.</p>
-<p class="cl-s">Tutte le <strong id="clc">…</strong> offerte del Portale ARERA, sempre aggiornate.</p>
-<div class="cl-a"><a class="cl-btn" href="#q">Calcola la mia spesa</a></div></div>
+<p class="cl-s">Tutte le <strong id="clc">…</strong> offerte del Portale ARERA, sempre aggiornate.</p></div>
 </section>
 <section class="idx" aria-label="Indici">
 <a class="ix ix-luce" href="/prezzo-energia-oggi/"><span class="ixl">PUN <span id="pm"></span></span><span class="ixv"><strong id="pv">—</strong> €/kWh <span class="dl" id="pd"></span></span></a>
