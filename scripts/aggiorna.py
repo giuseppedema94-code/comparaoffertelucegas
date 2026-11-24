@@ -445,6 +445,25 @@ def prepara_cache(grezzi: Path) -> None:
             shutil.copy(f, dest / f.name)
 
 
+def reg_luce(parametri: dict) -> None:
+    """Aggiorna le componenti regolate luce (cliente domestico residente) con i parametri
+    ARERA pubblicati negli open data del Portale Offerte. Se ne manca uno restano i valori fissi."""
+    v = lambda k: (parametri.get(k) or {}).get("valore")
+    chiavi = ("sigma1", "sigma2", "sigma3", "uc3", "uc6p_d", "uc6s_d", "asos_dr", "arim_dr", "cdispd", "acc_c_r_l", "iva_c")
+    if any(v(k) is None for k in chiavi):
+        print("parametri ARERA incompleti, componenti regolate luce invariate", file=sys.stderr)
+        return
+    qp = v("sigma2") + v("uc6s_d")  # trasporto quota potenza + UC6, €/kW/anno
+    REG["luce"].update({
+        "rf": round(v("sigma1") + (v("dispbt_d") or 0) + 3 * qp, 4),  # quota fissa + dispacciamento fisso + potenza 3 kW, €/anno
+        "qp": round(qp, 4),
+        "rv": round(v("sigma3") + v("uc3") + v("uc6p_d") + v("asos_dr") + v("arim_dr") + v("cdispd"), 6),  # trasporto, oneri, dispacciamento, €/kWh
+        "acc": v("acc_c_r_l"),
+        "iva": v("iva_c"),
+    })
+    print("componenti regolate luce:", REG["luce"])
+
+
 def main() -> int:
     DATI.mkdir(exist_ok=True)
     if len(sys.argv) > 1:
@@ -453,6 +472,7 @@ def main() -> int:
     cambio = json.loads(percorso_cambio.read_text(encoding="utf-8")) if percorso_cambio.exists() else {}
     archivio = Archivio()
     archivio.assicura(forza=True)
+    reg_luce(archivio.parametri.get("luce", {}))
     tutti = {}
     for commodity in ("luce", "gas"):
         dati = genera(archivio, commodity, cambio)
