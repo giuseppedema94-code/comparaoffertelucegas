@@ -307,6 +307,7 @@ html,button,a,input,select,label{touch-action:manipulation}
 <div class="opts">
 <label><input type="checkbox" id="onp"> Senza penale di uscita</label>
 <label id="ovdw"><input type="checkbox" id="ovd"> Energia verde</label>
+<label><input type="checkbox" id="ofn"> Solo fornitori noti</label>
 </div>
 <div class="prio" id="prio" hidden><strong>Quanto conta per te?</strong>
 <div class="pre" role="group" aria-label="Priorità pronte"><button type="button" class="chip" data-pre="5220">Equilibrato</button><button type="button" class="chip" data-pre="3520">Prezzo bloccato</button><button type="button" class="chip" data-pre="3115" id="prev">Energia verde</button></div>
@@ -425,6 +426,7 @@ function render(){
     if(S.f==='b'){if(x.o.t!=='f'||!(x.o.d>=36&&x.o.d<=240))return false}else if(S.f!=='tutte'&&x.o.t!==S.f)return false;
     if(S.np&&x.o.pen)return false;
     if(S.vd&&!x.o.vd)return false;
+    if(S.fn&&!x.o.fn)return false;
     if(s&&(x.o.v+' '+x.o.n).toLowerCase().indexOf(s)<0)return false;
     return true;
   });
@@ -463,7 +465,7 @@ function render(){
   cbar();urlSync();
 }
 function urlSync(){var p=new URLSearchParams(),l=S.c==='luce',q=Math.round(S.q[S.c]);if(!l)p.set('c','gas');if(q!==(l?225:90))p.set(l?'kwh':'smc',q);
-  if(l&&S.kw!==3)p.set('kw',S.kw);if(l&&!S.rai)p.set('rai','0');if(S.per==='a')p.set('per','a');if(S.f!=='tutte')p.set('f',S.f);if(S.np)p.set('np','1');if(l&&S.vd)p.set('vd','1');
+  if(l&&S.kw!==3)p.set('kw',S.kw);if(l&&!S.rai)p.set('rai','0');if(S.per==='a')p.set('per','a');if(S.f!=='tutte')p.set('f',S.f);if(S.np)p.set('np','1');if(l&&S.vd)p.set('vd','1');if(S.fn)p.set('fn','1');
   if(S.k!=='m')p.set('ord',S.k);if(S.k==='pr')p.set('w',S.w.join(''));if(S.s.trim())p.set('q',S.s.trim());
   var t=p.toString();try{history.replaceState(null,'',location.pathname+(t?'?'+t:''))}catch(e){}}
 function findX(id){var a=compute()||[];for(var i=0;i<a.length;i++)if(a[i].o.id===id)return a[i];return null}
@@ -509,6 +511,7 @@ document.querySelectorAll('[data-pre]').forEach(function(b){b.addEventListener('
 $('msort').addEventListener('change',function(e){S.k=e.target.value;S.dir=1;render()});
 $('onp').addEventListener('change',function(e){S.np=e.target.checked;render()});
 $('ovd').addEventListener('change',function(e){S.vd=e.target.checked;render()});
+$('ofn').addEventListener('change',function(e){S.fn=e.target.checked;render()});
 document.querySelectorAll('#prio input').forEach(function(r){r.addEventListener('input',function(){S.w[+r.dataset.w]=+r.value;render()})});
 var PF={luce:{1:125,2:185,4:270},gas:{1:40,2:75,4:115}};
 document.querySelectorAll('[data-pf]').forEach(function(b){b.addEventListener('click',function(){S.q[S.c]=PF[S.c][b.dataset.pf];render()})});
@@ -548,7 +551,7 @@ try{var P=new URLSearchParams(location.search),g=function(k){return P.get(k)},n=
   if(g('c')==='gas')C0='gas';var v;if(v=n('kwh',3000))S.q.luce=v;if(v=n('smc',1000))S.q.gas=v;
   if((v=n('kw',10))&&[1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10].indexOf(v)>=0){S.kw=v;$('kw').value=String(v)}
   if(g('rai')==='0'){S.rai=false;$('rai').checked=false}if(g('per')==='a')S.per='a';
-  if(['f','v','b'].indexOf(g('f'))>=0)S.f=g('f');if(g('np')==='1')S.np=$('onp').checked=true;if(g('vd')==='1')S.vd=$('ovd').checked=true;
+  if(['f','v','b'].indexOf(g('f'))>=0)S.f=g('f');if(g('np')==='1')S.np=$('onp').checked=true;if(g('vd')==='1')S.vd=$('ovd').checked=true;if(g('fn')==='1')S.fn=$('ofn').checked=true;
   if(['p','fx','pr'].indexOf(g('ord'))>=0)S.k=g('ord');if(/^[0-5]{4}$/.test(g('w')||''))S.w=g('w').split('').map(Number);
   if(g('q')){S.s=g('q').slice(0,60);$('search').value=S.s}}catch(e){}
 setC(C0);load('gas');

@@ -41,6 +41,7 @@ REG = {
 
 
 RISERVATE_FILE = DATI / "riservate.json"
+NOTI = set(json.loads((DATI / "noti.json").read_text(encoding="utf-8"))["nomi"]) if (DATI / "noti.json").exists() else set()
 RISERVATE_RE = re.compile(r"\bresti\b|fedel|retention|win.?back|rinnov[oi](?![a-z])|convenzion|dipendent|\bsoci(o)?\b|soci(o)?$", re.I)
 
 
@@ -233,6 +234,7 @@ def genera(archivio: Archivio, commodity: str, cambio: dict) -> dict:
             "id": hashlib.md5(f"{o['piva']}|{o['codice']}".encode()).hexdigest()[:8],
             "vd": True if verde else None,
             "v": marchio(o, marchi),
+            "fn": marchio(o, marchi) in NOTI,
             "n": bello(o.get("nome") or ""),
             "c": o["codice"],
             "t": "f" if o.get("tipo_prezzo") == "fisso" else "v",
@@ -330,6 +332,7 @@ def genera_dual(archivio: Archivio) -> dict:
         contatti = d.get("contatti") or {}
         righe.append({
             "v": marchio(d, marchi),
+            "fn": marchio(d, marchi) in NOTI,
             "n": bello(d.get("nome") or ""),
             "t": "f" if d.get("tipo_prezzo") == "fisso" else "v",
             "d": durata(d),
