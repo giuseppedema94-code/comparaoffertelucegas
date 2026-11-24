@@ -51,3 +51,5 @@ jobs:
           git commit -m "Offerte aggiornate $(date -u +%Y-%m-%dT%H:%MZ)"
           git pull --rebase origin main
           git push origin HEAD:main
+      - name: Avvisa i motori di ricerca
+        run: python scripts/indexnow.py
