@@ -2,7 +2,7 @@
 <html lang="it" data-c="lg">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at https://www.googletagmanager.com https://*.clarity.ms 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-i/ZkaEfWY0o+Db6D1/9Ow2B8cU6gysBWlCJn0rqEDYA='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; connect-src 'self' https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at https://www.googletagmanager.com https://*.clarity.ms 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-J1zZcH4JjsfJkQlOxc2xsh+SyUDAKswpTvXROoz90e4='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; connect-src 'self' https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Offerte luce e gas insieme: pacchetti a confronto</title>
@@ -289,6 +289,7 @@ html,button,a,input,select,label{touch-action:manipulation}
 <div class="lgq"><label for="qg">Gas</label><div class="lgst"><button type="button" class="pm" data-t="qg" data-d="-5" aria-label="Diminuisci il consumo di gas">−</button><div class="lgv"><input type="number" id="qg" value="90" min="0" step="5" inputmode="numeric"><span>Smc</span></div><button type="button" class="pm" data-t="qg" data-d="5" aria-label="Aumenta il consumo di gas">+</button></div></div>
 <div class="prof" role="group" aria-label="Consumo tipo"><span>Non hai la bolletta?</span><button type="button" data-pf="1">Single</button><button type="button" data-pf="2">Coppia</button><button type="button" data-pf="4">Famiglia di 4</button></div>
 <label class="lgr"><input type="checkbox" id="rai" checked> Canone RAI <span>(90 €/anno)</span></label>
+<label class="lgr"><input type="checkbox" id="ofn"> Solo fornitori noti</label>
 <p class="src">Cliente residente, contatore da 3 kW. Spesa con imposte, stimata come nella <a href="/">classifica principale</a>.</p></div>
 <div class="lgb1" id="best" aria-live="polite">Caricamento offerte…</div>
 </section>
@@ -324,14 +325,14 @@ function setPer(x){if(x===PER)return;var f=x==='a'?12:1/12;['ql','qg'].forEach(f
 function render(){
   var k=PER==='a'?1:12,yl=Math.max(0,+$('ql').value||0)*k,yg=Math.max(0,+$('qg').value||0)*k,rai=$('rai').checked?90/12:0;
   var R=D.dual.reg;
-  var ok=function(o,y){return o.ok!==false&&!(o.min!=null&&y<o.min||o.max!=null&&y>o.max)};
-  var rows=D.dual.offerte.map(function(o){var l=costo(o.l,'luce',yl,R)+rai,g=costo(o.g,'gas',yg,R);return {o:o,l:l,g:g,t:l+g,k:'c'}});
+  var FN=$('ofn').checked,ok=function(o,y){return o.ok!==false&&(!FN||o.fn)&&!(o.min!=null&&y<o.min||o.max!=null&&y>o.max)};
+  var rows=D.dual.offerte.filter(function(o){return !FN||o.fn}).map(function(o){var l=costo(o.l,'luce',yl,R)+rai,g=costo(o.g,'gas',yg,R);return {o:o,l:l,g:g,t:l+g,k:'c'}});
   var bestBy=function(d,c,y){var m={};d.offerte.forEach(function(o){if(!ok(o,y))return;var x=costo(o,c,y,R);if(!m[o.v]||x<m[o.v].x)m[o.v]={o:o,x:x}});return m};
   var ML=bestBy(D.luce,'luce',yl),MG=bestBy(D.gas,'gas',yg);
   Object.keys(ML).forEach(function(v){if(!MG[v])return;var L=ML[v].o,G=MG[v].o,l=ML[v].x+rai,g=MG[v].x;
     rows.push({k:'s',l:l,g:g,t:l+g,o:{v:v,n:'Luce: '+L.n+' · Gas: '+G.n,u:null,t:L.t==='f'&&G.t==='f'?'f':'v',d:Math.min(L.d||0,G.d||0),pen:L.pen||G.pen,lg:L.lg||G.lg,l:{pd:L.pd!=null?L.pd:L.p,fx:L.fx},g:{pd:G.pd!=null?G.pd:G.p,fx:G.fx},L:L,G:G}})});
   rows.sort(function(a,b){return a.t-b.t});
-  function migliore(d,c,y){var b=null;d.offerte.forEach(function(o){if(o.ok===false)return;if(o.min!=null&&y<o.min||o.max!=null&&y>o.max)return;var x=costo(o,c,y,R);if(!b||x<b.x)b={o:o,x:x}});return b}
+  function migliore(d,c,y){var b=null;d.offerte.forEach(function(o){if(o.ok===false||FN&&!o.fn)return;if(o.min!=null&&y<o.min||o.max!=null&&y>o.max)return;var x=costo(o,c,y,R);if(!b||x<b.x)b={o:o,x:x}});return b}
   var bl=migliore(D.luce,'luce',yl),bg=migliore(D.gas,'gas',yg);
   if(bl&&bg){var sep=bl.x+rai+bg.x,pk=rows[0],vince=!pk||sep<=pk.t,lnk=function(o,t,c){var u=safe(o.u)||safe(o.us),k=/luce$/.test(t)?' bl':/gas$/.test(t)?' bg':'';return u?'<a class="lgbtn'+k+'" href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+t+'</a>':'<a class="lgbtn'+k+'" href="/?q='+encodeURIComponent(o.v)+'#'+(c||'luce')+'">'+t+'</a>'};
     var riga=function(k,x,o){return '<div class="lgr1"><span class="k">'+k+'</span><span class="lgl">'+logoB(o)+'<span><strong>'+esc(o.v)+'</strong><br>'+esc(o.n)+'</span></span><span class="lgp">'+eur(x)+'</span></div>'};
@@ -353,7 +354,7 @@ function render(){
   var nc=rows.filter(function(x){return x.k==='c'}).length;$('cnt').textContent=(rows.length-nc)+' fornitori con luce e gas, '+nc+' offerte congiunte';
 }
 Promise.all(['dual','luce','gas'].map(function(k){return fetch('/data/'+k+'.json',{cache:'no-cache'}).then(function(r){return r.json()})})).then(function(a){D.dual=a[0];D.luce=a[1];D.gas=a[2];
-  ['ql','qg','rai'].forEach(function(id){$(id).addEventListener('input',render)});
+  ['ql','qg','rai'].forEach(function(id){$(id).addEventListener('input',render)});$('ofn').addEventListener('change',render);
   document.querySelectorAll('.pm').forEach(function(b){b.addEventListener('click',function(){var i=$(b.dataset.t);i.value=Math.max(0,(+i.value||0)+(+b.dataset.d));render()})});
   document.querySelectorAll('.per button').forEach(function(b){b.addEventListener('click',function(){setPer(b.dataset.p)})});
   var PF={1:[125,40],2:[185,75],4:[270,115]};document.querySelectorAll('[data-pf]').forEach(function(b){b.addEventListener('click',function(){var k=PER==='a'?12:1;$('ql').value=PF[b.dataset.pf][0]*k;$('qg').value=PF[b.dataset.pf][1]*k;render()})});render();
