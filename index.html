@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at https://www.googletagmanager.com https://*.clarity.ms 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-LvA348Kdq6cUWkjlA4SvgirxoV6FgbniO7YzGfsYg8Q='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; connect-src 'self' https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at https://www.googletagmanager.com https://*.clarity.ms 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-Fq8jifFhcO/W3kIvceMB2BEUjzE2OHkRlKo0LkRFLoU='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; connect-src 'self' https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Confronto offerte luce e gas, aggiornato ogni giorno</title>
@@ -289,7 +289,7 @@ html,button,a,input,select,label{touch-action:manipulation}
 <section class="hero">
 <div class="card ask">
 <h2 class="h" id="q">Il tuo consumo</h2>
-<div class="per" role="group" aria-label="Periodo del consumo"><button type="button" data-p="m" aria-pressed="true">Mensile</button><button type="button" data-p="a" aria-pressed="false">Annuo</button></div>
+<div class="per" role="group" aria-label="Periodo del consumo"><button type="button" data-p="m" aria-pressed="true">Mensile</button><button type="button" data-p="b" aria-pressed="false">Bimestrale</button><button type="button" data-p="a" aria-pressed="false">Annuo</button></div>
 <div class="opz" id="raiw"><label class="kw">Contatore <select id="kw" aria-label="Potenza impegnata del contatore"><option value="1.5">1,5</option><option value="2">2</option><option value="2.5">2,5</option><option value="3" selected>3</option><option value="3.5">3,5</option><option value="4">4</option><option value="4.5">4,5</option><option value="5">5</option><option value="5.5">5,5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select> kW</label><label class="rai"><input type="checkbox" id="rai" checked> Canone RAI <span>(90 €/anno)</span></label></div>
 <div class="stepper">
 <button type="button" id="minus" aria-label="Diminuisci il consumo">−</button>
@@ -446,8 +446,8 @@ function compute(){
 
 function render(){
   var cfg=CFG[S.c];
-  var an=S.per==='a';$('qlab').textContent=an?'Consumo annuo':'Consumo mensile';$('unit').textContent=cfg.u;$('raiw').hidden=S.c!=='luce';document.querySelectorAll('.per button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.p===S.per)});
-  if(document.activeElement!==$('cons'))$('cons').value=Math.round(an?S.q[S.c]*12:S.q[S.c]).toLocaleString('it-IT');fitC();
+  var an=S.per==='a',pf={m:1,b:2,a:12}[S.per]||1;$('qlab').textContent=an?'Consumo annuo':S.per==='b'?'Consumo bimestrale':'Consumo mensile';$('unit').textContent=cfg.u;$('raiw').hidden=S.c!=='luce';document.querySelectorAll('.per button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.p===S.per)});
+  if(document.activeElement!==$('cons'))$('cons').value=Math.round(S.q[S.c]*pf).toLocaleString('it-IT');fitC();
   document.querySelectorAll('.seg button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.c===S.c)});
   document.querySelectorAll('[data-f]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.f===S.f)});
   
@@ -516,7 +516,7 @@ function render(){
   cbar();urlSync();
 }
 function urlSync(){var p=new URLSearchParams(),l=S.c==='luce',q=Math.round(S.q[S.c]);if(!l)p.set('c','gas');if(q!==(l?125:40))p.set(l?'kwh':'smc',q);
-  if(l&&S.kw!==3)p.set('kw',S.kw);if(l&&!S.rai)p.set('rai','0');if(S.per==='a')p.set('per','a');if(S.f!=='tutte')p.set('f',S.f);if(S.np)p.set('np','1');if(l&&S.vd)p.set('vd','1');if(S.fn)p.set('fn','1');
+  if(l&&S.kw!==3)p.set('kw',S.kw);if(l&&!S.rai)p.set('rai','0');if(S.per!=='m')p.set('per',S.per);if(S.f!=='tutte')p.set('f',S.f);if(S.np)p.set('np','1');if(l&&S.vd)p.set('vd','1');if(S.fn)p.set('fn','1');
   if(S.k!=='m')p.set('ord',S.k);if(S.k==='pr')p.set('w',S.w.join(''));if(S.s.trim())p.set('q',S.s.trim());
   var t=p.toString();try{history.replaceState(null,'',location.pathname+(t?'?'+t:''))}catch(e){}}
 function findX(id){var a=compute()||[];for(var i=0;i<a.length;i++)if(a[i].o.id===id)return a[i];return null}
@@ -577,7 +577,7 @@ $('rai').addEventListener('change',function(e){S.rai=e.target.checked;render()})
 document.querySelectorAll('.per button').forEach(function(b){b.addEventListener('click',function(){S.per=b.dataset.p;render()})});
 $('minus').addEventListener('click',function(){step(-1)});$('plus').addEventListener('click',function(){step(1)});
 function fitC(){var c=$('cons');c.style.width=Math.max(1,c.value.length)+0.3+'ch'}
-$('cons').addEventListener('input',function(e){fitC();var v=parseInt(e.target.value.replace(/\D/g,''),10);if(v>0){S.q[S.c]=Math.min(CFG[S.c].max,S.per==='a'?v/12:v);render()}});
+$('cons').addEventListener('input',function(e){fitC();var v=parseInt(e.target.value.replace(/\D/g,''),10);if(v>0){S.q[S.c]=Math.min(CFG[S.c].max,v/({m:1,b:2,a:12}[S.per]||1));render()}});
 
 var IDX=null,MESI=['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
 var ml=function(m){var p=m.split('-');return MESI[+p[1]-1]+' '+p[0]};
@@ -605,7 +605,7 @@ var C0=location.hash==='#gas'?'gas':'luce';
 try{var P=new URLSearchParams(location.search),g=function(k){return P.get(k)},n=function(k,mx){var v=parseFloat(g(k));return v>0?Math.min(mx,v):null};
   if(g('c')==='gas')C0='gas';var v;if(v=n('kwh',3000))S.q.luce=v;if(v=n('smc',1000))S.q.gas=v;
   if((v=n('kw',10))&&[1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,7,8,9,10].indexOf(v)>=0){S.kw=v;$('kw').value=String(v)}
-  if(g('rai')==='0'){S.rai=false;$('rai').checked=false}if(g('per')==='a')S.per='a';
+  if(g('rai')==='0'){S.rai=false;$('rai').checked=false}if(g('per')==='a'||g('per')==='b')S.per=g('per');
   if(['f','v','b'].indexOf(g('f'))>=0)S.f=g('f');if(g('np')==='1')S.np=$('onp').checked=true;if(g('vd')==='1')S.vd=$('ovd').checked=true;if(g('fn')==='1')S.fn=$('ofn').checked=true;
   if(['p','fx','pr'].indexOf(g('ord'))>=0)S.k=g('ord');if(/^[0-5]{4}$/.test(g('w')||''))S.w=g('w').split('').map(Number);
   if(g('q')){S.s=g('q').slice(0,60);$('search').value=S.s}}catch(e){}
