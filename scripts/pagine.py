@@ -239,18 +239,7 @@ ver = f"{int(ver[2])}/{ver[1]}/{ver[0]}"
 import datetime as _dt
 auto = json.loads((R / "data" / "internet_auto.json").read_text(encoding="utf-8"))
 fresco = lambda x: not x.get("letto") or (_dt.date.fromisoformat(net["verificato"]) - _dt.date.fromisoformat(x["letto"])).days <= 7
-MESI = 24
-
-
-def media(x):
-    """Costo medio al mese nei primi 24 mesi: attivazione + mesi in promozione + mesi a prezzo pieno."""
-    pm = x["prezzo_mese"]
-    dopo = x.get("prezzo_dopo") or pm
-    promo = min(MESI, x.get("mesi_promo") or (12 if x.get("prezzo_dopo") else MESI))
-    return ((x.get("attivazione") or 0) + pm * promo + dopo * (MESI - promo)) / MESI
-
-
-righe = sorted([x for x in net["internet"] + [a for a in auto if not a["bundle"]] if fresco(x)], key=media)
+righe = sorted([x for x in net["internet"] + [a for a in auto if not a["bundle"]] if fresco(x)], key=lambda x: x["prezzo_mese"])
 net["bundle"] = net["bundle"] + [{"fornitore": a["operatore"], "offerta": a["offerta"], "vantaggio": a["nota"], "prezzo_fibra_mese": a["prezzo_mese"], "url": a["url"], "nota": (f"Poi {a['prezzo_dopo']:.2f} €".replace(".", ",") + (f" dopo {a['mesi_promo']} mesi." if a.get("mesi_promo") else ".")) if a.get("prezzo_dopo") and a["prezzo_dopo"] != a["prezzo_mese"] else ""} for a in auto if a["bundle"] and fresco(a)]
 vecchio = lambda x: x.get("letto") and x["letto"] < net["verificato"]
 dl = lambda x: f' Prezzo letto il {int(x["letto"][8:])}/{x["letto"][5:7]}.' if vecchio(x) else ""
@@ -274,9 +263,7 @@ def scheda(x, i, top, bundle=False):
     if x.get("nota"): dati.append(("Condizioni", e(x["nota"][:1].upper()+x["nota"][1:]) + dl(x), "w"))
     dd = "".join(f'<div class="{w}"><dt>{k}</dt><dd{" class=nt" if k in ("Condizioni", "Vantaggio") else ""}>{v}</dd></div>' for k, v, w in dati)
     dopo = (f'poi {n2(x["prezzo_dopo"])}' + (f' dopo {x["mesi_promo"]} mesi' if x.get("mesi_promo") else "")) if x.get("prezzo_dopo") and x["prezzo_dopo"] != pm else ""
-    if not bundle: dati.append(("Media su 2 anni", n2(media(x)) + " al mese", ""))
-    dd = "".join(f'<div class="{w}"><dt>{k}</dt><dd{" class=nt" if k in ("Condizioni", "Vantaggio") else ""}>{v}</dd></div>' for k, v, w in dati)
-    diff = "" if bundle else ('<div class="oc-dd top1">La più conveniente</div>' if i == 0 else f'<div class="oc-dd">+{n2(media(x) - top)} al mese in media</div>')
+    diff = "" if bundle else ('<div class="oc-dd top1">Il canone più basso</div>' if i == 0 else f'<div class="oc-dd">+{n2(pm - top)} al mese</div>')
     btn = f'<a class="oc-btn" href="{e(x["url"])}" target="_blank" rel="nofollow noopener">Vai all\'offerta</a>' if x.get("url") else ""
     num = "" if bundle else f'<span class="oc-n">{i + 1}</span>'
     first = " first" if (i == 0 and not bundle) else ""
@@ -286,16 +273,16 @@ def scheda(x, i, top, bundle=False):
             f'{f"<div class=oc-y>{dopo}</div>" if dopo else ""}{diff}</div><div class="oc-a">{btn}</div></div></article>')
 
 
-top = media(righe[0]) if righe else 0
+top = righe[0]["prezzo_mese"] if righe else 0
 tr = [scheda(x, i, top) for i, x in enumerate(righe)]
 bt = [scheda(x, 0, 0, bundle=True) for x in sorted(net["bundle"], key=lambda b: b["prezzo_fibra_mese"])]
 
 corpo = testata("/internet/", "Offerte fibra e internet casa a confronto",
-                "Le offerte fibra per la casa dei principali operatori, ordinate per costo medio nei primi due anni, e i pacchetti energia più internet dei fornitori di luce e gas.",
+                "Le offerte fibra per la casa dei principali operatori, ordinate per canone mensile, e i pacchetti energia più internet dei fornitori di luce e gas.",
                 "net", "/img/geco-net.svg")
 corpo += f"""<main class="wrap pg">
 <h1 class="h">Offerte fibra e internet casa</h1>
-<section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Internet casa, dalla più conveniente <span class="src" id="ncnt"></span></h2>
+<section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Internet casa, dal canone più basso <span class="src" id="ncnt"></span></h2>
 <div class="flt" role="group" aria-label="Filtra"><button type="button" data-t="tutte" aria-pressed="true">Tutte</button><button type="button" data-t="ftth" aria-pressed="false">Fibra FTTH</button><button type="button" data-t="fwa" aria-pressed="false">FWA senza linea</button><label><input type="checkbox" id="noreg"> Nascondi offerte regionali</label></div>
 <div id="nt">
 {''.join(tr)}
@@ -312,8 +299,7 @@ corpo += f"""<main class="wrap pg">
 <p class="src">Il prezzo della luce e del gas di questi fornitori lo trovi nella <a href="/">classifica luce e gas</a>.</p></section>
 <section class="card txt"><h2 class="h">Come leggere il confronto</h2>
 <p>Per luce e gas usiamo gli open data ufficiali di ARERA. Per internet non esiste una banca dati pubblica delle offerte: ogni mattina leggiamo i prezzi direttamente dalle pagine degli operatori. Prima di attivare, controlla comunque prezzo e condizioni sulla pagina dell'offerta.</p>
-<p>Ordiniamo le offerte per costo medio al mese nei primi 24 mesi: contiamo l'attivazione, i mesi a prezzo promozionale e quelli a prezzo pieno. Se l'operatore indica il prezzo dopo la promozione ma non quanto dura, la contiamo di 12 mesi.</p>
-<p>Prima di firmare controlla anche il modem e quanto paghi se disdici prima del vincolo.</p></section>
+<p>Oltre al canone guarda tre cose: quanto dura il prezzo promozionale, il costo di attivazione e quanto paghi se disdici prima del vincolo.</p></section>
 """
 NET_JS = r"""
 var T='tutte';function flt(){var n=0,rr=document.querySelectorAll('#nt article');rr.forEach(function(r){var ok=(T==='tutte'||r.dataset.cat===T)&&!($('noreg').checked&&r.dataset.reg==='1');r.hidden=!ok;if(ok)n++});$('ncnt').textContent=n+' offerte';document.querySelectorAll('.flt button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.t===T)})}
