@@ -125,7 +125,7 @@ def salva(im, f):
 def cerca(d):
     f = DIR / f"{d}.png"
     s = stato.get(d, {})
-    if f.exists() and s.get("px", 0) >= BUONO:
+    if f.exists() and (s.get("manuale") or s.get("px", 0) >= BUONO):
         return
     if s.get("data") and (oggi - dt.date.fromisoformat(s["data"])).days < 7:
         return
