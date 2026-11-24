@@ -2,7 +2,7 @@
 <html lang="it" data-c="lg">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at https://www.googletagmanager.com https://*.clarity.ms 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-kj9SPgYG0YArz+mdY++ytCDj1VxeDaBqTdcP06y2eHA='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; connect-src 'self' https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at https://www.googletagmanager.com https://*.clarity.ms 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-9Mt2D28oyp7MTmQYfn2Wvwh8gjvybpm69cIijsOD8eQ='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; connect-src 'self' https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Offerte luce e gas insieme: pacchetti a confronto</title>
@@ -345,7 +345,7 @@ function setPer(x){if(x===PER)return;var f=PF_[x]/PF_[PER];['ql','qg'].forEach(f
   document.querySelectorAll('.pm').forEach(function(b){var s=b.dataset.t==='ql'?10:5;b.dataset.d=(+b.dataset.d<0?-1:1)*s*PS_[x]});
   PER=x;document.querySelectorAll('.per button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.p===x)});render()}
 function render(){
-  var k=12/PF_[PER],yl=Math.max(0,+$('ql').value||0)*k,yg=Math.max(0,+$('qg').value||0)*k,rai=$('rai').checked?90/12:0;
+  var k=12/PF_[PER],yl=Math.max(0,+$('ql').value||0)*k,yg=Math.max(0,+$('qg').value||0)*k,rai=$('rai').checked?9:0;
   var R=D.dual.reg;
   var FN=$('ofn').checked,ok=function(o,y){return o.ok!==false&&(!FN||o.fn)&&!(o.min!=null&&y<o.min||o.max!=null&&y>o.max)};
   var rows=D.dual.offerte.filter(function(o){return !FN||o.fn}).map(function(o){var l=costo(o.l,'luce',yl,R)+rai,g=costo(o.g,'gas',yg,R);return {o:o,l:l,g:g,t:l+g,k:'c'}});

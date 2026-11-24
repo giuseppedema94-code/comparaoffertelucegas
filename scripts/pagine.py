@@ -179,7 +179,7 @@ function setPer(x){if(x===PER)return;var f=PF_[x]/PF_[PER];['ql','qg'].forEach(f
   document.querySelectorAll('.pm').forEach(function(b){var s=b.dataset.t==='ql'?10:5;b.dataset.d=(+b.dataset.d<0?-1:1)*s*PS_[x]});
   PER=x;document.querySelectorAll('.per button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.p===x)});render()}
 function render(){
-  var k=12/PF_[PER],yl=Math.max(0,+$('ql').value||0)*k,yg=Math.max(0,+$('qg').value||0)*k,rai=$('rai').checked?90/12:0;
+  var k=12/PF_[PER],yl=Math.max(0,+$('ql').value||0)*k,yg=Math.max(0,+$('qg').value||0)*k,rai=$('rai').checked?9:0;
   var R=D.dual.reg;
   var FN=$('ofn').checked,ok=function(o,y){return o.ok!==false&&(!FN||o.fn)&&!(o.min!=null&&y<o.min||o.max!=null&&y>o.max)};
   var rows=D.dual.offerte.filter(function(o){return !FN||o.fn}).map(function(o){var l=costo(o.l,'luce',yl,R)+rai,g=costo(o.g,'gas',yg,R);return {o:o,l:l,g:g,t:l+g,k:'c'}});
@@ -376,7 +376,7 @@ def spesa(o, c, reg):
     else:
         acc = 0 if y <= reg["accSoglia"] else reg["accRif"] * y
     a = (1 + reg["iva"]) * (o["fx"] + o["p"] * y - (o.get("s") or 0) + reg["rf"] + reg["rv"] * y + acc)
-    return a / 12 + (90 / 12 if c == "luce" else 0)
+    return a / 12 + (9 if c == "luce" else 0)
 
 
 def stab(o):
@@ -421,7 +421,7 @@ def scheda_en(x, i, top, c):
     diff = '<div class="oc-dd top1">La più conveniente</div>' if i == 0 else f'<div class="oc-dd">+{n2(m - top)} al mese</div>'
     return (f'<article class="oc{" first" if i == 0 else ""}"><div class="oc-h"><span class="oc-n">{i + 1}</span>{logo_}'
             f'<div class="oc-t"><div class="oc-v">{e(o["v"])}</div><div class="oc-o">{e(o["n"])}</div></div><div class="oc-tg">{tags}</div></div>'
-            f'<div class="oc-b"><dl class="oc-d">{dd}</dl><div class="oc-p"><div class="oc-m">{eur_big(m)}</div><div class="oc-y">{n0(m * 12)} l\'anno</div>{diff}</div>'
+            f'<div class="oc-b"><dl class="oc-d">{dd}</dl><div class="oc-p"><div class="oc-m">{eur_big(m)}</div><div class="oc-y">{n0(m * 12 - (18 if c == "luce" else 0))} l\'anno</div>{diff}</div>'
             f'<div class="oc-a">{btn}</div></div></article>')
 
 

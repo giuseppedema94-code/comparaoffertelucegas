@@ -361,7 +361,7 @@ def migliori(luce: dict, gas: dict, n: int = 3) -> dict:
     def mese(o, c, y):
         r = REG[c]
         acc = acc_luce(y, r["acc"]) if c == "luce" else 0
-        return (1 + r["iva"]) * (o["fx"] + o["p"] * y - (o.get("s") or 0) + r["rf"] + r["rv"] * y + acc) / 12 + (90 / 12 if c == "luce" else 0)
+        return (1 + r["iva"]) * (o["fx"] + o["p"] * y - (o.get("s") or 0) + r["rf"] + r["rv"] * y + acc) / 12 + (9 if c == "luce" else 0)
 
     out = {}
     for c, d, y in (("luce", luce, 2700), ("gas", gas, 1080)):
