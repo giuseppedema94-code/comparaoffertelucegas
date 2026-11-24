@@ -1,0 +1,16 @@
+https_static.octopuscdn.com_favicons_apple_touch_icon.png 6213 https://static.octopuscdn.com/favicons/apple-touch-icon.png
+https_static.octopuscdn.com_favicons_android_chrome_512x512.png 38736 https://static.octopuscdn.com/favicons/android-chrome-512x512.png
+https_static.octopuscdn.com_favicons_android_chrome_192x192.png 12877 https://static.octopuscdn.com/favicons/android-chrome-192x192.png
+https_static.octopuscdn.com_favicons_mstile_150x150.png 6274 https://static.octopuscdn.com/favicons/mstile-150x150.png
+https_static.octopuscdn.com_favicons_favicon.ico 15086 https://static.octopuscdn.com/favicons/favicon.ico
+octopus.energy_0.svg 4322 https://octopus.energy/_next/static/immutable/media/trustpilot-logo.2w_uh2ftgy7he.svg
+octopus.energy_1.png 6213 https://octopus.energy/apple-touch-icon.png
+octopus.energy_2.ico 15086 https://octopus.energy/favicon.ico
+octopus.energy_3.ico 15086 https://octopus.energy/favicon.ico?favicon.0t0le2it_4aml.ico
+octopus.energy_4.svg 95016 https://octopus.energy/favicon.svg
+octopus.energy_5.png 6082 https://static.octopuscdn.com/coral/app-icons/android/en/icon.png
+octopus.energy_6.svg 10804 https://static.octopuscdn.com/coral/app-icons/ios/en/icon.svg
+octopus.energy_7.png 12877 https://static.octopuscdn.com/favicons/android-chrome-192x192.png
+octopus.energy_8.png 38736 https://static.octopuscdn.com/favicons/android-chrome-512x512.png
+octopus.energy_9.png 6213 https://static.octopuscdn.com/favicons/apple-touch-icon.png
+octopus.energy_10.png 248347 https://static.octopuscdn.com/oegb/social-share.png
