@@ -44,7 +44,8 @@ GOOGLE = bool(E_("GA_KEY") or E_("GOOGLE_APPLICATION_CREDENTIALS"))
 # --- GoatCounter
 try:
     t = E_("GC_TOKEN")
-    rng = lambda d: {"start": str(d), "end": str(d)}
+    # GoatCounter vuole un intervallo: con inizio e fine uguali alla stessa data il totale esce 0
+    rng = lambda d: {"start": f"{d}T00:00:00Z", "end": f"{d}T23:59:59Z"}
     tot = get(GC + "/stats/total", t, **rng(ieri))
     tot2 = get(GC + "/stats/total", t, **rng(altro))
     v, v2 = tot.get("total", 0), tot2.get("total", 0)
@@ -69,10 +70,11 @@ if E_("CLARITY_TOKEN"):
         d = get("https://www.clarity.ms/export-data/api/v1/project-live-insights", E_("CLARITY_TOKEN"), numOfDays=1)
         m = {x.get("metricName"): (x.get("information") or [{}])[0] for x in d}
         tr = m.get("Traffic", {})
-        val = lambda k: next((m.get(k, {}).get(f) for f in ("sessionsCount", "subTotal", "pagesViews") if m.get(k, {}).get(f) is not None), "0")
+        # sessionsCount e il totale delle sessioni, uguale per ogni metrica: conta la quota di sessioni con il problema
+        val = lambda k: f"{round(float(m.get(k, {}).get('sessionsWithMetricPercentage') or 0))}%"
         righe.append(f"<h3>Comportamento (Clarity, ultime 24 ore)</h3><p>{tr.get('totalSessionCount', 0)} sessioni registrate, "
-                     f"{tr.get('distinctUserCount', 0)} utenti. Clic a vuoto in {val('DeadClickCount')} sessioni, clic ripetuti per frustrazione in {val('RageClickCount')}, "
-                     f"ritorni rapidi alla pagina precedente in {val('QuickbackClick')}. Errori JavaScript in {val('ScriptErrorCount')} sessioni." + (f" Scorrimento medio {round(sd)}%." if (sd := m.get('ScrollDepth', {}).get('averageScrollDepth')) is not None else "") + "</p>")
+                     f"{tr.get('distinctUserCount', 0)} utenti. Sessioni con clic a vuoto {val('DeadClickCount')}, con clic ripetuti per frustrazione {val('RageClickCount')}, "
+                     f"con ritorni rapidi alla pagina precedente {val('QuickbackClick')}, con errori JavaScript {val('ScriptErrorCount')}." + (f" Scorrimento medio {round(sd)}%." if (sd := m.get('ScrollDepth', {}).get('averageScrollDepth')) is not None else "") + "</p>")
     except Exception as e:
         err.append(f"Clarity: {e}")
 # --- Google Analytics (facoltativo)

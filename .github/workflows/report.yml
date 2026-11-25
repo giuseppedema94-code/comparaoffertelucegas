@@ -3,6 +3,11 @@ on:
   schedule:
     - cron: "17 6 * * *"
   workflow_dispatch:
+    inputs:
+      solo_stampa:
+        description: Solo riepilogo su GitHub, senza mail
+        type: boolean
+        default: false
 permissions:
   contents: read
   id-token: write
@@ -14,6 +19,7 @@ jobs:
       CLARITY_TOKEN: ${{ secrets.CLARITY_TOKEN }}
       GA_PROPERTY: ${{ secrets.GA_PROPERTY || '565589904' }}
       GA_KEY: ${{ secrets.GA_KEY }}
+      SOLO_STAMPA: ${{ inputs.solo_stampa && '1' || '' }}
       MAIL_USER: ${{ secrets.MAIL_USER }}
       MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
       GMAIL_USER: ${{ secrets.GMAIL_USER }}
