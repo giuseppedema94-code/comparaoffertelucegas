@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at https://www.googletagmanager.com https://*.clarity.ms 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-onYSKc2vO3zpJnnpOU4FkrsOl9ihwGlgDcOZTaUOuUM='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; connect-src 'self' https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at https://www.googletagmanager.com https://*.clarity.ms 'sha256-RqYb+PmVLBpI1wp8ZiR3rABcA2WzSVYUDWJYmzfOdm0=' 'sha256-D4dkmne/2i7KU7mqpacfFZ9McuXFaoWbceLefxzmDII='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; connect-src 'self' https://*.goatcounter.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Confronto offerte luce e gas, aggiornato ogni giorno</title>
@@ -205,6 +205,8 @@ footer .wrap{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;ga
 .oc-d div{display:flex;flex-direction:column}.oc-d dt{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}.oc-d dd{margin:2px 0 0;font-weight:700;font-size:15px}.oc-d dd.ok{color:#15803d}
 .oc-p{text-align:center;padding:14px 18px;border-right:1px solid var(--line)}
 .oc-m strong{font:800 46px/1 'Schibsted Grotesk',sans-serif;letter-spacing:-.03em}.oc-m span{font:700 18px 'Schibsted Grotesk',sans-serif}
+.oc-m[data-det]{cursor:pointer}.oc-det{display:block;margin-top:4px;padding:2px 0;border:0;background:none;font:600 13px 'Schibsted Grotesk',sans-serif;color:var(--ink2);text-decoration:underline;text-underline-offset:3px;cursor:pointer}.oc-det:hover{color:var(--ink)}
+.ctab.dtab{table-layout:auto}.ctab.dtab th{width:auto;font-weight:500;color:var(--ink2)}.ctab.dtab td{text-align:right;white-space:nowrap;width:1%;padding-left:16px}.ctab.dtab tr.tot th,.ctab.dtab tr.tot td{font-weight:800;color:var(--ink);border-top:2px solid var(--ink);border-bottom:0}
 .oc-y{color:var(--mut);font-size:14px;margin-top:4px}.oc-dd{font-size:13.5px;font-weight:700;color:#B45309;margin-top:4px}.oc-dd.top1{color:#15803d}.oc-m{white-space:nowrap}.oc-dd{white-space:nowrap}
 .oc-a{padding:14px 18px}.oc-btn{display:inline-flex;align-items:center;gap:6px;background:var(--accbg);color:#14161A!important;font:800 15px 'Schibsted Grotesk',sans-serif;padding:13px 18px;border-radius:12px;text-decoration:none;white-space:nowrap}.oc-btn:after{content:'›';font-size:20px;line-height:1}
 .oc-btn:hover{filter:brightness(.94)}:root[data-c=gas] .oc-btn{color:#fff!important}
@@ -414,6 +416,25 @@ function PL(){return S.per==='b'?' a bimestre':' al mese'}
 function costo(o,d,annuo){var r=d.reg,pp=o.p+(o.t==='v'&&S.st&&d.idx?d.idx*S.st:0);
   if(r&&o.s!=null){var acc=r.acc!=null?accLuce(annuo,r.acc,S.kw):(annuo<=r.accSoglia?0:r.accRif*annuo);return (1+r.iva)*(o.fx+pp*annuo-o.s+r.rf+(r.qp?r.qp*(S.kw-3):0)+r.rv*annuo+acc)}
   return o.A!=null?o.A+o.B*annuo:o.fx+pp*annuo}
+function voci(o,d,annuo){var r=d.reg,l=S.c==='luce',u=CFG[S.c].u,pp=o.p+(o.t==='v'&&S.st&&d.idx?d.idx*S.st:0),q=annuo/12,V=[];
+  if(!(r&&o.s!=null))return null;
+  var acc=l?(r.acc!=null?accLuce(annuo,r.acc,S.kw):(annuo<=r.accSoglia?0:r.accRif*annuo)):(annuo<=r.accSoglia?0:r.accRif*annuo),rete=r.rf+(r.qp?r.qp*(S.kw-3):0)+r.rv*annuo;
+  V.push([(l?'Energia':'Gas')+' ('+num(pp,4)+' €/'+u+' × '+Math.round(q)+' '+u+')',pp*annuo/12]);
+  V.push(['Quota fissa del venditore',o.fx/12]);
+  if(o.s)V.push(['Sconto',-o.s/12]);
+  V.push([l?'Trasporto, contatore e oneri di sistema':'Trasporto, contatore, oneri e accise',rete/12]);
+  if(acc)V.push(['Accise',acc/12]);
+  var base=(o.fx+pp*annuo-o.s+rete+acc)/12;V.push([l?'IVA 10%':'IVA (10% fino a 480 Smc l\'anno, poi 22%)',base*r.iva]);
+  if(l&&S.rai)V.push(['Canone RAI (rata di gen-ott)',RAIM]);
+  return V}
+function dettaglio(x){var V=voci(x.o,S.data[S.c],S.q[S.c]*12),pm=PMf(),l=S.c==='luce';
+  $('cdh').textContent='Com\'è calcolata la spesa';
+  var h='<p class="note" style="margin-top:0"><strong>'+esc(x.o.v)+'</strong>, '+esc(x.o.n)+'</p>';
+  if(!V)h+='<p class="note">Per questa offerta usiamo la spesa stimata dal Portale ARERA: '+eur(x.m*pm,2)+PL()+'.</p>';
+  else{h+='<table class="ctab dtab"><tbody>'+V.map(function(v){return '<tr><th>'+v[0]+'</th><td>'+(v[1]<0?'−':'')+eur(Math.abs(v[1])*pm,2)+'</td></tr>'}).join('')
+    +'<tr class="tot"><th>Totale'+PL()+'</th><td>'+eur(x.m*pm,2)+'</td></tr></tbody></table>'
+    +'<p class="note">Consumo di '+Math.round(S.q[S.c]*pm)+' '+CFG[S.c].u+(S.per==='b'?' a bimestre':' al mese')+', cliente residente'+(l?', contatore da '+String(S.kw).replace('.',',')+' kW':'')+'. '+(x.o.t==='v'?'Prezzo variabile calcolato con l\'indice di oggi. ':'')+'Trasporto, oneri e accise sono stabiliti da ARERA e uguali per tutti i fornitori.</p>'}
+  $('cbody').innerHTML=h;var dl=$('cdlg');if(dl.showModal)dl.showModal();else dl.setAttribute('open','')}
 var MIA={luce:{t:'f',p:'',q:''},gas:{t:'f',p:'',q:''}};try{var _m=JSON.parse(localStorage.getItem('mia')||'null');if(_m&&_m.luce&&_m.gas)MIA=_m}catch(e){}
 var pn=function(v){v=String(v||'').replace(/\s|€/g,'').replace(',','.');var n=parseFloat(v);return isFinite(n)?n:NaN};
 function miaM(){var d=S.data[S.c],m=MIA[S.c];if(!d||!IDX)return null;var p=pn(m.p),q=pn(m.q),l=S.c==='luce',ix=IDX.serie[IDX.serie.length-1][l?'pun':'psv'];
@@ -503,7 +524,7 @@ function render(){
      +'<div class="oc-h"><span class="oc-n">'+(i+1)+'</span>'+bl+'<div class="oc-t"><div class="oc-v">'+esc(o.v)+'</div><div class="oc-o">'+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+'</div></div>'
      +'<div class="oc-tg"><span class="tg '+(o.t==='f'?'tg-f':'tg-v')+'">'+tipo+'</span>'+'<span class="tg st-'+stab(o)+'" title="'+STT[stab(o)]+'">Stabilità '+stab(o)+'</span>'+(o.vd?'<span class="tg tg-g">Verde</span>':'')+(o.tr?'<span class="tg tg-tr '+(o.tr<0?'dn':'up')+'" title="Variazione della spesa per un consumo tipo rispetto a una settimana fa">'+(o.tr<0?'▼ ':'▲ ')+eur(Math.abs(o.tr),2)+' in 7 giorni</span>':'')+(o.pl?'<span class="tg tg-p">PLACET</span>':'')+(o.pen?'<span class="tg tg-w" title="'+esc(o.penT||'')+'">Penale di uscita</span>':'')+(dd!=null&&dd>=0&&dd<=30?'<span class="tg tg-s">Scade tra '+dd+(dd===1?' giorno':' giorni')+'</span>':'')+'</div></div>'
      +'<div class="oc-b"><dl class="oc-d"><div><dt>Energia</dt><dd>'+num(o.pd!=null?o.pd:o.p,4)+' €/'+cfg.u+'</dd></div><div><dt>Quota fissa</dt><dd>'+num(o.fx/12,2)+' €/mese</dd></div>'+(o.ds?'<div><dt>Sconto</dt><dd class="ok">−'+eur(o.ds,0)+'/anno</dd></div>':'')+(o.sc?'<div><dt>Offerta valida fino al</dt><dd>'+fd(o.sc)+'</dd></div>':'')+'</dl>'
-     +'<div class="oc-p"><div class="oc-m"><strong>'+num(Math.floor(Math.round(x.m*PMf()*100)/100),0)+'</strong><span>,'+String(Math.round(x.m*PMf()*100)%100).padStart(2,'0')+(S.per==='b'?' €/bimestre':' €/mese')+'</span></div><div class="oc-y">'+eur(ANNO(x.m),0)+' l\'anno</div><div class="oc-dd'+(first?' top1':'')+'">'+(first?'La più conveniente':'+'+eur((x.m-top)*PMf(),2)+PL())+'</div></div>'
+     +'<div class="oc-p"><div class="oc-m" role="button" tabindex="0" data-det="'+i+'" title="Com\'è calcolata la spesa"><strong>'+num(Math.floor(Math.round(x.m*PMf()*100)/100),0)+'</strong><span>,'+String(Math.round(x.m*PMf()*100)%100).padStart(2,'0')+(S.per==='b'?' €/bimestre':' €/mese')+'</span></div><div class="oc-y">'+eur(ANNO(x.m),0)+' l\'anno</div><button type="button" class="oc-det" data-det="'+i+'">Com\'è calcolata</button><div class="oc-dd'+(first?' top1':'')+'">'+(first?'La più conveniente':'+'+eur((x.m-top)*PMf(),2)+PL())+'</div></div>'
      +'<div class="oc-a">'+(u?'<a class="oc-btn" href="'+esc(u)+'" target="_blank" rel="nofollow noopener">Vai all\'offerta</a>':(safeUrl(o.us)?'<a class="oc-btn" href="'+esc(safeUrl(o.us))+'" target="_blank" rel="nofollow noopener" title="Questa offerta non ha un link diretto nei dati ARERA">Sito del fornitore</a>':'<a class="oc-btn" href="https://www.ilportaleofferte.it/portaleOfferte/" target="_blank" rel="noopener" title="Cerca l\'offerta sul Portale Offerte di ARERA">Portale ARERA</a>'))+(o.t==='f'&&o.d>=6&&o.d<=240?'<button type="button" class="oc-rem" data-i="'+i+'" title="Scarica un promemoria per il calendario un mese prima che finisca il prezzo bloccato">Promemoria scadenza</button>':'')+'<button type="button" class="oc-cmp" data-id="'+esc(o.id)+'" aria-pressed="'+(S.cmp.indexOf(o.id)>=0)+'">Confronta</button><button type="button" class="oc-cmp oc-sh" data-s="'+i+'" aria-label="Condividi questa offerta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>Condividi</button></div></div></article>');
   });
   if(mk&&list.length&&list.length<=S.lim)h.push(mrow());
@@ -574,6 +595,7 @@ document.querySelectorAll('#prio input').forEach(function(r){r.addEventListener(
 var PF={luce:{1:125,2:185,4:270},gas:{1:40,2:75,4:115}};
 document.querySelectorAll('[data-pf]').forEach(function(b){b.addEventListener('click',function(){S.q[S.c]=PF[S.c][b.dataset.pf];render()})});
 $('tbl').addEventListener('click',function(e){var b=e.target.closest('.oc-rem');if(b&&S.cur){var x=S.cur[+b.dataset.i];if(x)ics(x.o)}});
+$('tbl').addEventListener('click',function(e){var b=e.target.closest('[data-det]');if(b&&S.cur){var x=S.cur[+b.dataset.det];if(x)dettaglio(x)}});$('tbl').addEventListener('keydown',function(e){var b=e.target.closest('.oc-m[data-det]');if(b&&(e.key==='Enter'||e.key===' ')){e.preventDefault();b.click()}});
 $('tbl').addEventListener('click',function(e){var b=e.target.closest('.sort');if(!b)return;var k=b.dataset.k;if(S.k===k)S.dir=-S.dir;else{S.k=k;S.dir=1}render()});
 function step(dir){var c=CFG[S.c];if(S.per==='a'){var y=Math.round(S.q[S.c]*12/(c.step*10))*c.step*10+dir*c.step*10;S.q[S.c]=Math.max(c.step,Math.min(c.max,y/12))}else S.q[S.c]=Math.max(c.step,Math.min(c.max,S.q[S.c]+dir*c.step));render()}
 $('rai').addEventListener('change',function(e){S.rai=e.target.checked;render()});$('kw').addEventListener('change',function(e){S.kw=parseFloat(e.target.value);render()});
