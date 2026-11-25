@@ -140,16 +140,21 @@ corpo = (f"<div style='font:15px/1.5 -apple-system,Segoe UI,sans-serif;color:#14
 if E_("GITHUB_STEP_SUMMARY"):
     with open(E_("GITHUB_STEP_SUMMARY"), "a", encoding="utf-8") as f:
         f.write(corpo)
+# Invio: Gmail (GMAIL_USER + password per le app) se configurato, altrimenti la casella Aruba
+if (E_("GMAIL_USER") or "").strip() and (E_("GMAIL_APP_PASSWORD") or "").strip():
+    server, utente, pw = "smtp.gmail.com", E_("GMAIL_USER").strip(), E_("GMAIL_APP_PASSWORD").replace(" ", "").strip()
+else:
+    server, utente, pw = "smtps.aruba.it", (E_("MAIL_USER") or "").strip(), (E_("MAIL_PASSWORD") or "").strip()
 msg = MIMEText(corpo, "html", "utf-8")
 msg["Subject"] = f"I tuoi siti: riepilogo del {ieri.strftime('%d/%m')}"
-msg["From"] = "Report siti <" + E_("MAIL_USER", "") + ">"
-msg["To"] = E_("MAIL_TO", "")
+msg["From"] = "Report siti <" + utente + ">"
+msg["To"] = E_("MAIL_TO", "") or utente
 if os.environ.get("SOLO_STAMPA"):
     print(corpo)
 else:
-    if not ((E_("MAIL_USER") or "").strip() and (E_("MAIL_PASSWORD") or "").strip()):
-        raise SystemExit("MAIL_USER o MAIL_PASSWORD vuoti nei secret: il report e solo nel riepilogo di GitHub Actions")
-    with smtplib.SMTP_SSL("smtps.aruba.it", 465, context=ssl.create_default_context()) as s:
-        s.login(E_("MAIL_USER").strip(), E_("MAIL_PASSWORD").strip())
+    if not (utente and pw):
+        raise SystemExit("Credenziali mail mancanti nei secret: il report e solo nel riepilogo di GitHub Actions")
+    with smtplib.SMTP_SSL(server, 465, context=ssl.create_default_context()) as s:
+        s.login(utente, pw)
         s.send_message(msg)
     print("inviata")
