@@ -29,6 +29,18 @@ def var(a, b):
 
 
 righe, err = [], []
+
+
+def credenziali(scopes):
+    """Account di servizio: da GA_KEY se presente, altrimenti dal collegamento GitHub-Google senza chiavi (google-github-actions/auth)."""
+    if E_("GA_KEY"):
+        from google.oauth2 import service_account
+        return service_account.Credentials.from_service_account_info(json.loads(E_("GA_KEY")), scopes=scopes)
+    import google.auth
+    return google.auth.default(scopes=scopes)[0]
+
+
+GOOGLE = bool(E_("GA_KEY") or E_("GOOGLE_APPLICATION_CREDENTIALS"))
 # --- GoatCounter
 try:
     t = E_("GC_TOKEN")
@@ -64,12 +76,11 @@ if E_("CLARITY_TOKEN"):
     except Exception as e:
         err.append(f"Clarity: {e}")
 # --- Google Analytics (facoltativo)
-if E_("GA_PROPERTY") and E_("GA_KEY"):
+if E_("GA_PROPERTY") and GOOGLE:
     try:
         from google.analytics.data_v1beta import BetaAnalyticsDataClient
         from google.analytics.data_v1beta.types import DateRange, Metric, RunReportRequest
-        from google.oauth2 import service_account
-        cr = service_account.Credentials.from_service_account_info(json.loads(E_("GA_KEY")))
+        cr = credenziali(["https://www.googleapis.com/auth/analytics.readonly"])
         r = BetaAnalyticsDataClient(credentials=cr).run_report(RunReportRequest(
             property="properties/" + E_("GA_PROPERTY"), date_ranges=[DateRange(start_date=str(ieri), end_date=str(ieri))],
             metrics=[Metric(name=x) for x in ("activeUsers", "newUsers", "averageSessionDuration", "engagementRate")]))
@@ -84,13 +95,10 @@ if E_("GA_PROPERTY") and E_("GA_KEY"):
 SITI = [("comparaoffertelucegas.it", "sc-domain:comparaoffertelucegas.it"), ("stipendioccnl.it", "sc-domain:stipendioccnl.it"),
         ("vestitiperanimali.it", "sc-domain:vestitiperanimali.it"), ("superocchiali.it", "sc-domain:superocchiali.it")]
 sezioni = {}
-if E_("GA_KEY"):
+if GOOGLE:
     try:
-        from google.oauth2 import service_account
         from google.auth.transport.requests import AuthorizedSession
-        cr = service_account.Credentials.from_service_account_info(
-            json.loads(E_("GA_KEY")), scopes=["https://www.googleapis.com/auth/webmasters.readonly"])
-        ses = AuthorizedSession(cr)
+        ses = AuthorizedSession(credenziali(["https://www.googleapis.com/auth/webmasters.readonly"]))
         fine = oggi - dt.timedelta(days=3)
 
         def q(prop, a, b, **extra):
@@ -122,7 +130,7 @@ if err:
 box = lambda nome, html: f"<h2 style='margin:24px 0 4px;font-size:19px'>{nome}</h2>" + html
 blocchi = box("comparaoffertelucegas.it", sezioni.get("comparaoffertelucegas.it", "") + "".join(righe))
 for nome, _ in SITI[1:]:
-    blocchi += box(nome, sezioni.get(nome, "<p style='color:#666'>Search Console non configurato (manca GA_KEY).</p>"))
+    blocchi += box(nome, sezioni.get(nome, "<p style='color:#666'>Search Console non configurato.</p>"))
 corpo = (f"<div style='font:15px/1.5 -apple-system,Segoe UI,sans-serif;color:#14161A;max-width:620px'>"
          f"<h1 style='margin:0 0 4px;font-size:22px'>I tuoi siti</h1><p style='color:#666;margin:0 0 12px'>Riepilogo del {ieri.strftime('%d/%m/%Y')}</p>"
          + blocchi +

@@ -3,13 +3,16 @@ on:
   schedule:
     - cron: "17 6 * * *"
   workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
 jobs:
   mail:
     runs-on: ubuntu-latest
     env:
       GC_TOKEN: ${{ secrets.GC_TOKEN }}
       CLARITY_TOKEN: ${{ secrets.CLARITY_TOKEN }}
-      GA_PROPERTY: ${{ secrets.GA_PROPERTY }}
+      GA_PROPERTY: ${{ secrets.GA_PROPERTY || '565589904' }}
       GA_KEY: ${{ secrets.GA_KEY }}
       MAIL_USER: ${{ secrets.MAIL_USER }}
       MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
@@ -19,8 +22,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      # Accesso a Google senza chiavi: GitHub si presenta a Google come account di servizio report-siti
+      - name: Accesso a Google
+        if: ${{ env.GA_KEY == '' }}
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/198174354426/locations/global/workloadIdentityPools/github/providers/github
+          service_account: report-siti@comparaofferte.iam.gserviceaccount.com
       - name: Dipendenze Google Analytics e Search Console
-        if: ${{ env.GA_KEY != '' }}
         run: pip install google-analytics-data google-auth requests
       - name: Invia riepilogo
         run: python scripts/report.py
