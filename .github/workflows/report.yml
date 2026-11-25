@@ -19,8 +19,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Dipendenze Google Analytics
+      - name: Dipendenze Google Analytics e Search Console
         if: ${{ env.GA_KEY != '' }}
-        run: pip install google-analytics-data
+        run: pip install google-analytics-data google-auth requests
       - name: Invia riepilogo
         run: python scripts/report.py
