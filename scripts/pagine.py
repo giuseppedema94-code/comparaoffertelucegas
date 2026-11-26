@@ -517,3 +517,26 @@ _sm = (R / "sitemap.xml").read_text(encoding="utf-8")
 _sm = re.sub(r"\s*<lastmod>[^<]*</lastmod>", "", _sm)
 _sm = re.sub(r"(<loc>[^<]*</loc>)", r"\1<lastmod>" + _oggi + "</lastmod>", _sm)
 (R / "sitemap.xml").write_text(_sm, encoding="utf-8")
+
+
+# --- Titolo e descrizione della home con mese e offerta luce più conveniente del giorno (per i clic da Google su "offerte luce")
+def _home():
+    d = DATI["luce"]; y = TIPO_Y["luce"]
+    ok = [o for o in d["offerte"] if o.get("ok", True) and o.get("s") is not None
+          and (o.get("min") is None or y >= o["min"]) and (o.get("max") is None or y <= o["max"])]
+    if not ok:
+        return
+    o, m = min(((o, spesa(o, "luce", d["reg"])) for o in ok), key=lambda x: x[1])
+    mesi = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"]
+    mese = mesi[int(d["data_open_data"].split("-")[1]) - 1] + " " + d["data_open_data"][:4]
+    t = f"Offerte luce e gas {mese}: le più convenienti di oggi, da {n2(m)} al mese"
+    ds = (f"Offerte luce e gas di oggi dagli open data ARERA: la luce più conveniente è {o['v']} a {n2(m)} al mese. "
+          "Spesa, prezzo, quota fissa e scadenza. Nessuna registrazione, nessuna telefonata.")
+    p = R / "index.html"; s = p.read_text(encoding="utf-8")
+    s = re.sub(r"<title>.*?</title>", f"<title>{H.escape(t, quote=False)}</title>", s, count=1)
+    for k in ('name="description"', 'property="og:description"'):
+        s = re.sub(r'(<meta ' + k + r' content=")[^"]*', lambda mm: mm.group(1) + H.escape(ds), s, count=1)
+    s = re.sub(r'(<meta property="og:title" content=")[^"]*', lambda mm: mm.group(1) + H.escape(t), s, count=1)
+    p.write_text(s, encoding="utf-8")
+    print("home:", t)
+_home()
