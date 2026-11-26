@@ -1,0 +1,16 @@
+{
+  "name": "Compara offerte luce e gas",
+  "short_name": "Luce e gas",
+  "description": "Confronta le offerte di luce e gas del mercato libero con i dati ARERA aggiornati ogni giorno.",
+  "lang": "it",
+  "start_url": "/?app=1",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#14161A",
+  "theme_color": "#14161A",
+  "icons": [
+    {"src": "/favicon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "/icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

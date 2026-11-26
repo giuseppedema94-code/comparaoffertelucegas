@@ -16,7 +16,8 @@ for f in sorted(RADICE.glob("**/index.html")):
     s = re.sub(r'\s*<meta http-equiv="Content-Security-Policy"[^>]*>', "", s)
     s = re.sub(r'\s*<meta name="referrer"[^>]*>', "", s)
     s = re.sub(r'\s*<script src="/js/stat.js" defer></script>', "", s)
-    s = s.replace("</head>", '<script src="/js/stat.js" defer></script>\n</head>', 1)
+    s = re.sub(r'\s*<link rel="manifest"[^>]*>\s*<script src="/js/pwa.js" defer></script>', "", s)
+    s = s.replace("</head>", '<script src="/js/stat.js" defer></script>\n<link rel="manifest" href="/manifest.webmanifest">\n<script src="/js/pwa.js" defer></script>\n</head>', 1)
     hashes = []
     for m in re.finditer(r"<script(?![^>]*\bsrc=)(?![^>]*ld\+json)[^>]*>(.*?)</script>", s, re.S):
         hashes.append("'sha256-" + base64.b64encode(hashlib.sha256(m.group(1).encode()).digest()).decode() + "'")
