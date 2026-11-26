@@ -114,13 +114,20 @@ if GOOGLE:
                 a = q(prop, fine - dt.timedelta(days=6), fine)
                 b = q(prop, fine - dt.timedelta(days=13), fine - dt.timedelta(days=7))
                 cur, pre = (a[0] if a else {}), (b[0] if b else {})
-                top = q(prop, fine - dt.timedelta(days=6), fine, dimensions=["query"], rowLimit=5)
+                top = sorted(q(prop, fine - dt.timedelta(days=6), fine, dimensions=["query"], rowLimit=500),
+                             key=lambda r: -r["impressions"])[:6]
+                pag = sorted(q(prop, fine - dt.timedelta(days=6), fine, dimensions=["page"], rowLimit=200),
+                             key=lambda r: -r["impressions"])[:4]
                 txt = (f"<p><b>{n(int(cur.get('clicks', 0)))}</b> clic e <b>{n(int(cur.get('impressions', 0)))}</b> impressioni su Google"
                        + var(cur.get('impressions', 0), pre.get('impressions', 0)).replace('due giorni fa', 'la settimana prima')
                        + (f", posizione media {cur['position']:.1f}" if cur.get('position') else "")
                        + f" ({(fine - dt.timedelta(days=6)).strftime('%d/%m')}-{fine.strftime('%d/%m')}).</p>")
                 if top:
-                    txt += "<p>Ricerche: " + ", ".join(f"{r['keys'][0]} ({int(r['impressions'])})" for r in top) + ".</p>"
+                    txt += ("<p>Ricerche con più impressioni (impressioni, clic, posizione): "
+                            + ", ".join(f"{r['keys'][0]} ({n(int(r['impressions']))}, {int(r['clicks'])}, {r['position']:.0f}ª)" for r in top) + ".</p>")
+                if pag:
+                    txt += ("<p>Pagine con più impressioni: "
+                            + ", ".join(f"{r['keys'][0].split('/', 3)[-1] or 'home'} ({n(int(r['impressions']))}, {int(r['clicks'])} clic, {r['position']:.0f}ª)" for r in pag) + ".</p>")
                 sezioni[nome] = txt
             except Exception as e:
                 sezioni[nome] = f"<p style='color:#a33'>Search Console non letto: {e}</p>"
