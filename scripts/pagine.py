@@ -489,8 +489,10 @@ for slug, c, flt, qs, titolo, agg, testo in CLASSIFICHE:
     data = "/".join(reversed(d["data_open_data"].split("-")))
     b, bm = righe[0]
     cons = "225 kWh di luce al mese, contatore da 3 kW, imposte e canone RAI inclusi" if c == "luce" else "90 Smc di gas al mese, imposte incluse"
-    desc = f"{len(righe)} offerte {c} {agg} di {forn} fornitori, dagli open data ARERA del {data}, ordinate per spesa mensile stimata."
-    corpo = testata(f"/{slug}/", f"{titolo}: classifica di oggi", desc, c, f"/img/geco-{c}.svg").replace("</style>", CSS_CL + "</style>", 1)
+    mese = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"][int(d["data_open_data"].split("-")[1]) - 1] + " " + d["data_open_data"][:4]
+    desc = (f"La più conveniente oggi è {b['v']} a {n2(bm)} al mese. {len(righe)} offerte {c} {agg} di {forn} fornitori "
+            f"dagli open data ARERA del {data}, ordinate per spesa. Nessuna registrazione, nessuna telefonata.")
+    corpo = testata(f"/{slug}/", f"{titolo} {mese}: da {n2(bm)} al mese", desc, c, f"/img/geco-{c}.svg").replace("</style>", CSS_CL + "</style>", 1)
     ld = {"@context": "https://schema.org", "@type": "ItemList", "name": titolo, "numberOfItems": min(20, len(righe)),
           "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": f'{o["v"]}, {o["n"]}'} for i, (o, _) in enumerate(righe[:20])]}
     corpo = corpo.replace("</head>", '<script type="application/ld+json">' + json.dumps(ld, ensure_ascii=False) + "</script>\n</head>", 1)
