@@ -199,8 +199,9 @@ function render(){
         +'<div class="lbs">Risparmi '+eur((sep-pk.t)*PMv())+PLv()+' rispetto a luce e gas da fornitori diversi ('+eur(sep*PMv())+')</div><div class="lbb">'+(pk.k==='s'?lnk(pk.o.L,'Offerta luce','luce')+lnk(pk.o.G,'Offerta gas','gas'):lnk(pk.o,'Vai all\'offerta'))+'</div>'}
   var stab=function(o){return o.t!=='f'?'D':(o.d>=36&&o.d<=240?'A':o.d>=24&&o.d<=240?'B':'C')};
   var bt=function(o,t,c){var u=safe(o.u)||safe(o.us),k=/luce$/.test(t)?' bl':/gas$/.test(t)?' bg':'';return '<a class="oc-btn'+k+'" href="'+(u?esc(u)+'" target="_blank" rel="nofollow noopener':'/?q='+encodeURIComponent(o.v)+'#'+c)+'">'+t+'</a>'};
-  var h='',top=rows.length?rows[0].t:0;
-  rows.forEach(function(x,i){var o=x.o,u=safe(o.u),tipo=o.t==='f'?'Fisso'+(o.d>=12&&o.d<=240?' · '+(o.d%12?o.d+' mesi':o.d/12+(o.d===12?' anno':' anni')):''):'Variabile';
+  var h='',top=rows.length?rows[0].t:0,qs=($('lgs').value||'').trim().toLowerCase(),vis=qs?rows.filter(function(x){return (x.o.v+' '+x.o.n).toLowerCase().indexOf(qs)>=0}):rows;
+  if(!vis.length)h='<p class="src">Nessuna offerta per &laquo;'+esc(qs)+'&raquo;.</p>';
+  vis.forEach(function(x,j){var i=rows.indexOf(x);var o=x.o,u=safe(o.u),tipo=o.t==='f'?'Fisso'+(o.d>=12&&o.d<=240?' · '+(o.d%12?o.d+' mesi':o.d/12+(o.d===12?' anno':' anni')):''):'Variabile';
     h+='<article class="oc'+(i===0?' first':'')+'"><div class="oc-h"><span class="oc-n">'+(i+1)+'</span>'+logoB(o)+'<div class="oc-t"><div class="oc-v">'+esc(o.v)+'</div><div class="oc-o">'+(u?'<a href="'+esc(u)+'" target="_blank" rel="nofollow noopener">'+esc(o.n)+'</a>':esc(o.n))+'</div></div>'
      +'<div class="oc-tg"><span class="tg '+(o.t==='f'?'tg-f':'tg-v')+'">'+tipo+'</span><span class="tg st-'+stab(o)+'">Stabilità '+stab(o)+'</span>'+(x.k==='c'?'<span class="tg tg-s" title="Un unico contratto per luce e gas">Offerta congiunta</span>':'<span class="tg tg-s" title="Due contratti separati con lo stesso fornitore">Due contratti</span>')+(o.pen?'<span class="tg tg-w">Penale di uscita</span>':'')+'</div></div>'
      +'<div class="oc-b"><dl class="oc-d"><div><dt>Luce</dt><dd>'+eur(x.l*PMv())+PLv()+'</dd></div><div><dt>Gas</dt><dd>'+eur(x.g*PMv())+PLv()+'</dd></div><div><dt>Energia luce</dt><dd>'+num(o.l.pd,4)+' €/kWh</dd></div><div><dt>Energia gas</dt><dd>'+num(o.g.pd,4)+' €/Smc</dd></div><div><dt>Quota fissa luce</dt><dd>'+eur(o.l.fx/12)+' al mese</dd></div><div><dt>Quota fissa gas</dt><dd>'+eur(o.g.fx/12)+' al mese</dd></div></dl>'
@@ -215,7 +216,7 @@ function render(){
   var nc=rows.filter(function(x){return x.k==='c'}).length;$('cnt').textContent=(rows.length-nc)+' fornitori con luce e gas, '+nc+' offerte congiunte';
 }
 Promise.all(['dual','luce','gas'].map(function(k){return fetch('/data/'+k+'.json',{cache:'no-cache'}).then(function(r){return r.json()})})).then(function(a){D.dual=a[0];D.luce=a[1];D.gas=a[2];
-  ['ql','qg','rai'].forEach(function(id){$(id).addEventListener('input',render)});$('ofn').addEventListener('change',render);
+  ['ql','qg','rai','lgs'].forEach(function(id){$(id).addEventListener('input',render)});$('ofn').addEventListener('change',render);
   document.querySelectorAll('.pm').forEach(function(b){b.addEventListener('click',function(){var i=$(b.dataset.t);i.value=Math.max(0,(+i.value||0)+(+b.dataset.d));render()})});
   document.querySelectorAll('.per button').forEach(function(b){b.addEventListener('click',function(){setPer(b.dataset.p)})});
   var PF={1:[125,40],2:[185,75],4:[270,115]};document.querySelectorAll('[data-pf]').forEach(function(b){b.addEventListener('click',function(){var k=PF_[PER];$('ql').value=PF[b.dataset.pf][0]*k;$('qg').value=PF[b.dataset.pf][1]*k;render()})});render();
@@ -240,7 +241,7 @@ corpo += """<main class="wrap pg">
 <div class="lgb1" id="best" aria-live="polite">Caricamento offerte…</div>
 </section>
 <section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Luce e gas con un solo fornitore <span class="src" id="cnt"></span></h2>
-<div id="tab"></div></section>
+<input type="search" class="search" id="lgs" placeholder="Cerca fornitore o offerta, es. Enel" aria-label="Cerca fornitore o offerta" style="width:100%;margin:0 0 12px"><div id="tab"></div></section>
 <section class="card txt"><h2 class="h">Conviene il pacchetto unico?</h2>
 <p>Un'offerta dual lega luce e gas allo stesso venditore: una sola bolletta e, a volte, uno sconto. Non è detto che costi meno di due offerte separate scelte ciascuna al prezzo più basso, per questo le mettiamo a confronto qui sopra.</p>
 <p>Se un domani vuoi cambiare solo la luce o solo il gas, controlla nella scheda dell'offerta se lo sconto del pacchetto si perde.</p></section>
@@ -311,6 +312,7 @@ corpo += f"""<main class="wrap pg">
 <p class="cl-s">Tutte le <strong>{len(righe)}</strong> offerte fibra e FWA dei principali operatori, sempre aggiornate.</p></section>
 <section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Internet casa, risparmia fino all'ultimo centesimo <span class="src" id="ncnt"></span></h2>
 <div class="flt" role="group" aria-label="Filtra"><button type="button" data-t="tutte" aria-pressed="true">Tutte</button><button type="button" data-t="ftth" aria-pressed="false">Fibra FTTH</button><button type="button" data-t="fwa" aria-pressed="false">FWA senza linea</button><label><input type="checkbox" id="noreg"> Nascondi offerte regionali</label></div>
+<input type="search" class="search" id="ns" placeholder="Cerca fornitore o offerta, es. Iliad" aria-label="Cerca fornitore o offerta" style="width:100%;margin:0 0 12px">
 <div id="nt">
 {''.join(tr)}
 </div>
@@ -346,8 +348,8 @@ function tab(){var el=$('cmine'),v=mv(),a=CUR;if(!a)return;if(v==null){el.innerH
    +'<p class="note">'+(Math.abs(df)<0.005?'Costano uguale.':df>0?'Con '+nm+' risparmi '+fe(df)+' al mese, '+Math.round(df*12)+' € all\'anno.':'Il tuo abbonamento costa '+fe(-df)+' in meno al mese.')+' '+(n?n+(n===1?' offerta in elenco costa':' offerte in elenco costano')+' meno del tuo.':'Nessuna offerta in elenco costa meno del tuo.')+'</p>'}
 document.addEventListener('click',function(e){var b=e.target.closest('.oc-cmp');if(!b)return;CUR=b.closest('article');$('mq').value=MQ;tab();var dl=$('cdlg');if(dl.showModal)dl.showModal();else dl.setAttribute('open','');if(!MQ)$('mq').focus()});
 $('cclose').addEventListener('click',function(){$('cdlg').close()});$('cdlg').addEventListener('click',function(e){if(e.target===$('cdlg'))$('cdlg').close()});
-var T='tutte';function flt(){var n=0,rr=document.querySelectorAll('#nt article');rr.forEach(function(r){var ok=(T==='tutte'||r.dataset.cat===T)&&!($('noreg').checked&&r.dataset.reg==='1');r.hidden=!ok;if(ok)n++});mia();$('ncnt').textContent=n+' offerte';document.querySelectorAll('.flt button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.t===T)})}
-document.querySelectorAll('.flt button').forEach(function(b){b.addEventListener('click',function(){T=b.dataset.t;flt()})});$('noreg').addEventListener('change',flt);$('mq').addEventListener('input',function(e){MQ=e.target.value.slice(0,8);try{localStorage.setItem('mia-net',MQ)}catch(_){}mia();tab()});flt();
+var T='tutte';function flt(){var n=0,rr=document.querySelectorAll('#nt article');rr.forEach(function(r){var q=($('ns').value||'').trim().toLowerCase(),ok=(T==='tutte'||r.dataset.cat===T)&&!($('noreg').checked&&r.dataset.reg==='1')&&(!q||r.textContent.toLowerCase().indexOf(q)>=0);r.hidden=!ok;if(ok)n++});mia();$('ncnt').textContent=n+' offerte';document.querySelectorAll('.flt button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.t===T)})}
+document.querySelectorAll('.flt button').forEach(function(b){b.addEventListener('click',function(){T=b.dataset.t;flt()})});$('noreg').addEventListener('change',flt);$('ns').addEventListener('input',flt);$('mq').addEventListener('input',function(e){MQ=e.target.value.slice(0,8);try{localStorage.setItem('mia-net',MQ)}catch(_){}mia();tab()});flt();
 var eur=function(n){return n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})+' € al mese'};
 fetch('/data/top.json',{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){
   var l=d.luce[0],g=d.gas[0];$('xl').textContent=eur(l.m);$('xln').textContent=l.v+', '+l.n;$('xg').textContent=eur(g.m);$('xgn').textContent=g.v+', '+g.n;});
