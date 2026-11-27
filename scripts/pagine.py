@@ -620,6 +620,51 @@ if _add:
 print("fornitori generati:", len(_fatti))
 
 
+# ---------- quanto costa la potenza del contatore (/potenza-contatore/) ----------
+def _pot():
+    r = DATI["luce"]["reg"]; qp, al, iva = r["qp"], r["acc"], r["iva"]
+    data = "/".join(reversed(DATI["luce"]["data_open_data"].split("-")))
+    def acc(y, kw):
+        m = y / 12; g = 150 if kw <= 1.5 else 220
+        e = 0 if kw > 3 else (min(m, 150) if m <= g else max(0, 150 - (m - g)))
+        return (m - e) * 12 * al
+    def extra(kw, y):
+        return (1 + iva) * (qp * (kw - 3) + acc(y, kw) - acc(y, 3))
+    kws = [3.5, 4, 4.5, 5, 6]
+    righe = "".join(f"<tr><th>{str(k).replace('.', ',')} kW</th><td>+{n2(extra(k, 1800))}</td><td>+{n2(extra(k, 2700))}</td><td>+{n2(extra(k, 2700) / 12)}</td></tr>" for k in kws)
+    e45 = extra(4.5, 2700)
+    tit = "Contatore 3 kW o 4,5 kW: quanto costa di più in bolletta"
+    desc = (f"Passare da 3 a 4,5 kW costa circa {n0(e45)} l'anno in più in bolletta con 2.700 kWh di consumo, IVA inclusa. "
+            "Tabella per ogni potenza con le tariffe ARERA in vigore e calcolatore sui tuoi consumi.")
+    faq = [("Quanto costa passare da 3 a 4,5 kW?", f"In bolletta circa {n0(e45)} l'anno in più con 2.700 kWh di consumo (IVA inclusa): {n2(qp * 1.5 * (1 + iva))} di quota potenza più le accise che oltre i 3 kW si pagano anche sui primi kWh. A questo si aggiunge una volta il contributo per l'aumento di potenza, che dipende dal distributore."),
+           ("Perché oltre i 3 kW pago più accise?", "Per le abitazioni di residenza con potenza fino a 3 kW i primi 150 kWh al mese sono esenti da accisa. Sopra i 3 kW l'esenzione non spetta."),
+           ("Quanto costa ogni kW in più?", f"La quota potenza ARERA vale {n2(qp)} per kW all'anno, {n2(qp * (1 + iva))} con l'IVA al 10%.")]
+    ld = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]}
+    corpo = testata("/potenza-contatore/", tit, desc, "luce", "/img/geco-luce.svg").replace("</style>", CSS_CL + "</style>", 1)
+    corpo = corpo.replace("</head>", '<script type="application/ld+json">' + json.dumps(ld, ensure_ascii=False) + "</script>\n</head>", 1)
+    corpo += (f'<main class="wrap pg"><h1 class="h">Contatore 3 kW o 4,5 kW: quanto costa di più</h1>'
+              f'<p class="intro">Ogni kW di potenza in più costa <strong>{n2(qp * (1 + iva))} l\'anno</strong> di quota potenza, IVA inclusa. In più, oltre i 3 kW perdi l\'esenzione dall\'accisa sui primi 150 kWh al mese. Con 2.700 kWh l\'anno, passare a 4,5 kW costa circa <strong>{n0(e45)} l\'anno</strong> in più.</p>'
+              '<section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Calcola sui tuoi consumi</h2>'
+              '<p><label>Consumo annuo (kWh) <input id="pk" type="number" min="0" step="100" value="2700" inputmode="numeric" style="max-width:140px"></label> '
+              '<label>Potenza <select id="pw"><option>3,5</option><option>4</option><option selected>4,5</option><option>5</option><option>6</option></select> kW</label></p>'
+              '<p class="intro" id="pr" style="margin:8px 0 0"></p></section>'
+              f'<section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Costo in più rispetto a 3 kW</h2><div class="scroll" tabindex="0"><table class="itab fz"><thead><tr><th>Potenza</th><th>1.800 kWh/anno</th><th>2.700 kWh/anno</th><th>Al mese (2.700 kWh)</th></tr></thead><tbody>{righe}</tbody></table></div>'
+              f'<p class="src">Abitazione di residenza, IVA 10%. Quota potenza ({n2(qp)} per kW all\'anno) e accise ({str(al).replace(".", ",")} €/kWh) dalle tariffe ARERA in vigore al {data}. Non include il contributo una tantum per l\'aumento di potenza.</p></section>'
+              '<section class="card txt"><h2 class="h">Domande frequenti</h2>' + "".join(f"<h3>{H.escape(q)}</h3><p>{H.escape(a)}</p>" for q, a in faq) + "</section>"
+              '<section class="card txt"><h2 class="h">Confronta le offerte</h2><div class="altre"><a href="/">Tutte le offerte luce</a><a href="/offerte-luce-prezzo-fisso/">Luce prezzo fisso</a><a href="/fornitori/">Fornitori a confronto</a></div></section>\n')
+    js = ("var QP=%s,AL=%s,IVA=%s;function acc(y,kw){var m=y/12,g=kw<=1.5?150:220,e=kw>3?0:(m<=g?Math.min(m,150):Math.max(0,150-(m-g)));return (m-e)*12*AL}"
+          "function f(n){return n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'}"
+          "function up(){var y=+$('pk').value||0,kw=parseFloat($('pw').value.replace(',','.')),x=(1+IVA)*(QP*(kw-3)+acc(y,kw)-acc(y,3));"
+          "$('pr').innerHTML='Con '+y.toLocaleString('it-IT')+' kWh l\\'anno, a '+$('pw').value+' kW paghi <strong>'+f(x)+' l\\'anno in più</strong> ('+f(x/12)+' al mese) rispetto a 3 kW.'}"
+          "$('pk').addEventListener('input',up);$('pw').addEventListener('change',up);up();") % (qp, al, iva)
+    scrivi("/potenza-contatore/", corpo, js)
+    sm = (R / "sitemap.xml").read_text(encoding="utf-8")
+    if f"<loc>{BASE}/potenza-contatore/</loc>" not in sm:
+        (R / "sitemap.xml").write_text(sm.replace("</urlset>", f"  <url><loc>{BASE}/potenza-contatore/</loc><changefreq>monthly</changefreq></url>\n</urlset>"), encoding="utf-8")
+    print("potenza contatore:", n2(e45))
+_pot()
+
+
 # ---------- sitemap con data di aggiornamento ----------
 _oggi = _dt.date.today().isoformat()
 _sm = (R / "sitemap.xml").read_text(encoding="utf-8")
