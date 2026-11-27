@@ -505,10 +505,119 @@ for slug, c, flt, qs, titolo, agg, testo in CLASSIFICHE:
 {''.join(scheda_en(x, i, bm, c) for i, x in enumerate(righe[:20]))}
 <p class="src">Open data del Portale Offerte di ARERA del {data}. Spesa stimata per {cons}. Le offerte variabili sono stimate con le quotazioni dei prossimi 12 mesi.</p></section>
 <section class="card txt"><h2 class="h">Come funzionano</h2>{''.join(f"<p>{p}</p>" for p in testo)}</section>
-<section class="card txt"><h2 class="h">Altre classifiche</h2><div class="altre"><a href="/">Tutte le offerte luce</a><a href="/#gas">Tutte le offerte gas</a>{altre}</div></section>
+<section class="card txt"><h2 class="h">Altre classifiche</h2><div class="altre"><a href="/">Tutte le offerte luce</a><a href="/#gas">Tutte le offerte gas</a><a href="/fornitori/">Fornitori a confronto</a>{altre}</div></section>
 """
     scrivi(f"/{slug}/", corpo, "")
 print("classifiche generate")
+
+
+# ---------- pagine per fornitore (/offerte-<fornitore>/) ----------
+FORNITORI = [  # (slug, nome mostrato, nomi nel campo v)
+    ("octopus-energy", "Octopus Energy", ["Octopus Energy"]),
+    ("enel", "Enel", ["Enel"]),
+    ("eni-plenitude", "Eni Plenitude", ["Eni Plenitude"]),
+    ("a2a", "A2A Energia", ["A2A Energia"]),
+    ("edison", "Edison Energia", ["Edison Energia"]),
+    ("iren", "Iren", ["Iren"]),
+    ("sorgenia", "Sorgenia", ["Sorgenia"]),
+    ("eon", "E.ON", ["E.ON"]),
+    ("engie", "Engie", ["Engie"]),
+    ("hera", "Hera Comm", ["Hera Comm"]),
+    ("acea", "Acea Energia", ["Acea Energia"]),
+    ("pulsee", "Pulsee (Axpo)", ["Pulsee (Axpo)", "Axpo Italia"]),
+    ("illumia", "Illumia", ["Illumia"]),
+    ("optima", "Optima Italia", ["Optima Italia"]),
+    ("alperia", "Alperia", ["Alperia"]),
+    ("sinergas", "Sinergas", ["Sinergas"]),
+    ("lifegate-energy", "LifeGate Energy", ["LIFEGATE Energy"]),
+    ("nen", "NeN", ["NeN (YADA)"]),
+    ("estra", "Estra", ["Estra", "Estra Energie"]),
+    ("poste-energia", "Poste Energia", ["Poste Energia", "Postepay"]),
+    ("wind-tre-luce-gas", "WindTre Luce e Gas", ["Wind TRE Luce E GAS"]),
+    ("fastweb-energia", "Fastweb Energia", ["Fastweb"]),
+    ("audax", "Audax Energia", ["Audax Energía"]),
+    ("cva-energie", "CVA Energie", ["CVA Energie"]),
+    ("enostra", "ènostra", ["Enostra"]),
+]
+
+
+def _valide(c):
+    d = DATI[c]; y = TIPO_Y[c]
+    ok = [o for o in d["offerte"] if o.get("ok", True) and o.get("s") is not None
+          and (o.get("min") is None or y >= o["min"]) and (o.get("max") is None or y <= o["max"])]
+    return sorted(((o, spesa(o, c, d["reg"])) for o in ok), key=lambda x: x[1])
+
+
+_TUTTE = {c: _valide(c) for c in ("luce", "gas")}
+_fatti = []
+for slug, nome, nomi in FORNITORI:
+    per = {c: [x for x in _TUTTE[c] if x[0]["v"] in nomi] for c in ("luce", "gas")}
+    if not per["luce"] and not per["gas"]:
+        continue
+    d = DATI["luce"]
+    data = "/".join(reversed(d["data_open_data"].split("-")))
+    mesi = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"]
+    mese = mesi[int(d["data_open_data"].split("-")[1]) - 1] + " " + d["data_open_data"][:4]
+    parti, frasi = [], []
+    for c in ("luce", "gas"):
+        r = per[c]
+        if not r:
+            continue
+        b, bm = r[0]
+        best = _TUTTE[c][0][1]
+        pos = next(i for i, x in enumerate(_TUTTE[c]) if x[0]["v"] in nomi) + 1
+        cons = "225 kWh al mese, contatore da 3 kW, imposte e canone RAI inclusi" if c == "luce" else "90 Smc al mese, imposte incluse"
+        frasi.append(f"{c} da {n2(bm)} al mese")
+        parti.append(f'<section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Offerte {c} {H.escape(nome)} ({len(r)})</h2>'
+                     f'<p class="intro">La più conveniente è <strong>{H.escape(b["n"])}</strong>, {n2(bm)} al mese con {cons}. '
+                     f'Su {len(_TUTTE[c])} offerte {c} del mercato libero è al {pos}° posto'
+                     + (f'; la più conveniente di tutte costa {n2(best)} al mese.' if pos > 1 else ', la più conveniente di oggi.') + '</p>'
+                     + "".join(scheda_en(x, i, bm, c) for i, x in enumerate(r[:12]))
+                     + (f'<p class="src">Ci sono altre {len(r) - 12} offerte {c} {H.escape(nome)}: le trovi nel <a href="/?q={H.escape(nome.split(" ")[0].lower())}{"&c=gas" if c == "gas" else ""}">confronto completo</a>.</p>' if len(r) > 12 else "")
+                     + "</section>")
+    tit = f"Offerte {nome} luce e gas {mese}: prezzi e confronto"
+    desc = (f"Le offerte {nome} di oggi dagli open data ARERA: " + ", ".join(frasi) +
+            ". Prezzo, quota fissa, durata e penali, confrontati con tutto il mercato libero.")
+    c0 = "luce" if per["luce"] else "gas"
+    corpo = testata(f"/offerte-{slug}/", tit, desc, c0, f"/img/geco-{c0}.svg").replace("</style>", CSS_CL + "</style>", 1)
+    faq = []
+    for c in ("luce", "gas"):
+        if per[c]:
+            b, bm = per[c][0]
+            faq.append((f"Qual è l'offerta {c} {nome} più conveniente oggi?", f"{b['n']}, con una spesa stimata di {n2(bm)} al mese (open data ARERA del {data})."))
+    faq.append((f"{nome} conviene?", f"Dipende dai consumi. Confronta le offerte {nome} con le altre del mercato libero inserendo i tuoi consumi nel comparatore: la classifica cambia ogni giorno."))
+    ld = {"@context": "https://schema.org", "@graph": [
+        {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": BASE + "/"},
+                                                        {"@type": "ListItem", "position": 2, "name": "Fornitori", "item": BASE + "/fornitori/"},
+                                                        {"@type": "ListItem", "position": 3, "name": nome, "item": BASE + f"/offerte-{slug}/"}]},
+        {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]}]}
+    corpo = corpo.replace("</head>", '<script type="application/ld+json">' + json.dumps(ld, ensure_ascii=False) + "</script>\n</head>", 1)
+    corpo += (f'<main class="wrap pg"><h1 class="h">Offerte {H.escape(nome)} luce e gas</h1>'
+              f'<p class="intro">Tutte le offerte {H.escape(nome)} pubblicate sul Portale Offerte di ARERA, con la spesa stimata e il confronto con gli altri fornitori. Dati del {data}.</p>'
+              f'<a class="cta1" href="/">Confronta con tutte le offerte</a>' + "".join(parti)
+              + '<section class="card txt"><h2 class="h">Domande frequenti</h2>' + "".join(f"<h3>{H.escape(q)}</h3><p>{H.escape(a)}</p>" for q, a in faq) + "</section>"
+              + '<section class="card txt"><h2 class="h">Altri fornitori</h2><div class="altre">'
+              + "".join(f'<a href="/offerte-{s2}/">{H.escape(n2_)}</a>' for s2, n2_, _ in FORNITORI if s2 != slug) + "</div></section>\n")
+    scrivi(f"/offerte-{slug}/", corpo, "")
+    _fatti.append((slug, nome, per))
+
+# hub
+d = DATI["luce"]; data = "/".join(reversed(d["data_open_data"].split("-")))
+righe = "".join(f'<tr><th><a href="/offerte-{s}/">{H.escape(n)}</a></th><td>{len(p["luce"])}</td><td>{n2(p["luce"][0][1]) if p["luce"] else "–"}</td>'
+                f'<td>{len(p["gas"])}</td><td>{n2(p["gas"][0][1]) if p["gas"] else "–"}</td></tr>' for s, n, p in sorted(_fatti, key=lambda x: x[2]["luce"][0][1] if x[2]["luce"] else 9e9))
+corpo = testata("/fornitori/", "Fornitori luce e gas a confronto: offerte e prezzi di oggi",
+                f"I principali fornitori di luce e gas del mercato libero ({len(_fatti)}) messi a confronto con gli open data ARERA: numero di offerte e spesa più bassa per luce e gas.",
+                "luce", "/img/geco-luce.svg").replace("</style>", CSS_CL + "</style>", 1)
+corpo += (f'<main class="wrap pg"><h1 class="h">Fornitori luce e gas a confronto</h1>'
+          f'<p class="intro">Per ogni fornitore: quante offerte ha oggi sul Portale Offerte ARERA e quanto costa la più conveniente, per luce (225 kWh al mese) e gas (90 Smc al mese). Dati del {data}.</p>'
+          f'<section class="card"><div class="scroll" tabindex="0"><style>.fz td{{white-space:nowrap}}</style><table class="itab fz"><thead><tr><th>Fornitore</th><th>Offerte luce</th><th>Luce da</th><th>Offerte gas</th><th>Gas da</th></tr></thead><tbody>{righe}</tbody></table></div></section>\n')
+scrivi("/fornitori/", corpo, "")
+_sm = (R / "sitemap.xml").read_text(encoding="utf-8")
+_nuovi = ["/fornitori/"] + [f"/offerte-{s}/" for s, _, _ in _fatti]
+_add = "".join(f"  <url><loc>{BASE}{u}</loc><changefreq>daily</changefreq></url>\n" for u in _nuovi if f"<loc>{BASE}{u}</loc>" not in _sm)
+if _add:
+    (R / "sitemap.xml").write_text(_sm.replace("</urlset>", _add + "</urlset>"), encoding="utf-8")
+print("fornitori generati:", len(_fatti))
 
 
 # ---------- sitemap con data di aggiornamento ----------
