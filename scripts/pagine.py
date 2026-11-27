@@ -665,6 +665,92 @@ def _pot():
 _pot()
 
 
+# ---------- costo kWh, elettrodomestici, calcolo bolletta ----------
+def _kwh():
+    d = DATI["luce"]; r = d["reg"]; y = TIPO_Y["luce"]
+    data = "/".join(reversed(d["data_open_data"].split("-")))
+    tutte = _TUTTE["luce"]
+    best_o, best_m = tutte[0]
+    med_o, med_m = tutte[len(tutte) // 2]
+    pb = best_o["pd"] if best_o.get("pd") is not None else best_o["p"]
+    pm = med_o["pd"] if med_o.get("pd") is not None else med_o["p"]
+    marg = lambda pp: (1 + r["iva"]) * (pp + r["rv"] + r["acc"])  # costo di 1 kWh in più, tutto incluso
+    tot = lambda m: (m - 9) * 12 / y  # costo medio per kWh, tutto incluso, senza canone RAI
+    mb, mm = marg(pb), marg(pm)
+    sm = (R / "sitemap.xml").read_text(encoding="utf-8")
+    def addsm(u):
+        nonlocal sm
+        if f"<loc>{BASE}{u}</loc>" not in sm:
+            sm = sm.replace("</urlset>", f"  <url><loc>{BASE}{u}</loc><changefreq>daily</changefreq></url>\n</urlset>")
+    def pagina(path, tit, desc, h1, intro, sezioni, faq, js):
+        ld = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]}
+        corpo = testata(path, tit, desc, "luce", "/img/geco-luce.svg").replace("</style>", CSS_CL + ".pg label{display:block;margin:10px 0;font-weight:600}.pg label input,.pg label select{display:block;margin-top:4px;font:inherit;font-weight:400;padding:8px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--ink)}</style>", 1)
+        corpo = corpo.replace("</head>", '<script type="application/ld+json">' + json.dumps(ld, ensure_ascii=False) + "</script>\n</head>", 1)
+        corpo += (f'<main class="wrap pg"><h1 class="h">{h1}</h1><p class="intro">{intro}</p>' + sezioni
+                  + '<section class="card txt"><h2 class="h">Domande frequenti</h2>' + "".join(f"<h3>{H.escape(q)}</h3><p>{H.escape(a)}</p>" for q, a in faq) + "</section>"
+                  + '<section class="card txt"><h2 class="h">Vedi anche</h2><div class="altre"><a href="/">Confronta le offerte luce</a><a href="/costo-kwh/">Costo del kWh oggi</a><a href="/consumo-elettrodomestici/">Consumo elettrodomestici</a><a href="/calcolo-bolletta-luce/">Calcolo bolletta luce</a><a href="/potenza-contatore/">Contatore 3 o 4,5 kW</a><a href="/fornitori/">Fornitori a confronto</a></div></section>\n')
+        scrivi(path, corpo, js)
+        addsm(path)
+    n4e = lambda v: f"{v:.3f}".replace(".", ",") + " €"
+    fonte = f'<p class="src">Prezzi delle offerte dal Portale Offerte ARERA, tariffe di rete, oneri e accise ARERA in vigore. Dati del {data}. Abitazione di residenza, 3 kW, IVA 10%.</p>'
+    # 1) costo kWh
+    pagina("/costo-kwh/", f"Costo kWh luce oggi: {n4e(mb)} tutto incluso con l'offerta più conveniente",
+           f"Quanto costa oggi un kWh di luce, tasse comprese: {n4e(mb)} con l'offerta più conveniente, {n4e(mm)} con un'offerta nella media. Dati ARERA del {data}.",
+           "Quanto costa un kWh di luce oggi",
+           f"Ogni kWh che consumi in più costa oggi <strong>{n4e(mb)}</strong> con l'offerta più conveniente ({H.escape(best_o['v'])}) e <strong>{n4e(mm)}</strong> con un'offerta nella media del mercato, tutto compreso: energia, trasporto, oneri, accise e IVA.",
+           '<section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Il prezzo del kWh in bolletta</h2><div class="scroll" tabindex="0"><table class="itab fz"><thead><tr><th></th><th>Offerta più conveniente</th><th>Offerta media</th></tr></thead><tbody>'
+           f'<tr><th>Prezzo energia del venditore</th><td>{n4e(pb)}</td><td>{n4e(pm)}</td></tr>'
+           f'<tr><th>Ogni kWh in più, tutto incluso</th><td>{n4e(mb)}</td><td>{n4e(mm)}</td></tr>'
+           f'<tr><th>Costo medio per kWh con 2.700 kWh l\'anno (quote fisse comprese)</th><td>{n4e(tot(best_m))}</td><td>{n4e(tot(med_m))}</td></tr>'
+           '</tbody></table></div>' + fonte + '</section>',
+           [("Quanto costa un kWh di luce oggi?", f"Tutto incluso, {n4e(mb)} con l'offerta più conveniente e {n4e(mm)} con un'offerta nella media (dati ARERA del {data})."),
+            ("Perché il prezzo del kWh in bolletta è più alto di quello dell'offerta?", "Al prezzo dell'energia del venditore si aggiungono trasporto e gestione del contatore, oneri di sistema, accise e IVA, che decidono ARERA e lo Stato e sono uguali per tutti i venditori."),
+            ("Che differenza c'è tra costo del kWh in più e costo medio?", "Il costo del kWh in più conta solo le voci che crescono con i consumi: serve per sapere quanto costa usare un elettrodomestico. Il costo medio divide tutta la bolletta per i kWh consumati, quindi comprende anche le quote fisse.")],
+           "")
+    # 2) elettrodomestici
+    js = ("var MB=%s,MM=%s;function f(n){return n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'}"
+          "function up(){var k=+$('ek').value||0;$('er').innerHTML='Con '+k.toLocaleString('it-IT')+' kWh l\\'anno spendi <strong>'+f(k*MB)+' l\\'anno</strong> con l\\'offerta più conveniente e '+f(k*MM)+' con un\\'offerta nella media ('+f(k*MB/12)+' – '+f(k*MM/12)+' al mese).'}"
+          "function up2(){var k=+$('ck').value||0,n=+$('cn').value||0;$('cr').innerHTML='Un ciclo costa <strong>'+f(k*MB)+'</strong> ('+f(k*MM)+' con un\\'offerta media); con '+n+' cicli a settimana spendi '+f(k*MB*n*52)+' l\\'anno.'}"
+          "$('ek').addEventListener('input',up);$('ck').addEventListener('input',up2);$('cn').addEventListener('input',up2);up();up2();") % (round(mb, 5), round(mm, 5))
+    pagina("/consumo-elettrodomestici/", "Quanto costa un elettrodomestico in bolletta: calcolo dall'etichetta energetica",
+           f"Calcola quanto ti costano frigorifero, lavatrice o lavastoviglie: inserisci i kWh dell'etichetta energetica. Prezzo del kWh di oggi {n4e(mb)} tutto incluso, dati ARERA.",
+           "Quanto costa un elettrodomestico in bolletta",
+           f"Il consumo è scritto sull'etichetta energetica: in kWh all'anno per frigoriferi e congelatori, in kWh ogni 100 cicli per lavatrici e lavastoviglie. Moltiplicato per il prezzo del kWh di oggi, <strong>{n4e(mb)}</strong> tutto incluso con l'offerta più conveniente, dà il costo in bolletta.",
+           '<section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Frigorifero, congelatore, TV</h2>'
+           '<p><label>Consumo dall\'etichetta (kWh all\'anno) <input id="ek" type="number" min="0" step="10" value="200" inputmode="numeric" style="max-width:140px"></label></p><p class="intro" id="er" style="margin:8px 0 0"></p></section>'
+           '<section class="card"><h2 class="h" style="margin:0 0 8px;font-size:22px">Lavatrice e lavastoviglie</h2>'
+           '<p><label>kWh per ciclo <input id="ck" type="number" min="0" step="0.05" value="0.7" inputmode="decimal" style="max-width:120px"></label> '
+           '<label>Cicli a settimana <input id="cn" type="number" min="0" step="1" value="4" inputmode="numeric" style="max-width:90px"></label></p>'
+           '<p class="note">Sull\'etichetta trovi i kWh per 100 cicli: dividi per 100. Es. 70 kWh/100 cicli = 0,7 kWh per ciclo.</p><p class="intro" id="cr" style="margin:8px 0 0"></p>' + fonte + '</section>',
+           [("Come calcolo quanto consuma un elettrodomestico?", "Prendi i kWh dall'etichetta energetica e moltiplicali per il prezzo del kWh tutto incluso. Per lavatrici e lavastoviglie l'etichetta indica i kWh ogni 100 cicli."),
+            ("Quale prezzo del kWh usate?", f"Il costo di ogni kWh in più con tutte le voci della bolletta: {n4e(mb)} con l'offerta più conveniente e {n4e(mm)} con un'offerta nella media, aggiornato ogni giorno con i dati ARERA.")],
+           js)
+    # 3) calcolo bolletta
+    js = ("var R=%s,PM=%s,FM=%s;function f(n){return n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'}"
+          "function acc(y,kw){var m=y/12,g=kw<=1.5?150:220,e=kw>3?0:(m<=g?Math.min(m,150):Math.max(0,150-(m-g)));return (m-e)*12*R.acc}"
+          "function up(){var km=+$('bk').value||0,kw=parseFloat($('bw').value.replace(',','.')),p=+String($('bp').value).replace(',','.')||0,fx=+String($('bf').value).replace(',','.')||0,y=km*12;"
+          "var en=p*y+fx*12,rete=R.rf+R.qp*(kw-3)+R.rv*y,a=acc(y,kw),iva=(en+rete+a)*R.iva,tot=en+rete+a+iva;"
+          "var row=function(t,v){return '<tr><th>'+t+'</th><td>'+f(v/12)+'</td><td>'+f(v)+'</td></tr>'};"
+          "$('bt').innerHTML=row('Energia e quota fissa del venditore',en)+row('Trasporto, contatore e oneri di sistema',rete)+row('Accise',a)+row('IVA 10%%',iva)+'<tr class=\"tot\"><th><b>Totale (senza canone RAI)</b></th><td><b>'+f(tot/12)+'</b></td><td><b>'+f(tot)+'</b></td></tr>'}"
+          "['bk','bw','bp','bf'].forEach(function(i){$(i).addEventListener('input',up)});up();") % (json.dumps(r), round(pm, 4), round(med_o["fx"] / 12, 2))
+    pagina("/calcolo-bolletta-luce/", "Calcolo bolletta luce: quanto pagherai, voce per voce",
+           "Calcola la bolletta della luce dai tuoi consumi: energia, trasporto, oneri, accise e IVA, con le tariffe ARERA in vigore. Gratis, senza registrazione.",
+           "Calcolo della bolletta luce",
+           "Inserisci i consumi e le condizioni della tua offerta (le trovi in bolletta o nella scheda dell'offerta): il calcolo usa le tariffe di rete, gli oneri e le accise in vigore. I valori proposti sono quelli di un'offerta nella media di oggi.",
+           '<section class="card"><p><label>Consumo al mese (kWh) <input id="bk" type="number" min="0" step="10" value="225" inputmode="numeric" style="max-width:120px"></label> '
+           '<label>Potenza <select id="bw"><option>3</option><option>3,5</option><option>4</option><option>4,5</option><option>5</option><option>6</option></select> kW</label></p>'
+           f'<p><label>Prezzo energia (€/kWh) <input id="bp" type="number" min="0" step="0.001" value="{round(pm, 4)}" inputmode="decimal" style="max-width:120px"></label> '
+           f'<label>Quota fissa venditore (€/mese) <input id="bf" type="number" min="0" step="0.5" value="{round(med_o["fx"] / 12, 2)}" inputmode="decimal" style="max-width:110px"></label></p>'
+           '<div class="scroll" tabindex="0"><table class="ctab dtab"><thead><tr><th></th><td>Al mese</td><td>All\'anno</td></tr></thead><tbody id="bt"></tbody></table></div>' + fonte
+           + '<p class="note">Il canone RAI (90 € l\'anno, 9 € al mese da gennaio a ottobre) si aggiunge in bolletta.</p></section>',
+           [("Come si calcola la bolletta della luce?", "Si sommano la spesa per l'energia del venditore (prezzo per kWh e quota fissa), il trasporto e gli oneri di sistema decisi da ARERA, le accise e l'IVA al 10% per le abitazioni."),
+            ("Quanto costa la luce al mese per una famiglia?", f"Con 225 kWh al mese (2.700 l'anno) e un contatore da 3 kW, oggi si va da {n2(best_m)} al mese con l'offerta più conveniente a {n2(med_m)} con un'offerta nella media, canone RAI compreso.")],
+           js)
+    (R / "sitemap.xml").write_text(sm, encoding="utf-8")
+    print("kwh:", n4e(mb), n4e(mm))
+_kwh()
+
+
 # ---------- sitemap con data di aggiornamento ----------
 _oggi = _dt.date.today().isoformat()
 _sm = (R / "sitemap.xml").read_text(encoding="utf-8")
