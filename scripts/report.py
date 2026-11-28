@@ -49,10 +49,16 @@ try:
     tot = get(GC + "/stats/total", t, **rng(ieri))
     tot2 = get(GC + "/stats/total", t, **rng(altro))
     v, v2 = tot.get("total", 0), tot2.get("total", 0)
-    hits = get(GC + "/stats/hits", t, limit=50, **rng(ieri)).get("hits", [])
+    try:
+        hits = get(GC + "/stats/hits", t, limit=50, **rng(ieri)).get("hits", [])
+    except Exception as e:
+        hits = []; err.append(f"GoatCounter pagine: {e}")
     pag = [h for h in hits if not h.get("event")]
     ev = [h for h in hits if h.get("event") and str(h.get("path", "")).startswith("esce-")]
-    ref = get(GC + "/stats/toprefs", t, limit=6, **rng(ieri)).get("stats", [])
+    try:
+        ref = get(GC + "/stats/toprefs", t, limit=6, **rng(ieri)).get("stats", [])
+    except Exception as e:
+        ref = []; err.append(f"GoatCounter provenienze: {e}")
     c = lambda h: h.get("count", h.get("count_unique", 0))
     righe.append(f"<h3>Visite</h3><p><b>{n(v)}</b> pagine viste{var(v, v2)}.</p>")
     if ev:
